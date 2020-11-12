@@ -67,7 +67,7 @@ export const getFiles = async (dir: string): Promise<MarkdownFile[]> => {
 
 export const buildHtml = async (file: MarkdownFile): Promise<string> => {
   const style = await readFile(
-    join(process.cwd(), "dist/style.css")
+    join(__dirname, "../../dist/style.css")
   ).then((res) => res.toString());
 
   const options = {

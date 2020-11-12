@@ -62,7 +62,7 @@ exports.getFiles = (dir) => __awaiter(void 0, void 0, void 0, function* () {
     return files;
 });
 exports.buildHtml = (file) => __awaiter(void 0, void 0, void 0, function* () {
-    const style = yield readFile(path_1.join(process.cwd(), "dist/style.css")).then((res) => res.toString());
+    const style = yield readFile(path_1.join(__dirname, "../../dist/style.css")).then((res) => res.toString());
     const options = {
         title: "Testje",
         content: file.html,
