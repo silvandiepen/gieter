@@ -27,11 +27,11 @@
   "homepage": "https://github.com/silvandiepen/open-letter#readme",
   "devDependencies": {
     "@types/node": "^14.14.7",
-    "pug": "^3.0.0",
-    "sass": "^1.29.0",
     "typescript": "^4.0.5"
   },
   "dependencies": {
+    "pug": "^3.0.0",
+    "sass": "^1.29.0",
     "markdown-it": "^12.0.2",
     "markdown-it-highlightjs": "^3.3.0",
     "markdown-it-prism": "^2.1.3",
