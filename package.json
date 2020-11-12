@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Create an open letter html from Markdown",
   "main": "dist/index.js",
+  "bin": "dist/index.js",
   "scripts": {
     "test": "node dist/index.js",
     "build": "npm run build:js && npm run build:style",
