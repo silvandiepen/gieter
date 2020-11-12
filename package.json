@@ -1,0 +1,39 @@
+{
+  "name": "open-letter",
+  "version": "0.0.1",
+  "description": "Create an open letter html from Markdown",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "node dist/index.js",
+    "build": "npm run build:js && npm run build:style",
+    "build:js": "tsc",
+    "build:style": "sass --no-source-map src/style.scss dist/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silvandiepen/open-letter.git"
+  },
+  "keywords": [
+    "open",
+    "letter",
+    "generate"
+  ],
+  "author": "Sil van Diepen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/silvandiepen/open-letter/issues"
+  },
+  "homepage": "https://github.com/silvandiepen/open-letter#readme",
+  "devDependencies": {
+    "@types/node": "^14.14.7",
+    "markdown-it": "^12.0.2",
+    "markdown-it-highlightjs": "^3.3.0",
+    "markdown-it-prism": "^2.1.3",
+    "pug": "^3.0.0",
+    "sass": "^1.29.0",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "cli-block": "^1.2.3"
+  }
+}

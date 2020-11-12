@@ -1,0 +1,144 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:root {
+  --primary-color: #1b998b;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #222222;
+    color: #ffffff;
+  }
+}
+@media (prefers-color-scheme: light) {
+  body {
+    background: #ffffff;
+    color: #222222;
+  }
+}
+h1 {
+  font-size: calc(1.25vw + 1.5em);
+}
+
+h2 {
+  font-size: calc(1vw + 1.25em);
+}
+
+h3 {
+  font-size: calc(0.75vw + 1em);
+}
+
+h4 {
+  font-size: calc(0.5vw + 1em);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Lora", serif;
+}
+
+.content {
+  width: 720px;
+  padding: 2em;
+  max-width: 100%;
+  margin: auto;
+}
+
+.content a {
+  color: var(--primary-color);
+}
+
+.content p {
+  line-height: 1.75;
+  font-size: 1em;
+}
+
+.content p:first-of-type {
+  font-size: 1.2em;
+}
+
+h1 + h1, h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6, h1 + p, h1 + blockquote, h1 + table,
+h2 + h1,
+h2 + h2,
+h2 + h3,
+h2 + h4,
+h2 + h5,
+h2 + h6,
+h2 + p,
+h2 + blockquote,
+h2 + table,
+h3 + h1,
+h3 + h2,
+h3 + h3,
+h3 + h4,
+h3 + h5,
+h3 + h6,
+h3 + p,
+h3 + blockquote,
+h3 + table,
+h4 + h1,
+h4 + h2,
+h4 + h3,
+h4 + h4,
+h4 + h5,
+h4 + h6,
+h4 + p,
+h4 + blockquote,
+h4 + table,
+h5 + h1,
+h5 + h2,
+h5 + h3,
+h5 + h4,
+h5 + h5,
+h5 + h6,
+h5 + p,
+h5 + blockquote,
+h5 + table,
+h6 + h1,
+h6 + h2,
+h6 + h3,
+h6 + h4,
+h6 + h5,
+h6 + h6,
+h6 + p,
+h6 + blockquote,
+h6 + table,
+p + h1,
+p + h2,
+p + h3,
+p + h4,
+p + h5,
+p + h6,
+p + p,
+p + blockquote,
+p + table,
+blockquote + h1,
+blockquote + h2,
+blockquote + h3,
+blockquote + h4,
+blockquote + h5,
+blockquote + h6,
+blockquote + p,
+blockquote + blockquote,
+blockquote + table,
+table + h1,
+table + h2,
+table + h3,
+table + h4,
+table + h5,
+table + h6,
+table + p,
+table + blockquote,
+table + table {
+  margin-top: 1em;
+}
