@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildHtml = exports.getFiles = exports.getFileData = exports.getFileTree = void 0;
+exports.makePath = exports.buildHtml = exports.fileTitle = exports.getFiles = exports.getFileData = exports.getFileTree = void 0;
 const path_1 = require("path");
 const helpers_1 = require("./helpers");
 const pug_1 = __importDefault(require("pug"));
@@ -61,10 +61,14 @@ exports.getFiles = (dir) => __awaiter(void 0, void 0, void 0, function* () {
     }));
     return files;
 });
-exports.buildHtml = (file) => __awaiter(void 0, void 0, void 0, function* () {
+exports.fileTitle = (file) => {
+    const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html);
+    return matches[1] ? matches[1] : file.name;
+};
+exports.buildHtml = (file, menu) => __awaiter(void 0, void 0, void 0, function* () {
     const style = yield readFile(path_1.join(__dirname, "../../dist/style.css")).then((res) => res.toString());
     const options = {
-        title: "Testje",
+        title: exports.fileTitle(file),
         content: file.html,
         style,
         pretty: true,
@@ -72,4 +76,10 @@ exports.buildHtml = (file) => __awaiter(void 0, void 0, void 0, function* () {
     const html = pug_1.default.renderFile(path_1.join(__dirname, "../../src/template.pug"), options);
     return html;
 });
+exports.makePath = (path) => path
+    .replace(process.cwd(), "")
+    .replace("readme", "index")
+    .replace("README", "index")
+    .replace("Readme", "index")
+    .replace(".md", ".html");
 //# sourceMappingURL=files.js.map

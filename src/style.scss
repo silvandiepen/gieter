@@ -1,30 +1,55 @@
+:root {
+  --primary-color: #1b998b;
+  --roundness: 3px;
+  --dark: #222222;
+  --light: #ffffff;
+  --off-dark: #111111;
+  --off-light: #f7f7f7;
+  --off: var(--off-light);
+  --body-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --heading-font-family: var(--body-font-family);
+}
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: var(--body-font-family);
   margin: 0;
   padding: 0;
+  background: var(--background);
+  color: var(--text);
 }
 * {
   box-sizing: border-box;
   margin: 0;
 }
-:root {
-  --primary-color: #1b998b;
+@mixin darkMode {
+  --off: var(--off-dark);
+  --off-text: var(--off-light);
+  --background: var(--dark);
+  --text: var(--light);
 }
-
+@mixin lightMode {
+  --off: var(--off-light);
+  --off-text: var(--off-dark);
+  --background: var(--light);
+  --text: var(--dark);
+}
 @media (prefers-color-scheme: dark) {
   body {
-    background: #222222;
-    color: #ffffff;
+    @include darkMode;
   }
 }
 
 @media (prefers-color-scheme: light) {
   body {
-    background: #ffffff;
-    color: #222222;
+    @include lightMode;
   }
+}
+body[color-mode="dark"] {
+  @include darkMode;
+}
+body[color-mode="light"] {
+  @include lightMode;
 }
 
 h1 {
@@ -42,7 +67,7 @@ h4 {
 h1,
 h2,
 h3 {
-  font-family: "Lora", serif;
+  font-family: var(--heading-font-family);
 }
 
 .content {
@@ -64,6 +89,20 @@ h3 {
   font-size: 1.2em;
 }
 
+pre {
+  display: block;
+  border-radius: var(--roundness);
+  background-color: var(--off);
+  color: var(--off-text);
+  padding: 0.5em;
+}
+code {
+  padding: 0.5em;
+  font-size: 1em;
+  line-height: 1.75;
+  display: block;
+}
+
 h1,
 h2,
 h3,
@@ -72,6 +111,7 @@ h5,
 h6,
 p,
 blockquote,
+pre,
 table {
   & + h1,
   & + h2,
@@ -81,7 +121,37 @@ table {
   & + h6,
   & + p,
   & + blockquote,
-  & + table {
+  & + table,
+  & + pre {
     margin-top: 1em;
+  }
+}
+
+// Tools
+
+.tools {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 2em;
+  button {
+    width: 2em;
+    height: 2em;
+    border: none;
+    border-radius: 1em;
+    background-color: var(--off-text);
+    text-indent: -999em;
+    transform: translateX(-0%) rotate(45deg);
+    transition: transform 0.3s ease-in-out, border-radius 0.3s ease-in-out,
+      width 0.3s ease-in-out;
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px 0 var(--text);
+    }
+    [color-mode="dark"] & {
+      width: 1em;
+      border-radius: 1em 0 0 1em;
+      transform: translateX(-100%) rotate(0deg);
+    }
   }
 }

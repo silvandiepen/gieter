@@ -1,7 +1,23 @@
+:root {
+  --primary-color: #1b998b;
+  --roundness: 3px;
+  --dark: #222222;
+  --light: #ffffff;
+  --off-dark: #111111;
+  --off-light: #f7f7f7;
+  --off: var(--off-light);
+  --body-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --heading-font-family: var(--body-font-family);
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: var(--body-font-family);
   margin: 0;
   padding: 0;
+  background: var(--background);
+  color: var(--text);
 }
 
 * {
@@ -9,22 +25,36 @@ body {
   margin: 0;
 }
 
-:root {
-  --primary-color: #1b998b;
-}
-
 @media (prefers-color-scheme: dark) {
   body {
-    background: #222222;
-    color: #ffffff;
+    --off: var(--off-dark);
+    --off-text: var(--off-light);
+    --background: var(--dark);
+    --text: var(--light);
   }
 }
 @media (prefers-color-scheme: light) {
   body {
-    background: #ffffff;
-    color: #222222;
+    --off: var(--off-light);
+    --off-text: var(--off-dark);
+    --background: var(--light);
+    --text: var(--dark);
   }
 }
+body[color-mode=dark] {
+  --off: var(--off-dark);
+  --off-text: var(--off-light);
+  --background: var(--dark);
+  --text: var(--light);
+}
+
+body[color-mode=light] {
+  --off: var(--off-light);
+  --off-text: var(--off-dark);
+  --background: var(--light);
+  --text: var(--dark);
+}
+
 h1 {
   font-size: calc(1.25vw + 1.5em);
 }
@@ -44,7 +74,7 @@ h4 {
 h1,
 h2,
 h3 {
-  font-family: "Lora", serif;
+  font-family: var(--heading-font-family);
 }
 
 .content {
@@ -67,7 +97,22 @@ h3 {
   font-size: 1.2em;
 }
 
-h1 + h1, h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6, h1 + p, h1 + blockquote, h1 + table,
+pre {
+  display: block;
+  border-radius: var(--roundness);
+  background-color: var(--off);
+  color: var(--off-text);
+  padding: 0.5em;
+}
+
+code {
+  padding: 0.5em;
+  font-size: 1em;
+  line-height: 1.75;
+  display: block;
+}
+
+h1 + h1, h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6, h1 + p, h1 + blockquote, h1 + table, h1 + pre,
 h2 + h1,
 h2 + h2,
 h2 + h3,
@@ -77,6 +122,7 @@ h2 + h6,
 h2 + p,
 h2 + blockquote,
 h2 + table,
+h2 + pre,
 h3 + h1,
 h3 + h2,
 h3 + h3,
@@ -86,6 +132,7 @@ h3 + h6,
 h3 + p,
 h3 + blockquote,
 h3 + table,
+h3 + pre,
 h4 + h1,
 h4 + h2,
 h4 + h3,
@@ -95,6 +142,7 @@ h4 + h6,
 h4 + p,
 h4 + blockquote,
 h4 + table,
+h4 + pre,
 h5 + h1,
 h5 + h2,
 h5 + h3,
@@ -104,6 +152,7 @@ h5 + h6,
 h5 + p,
 h5 + blockquote,
 h5 + table,
+h5 + pre,
 h6 + h1,
 h6 + h2,
 h6 + h3,
@@ -113,6 +162,7 @@ h6 + h6,
 h6 + p,
 h6 + blockquote,
 h6 + table,
+h6 + pre,
 p + h1,
 p + h2,
 p + h3,
@@ -122,6 +172,7 @@ p + h6,
 p + p,
 p + blockquote,
 p + table,
+p + pre,
 blockquote + h1,
 blockquote + h2,
 blockquote + h3,
@@ -131,6 +182,17 @@ blockquote + h6,
 blockquote + p,
 blockquote + blockquote,
 blockquote + table,
+blockquote + pre,
+pre + h1,
+pre + h2,
+pre + h3,
+pre + h4,
+pre + h5,
+pre + h6,
+pre + p,
+pre + blockquote,
+pre + table,
+pre + pre,
 table + h1,
 table + h2,
 table + h3,
@@ -139,6 +201,33 @@ table + h5,
 table + h6,
 table + p,
 table + blockquote,
-table + table {
+table + table,
+table + pre {
   margin-top: 1em;
+}
+
+.tools {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 2em;
+}
+.tools button {
+  width: 2em;
+  height: 2em;
+  border: none;
+  border-radius: 1em;
+  background-color: var(--off-text);
+  text-indent: -999em;
+  transform: translateX(0%) rotate(45deg);
+  transition: transform 0.3s ease-in-out, border-radius 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+.tools button:focus {
+  outline: none;
+  box-shadow: 0 0 10px 0 var(--text);
+}
+[color-mode=dark] .tools button {
+  width: 1em;
+  border-radius: 1em 0 0 1em;
+  transform: translateX(-100%) rotate(0deg);
 }

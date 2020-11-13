@@ -2,8 +2,8 @@
 "use strict";
 
 import { toHtml } from "./libs/markdown";
-import { getFiles, buildHtml } from "./libs/files";
-import { Payload } from "./types";
+import { getFiles, buildHtml, makePath } from "./libs/files";
+import { MarkdownFile, Payload } from "./types";
 import { asyncForEach } from "./libs/helpers";
 import { existsSync, mkdirSync, writeFile } from "fs";
 import { join } from "path";
@@ -23,27 +23,41 @@ const files = async (payload: Payload) => {
 const build = async (payload: Payload) => {
   // Create an output folder
 
-  const outputFolder = join(process.cwd(), "build");
-  if (!existsSync(outputFolder)) {
-    mkdirSync(outputFolder);
-  }
-  await asyncForEach(payload.files, async (file) => {
-    const html = await buildHtml(file);
+  const menu = payload.files.map((file) => {
+    return {
+      name: file.name,
+      path: makePath(file.path),
+    };
+  });
 
-    const filename =
-      payload.files.length > 1 ? `${file.name}.html` : `index.html`;
+  const outputFolder = join(process.cwd(), "public");
 
-    await writeFile(join(outputFolder, filename), html, async () => {
-      await log.BLOCK_LINE_SUCCESS(`${file.name} created → ${filename}`);
+  await asyncForEach(payload.files, async (file: MarkdownFile) => {
+    const html = await buildHtml(file, menu);
+    const fileName = makePath(file.path);
+    const fileDir = join(
+      outputFolder,
+      fileName.split("/").slice(0, -1).join("")
+    );
+
+    try {
+      !existsSync(fileDir) && mkdirSync(fileDir, { recursive: true });
+    } catch (error) {
+      console.log(error);
+    }
+
+    await writeFile(join(outputFolder, fileName), html, async () => {
+      await log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
     });
   });
   return { ...payload };
 };
 
 const hello = async () => {
-  log.BLOCK_START("Building your letter");
+  log.BLOCK_START("Building your vue");
   return {};
 };
+
 const stop = async () => {
   log.BLOCK_END();
 };

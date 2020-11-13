@@ -10,3 +10,7 @@ export interface MarkdownFile {
     data?: string;
     html?: string;
 }
+export interface MenuItem {
+    name: string;
+    path: string;
+}

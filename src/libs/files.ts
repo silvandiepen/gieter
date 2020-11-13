@@ -1,5 +1,5 @@
 import { extname, resolve, basename, join } from "path";
-import { MarkdownFile } from "../types";
+import { MarkdownFile, MenuItem } from "../types";
 import { asyncForEach } from "./helpers";
 import pug from "pug";
 
@@ -65,13 +65,21 @@ export const getFiles = async (dir: string): Promise<MarkdownFile[]> => {
   return files;
 };
 
-export const buildHtml = async (file: MarkdownFile): Promise<string> => {
+export const fileTitle = (file: MarkdownFile) => {
+  const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html);
+  return matches[1] ? matches[1] : file.name;
+};
+
+export const buildHtml = async (
+  file: MarkdownFile,
+  menu: MenuItem[]
+): Promise<string> => {
   const style = await readFile(
     join(__dirname, "../../dist/style.css")
   ).then((res) => res.toString());
 
   const options = {
-    title: "Testje",
+    title: fileTitle(file),
     content: file.html,
     style,
     pretty: true,
@@ -84,3 +92,11 @@ export const buildHtml = async (file: MarkdownFile): Promise<string> => {
 
   return html;
 };
+
+export const makePath = (path: string): string =>
+  path
+    .replace(process.cwd(), "")
+    .replace("readme", "index")
+    .replace("README", "index")
+    .replace("Readme", "index")
+    .replace(".md", ".html");
