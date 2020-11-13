@@ -67,7 +67,7 @@ export const getFiles = async (dir: string): Promise<MarkdownFile[]> => {
 
 export const fileTitle = (file: MarkdownFile) => {
   const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html);
-  return matches[1] ? matches[1] : file.name;
+  return matches && matches[1] ? matches[1] : file.name;
 };
 
 export const buildHtml = async (
