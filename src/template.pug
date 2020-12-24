@@ -4,6 +4,7 @@ html(lang="en")
     meta(name="viewport",content="width=device-width, initial-scale=1")
     if meta.date
       meta(name="updated",content=formatDate(meta.date,'yy-MM-dd'))
+
     if meta.title
       title=meta.title
     else 
@@ -20,6 +21,28 @@ html(lang="en")
   body
     .toolbar
       button.color-mode(onClick="switchMode()") switch
+
+    input.navigation-input(type="checkbox",id="nav-toggle")
+    label.navigation-toggle(for="nav-toggle")
+      span
+    div.navigation-background
+
+    header.header.header--sticky
+      if project
+        if project.logo
+          a.logo(href="/")
+            img(src=project.logo)
+        else if project.title
+          a.logo(href="/")=project.title
+      if menu 
+        nav.navigation.center
+          ul.navigation__list
+            each item in menu
+              li.navigation__item
+                a.navigation__link(href= item.path)
+                  span.navigation__text= item.name
+
+
     main.content
       section.section
         div.container

@@ -1,5 +1,5 @@
 import { extname, resolve, basename, join } from "path";
-import { MarkdownFile, MenuItem, Payload } from "../types";
+import { MarkdownFile, buildHtmlArgs } from "../types";
 import { asyncForEach } from "./helpers";
 import pug from "pug";
 import { format, compareAsc } from "date-fns";
@@ -77,15 +77,13 @@ export const fileTitle = (file: MarkdownFile) => {
 
 export const buildHtml = async (
   file: MarkdownFile,
-  menu: MenuItem[],
-  style: string
+  args: buildHtmlArgs
 ): Promise<string> => {
   const options = {
+    ...args,
     title: file.html.meta?.title ? file.html.meta.title : fileTitle(file),
     content: file.html.document,
     meta: file.html.meta,
-    style: false,
-    menu,
     pretty: true,
     formatDate: format,
   };

@@ -1,3 +1,7 @@
+---
+title: Home
+---
+
 # Open letter
 
 ## Use

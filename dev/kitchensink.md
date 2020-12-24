@@ -1,6 +1,7 @@
 ---
 date: 2-12-2020
 title: KitchenSink
+projectTitle: Open Letter
 ---
 
 # Header 123

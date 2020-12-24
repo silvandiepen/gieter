@@ -18,13 +18,26 @@ import * as log from "cli-block";
 */
 const files = async (payload: Payload): Promise<Payload> => {
   const files = await getFiles(process.cwd());
+  let project = {};
 
   await asyncForEach(files, async (file, index) => {
     const html = await toHtml(file.data).then((r) => r);
     files[index] = { ...file, html: html };
+    // Merge configs
+
+    Object.keys(html.meta).forEach((meta) => {
+      if (meta.includes("project")) {
+        project[meta.toLowerCase().replace("project", "")] = html.meta[meta];
+      }
+    });
   });
 
-  return { ...payload, files: files };
+  if (Object.keys(project).length) {
+    log.BLOCK_MID("Project settings");
+    log.BLOCK_SETTINGS(project);
+  }
+
+  return { ...payload, files: files, project };
 };
 
 /*
@@ -67,6 +80,23 @@ const styles = async (payload: Payload): Promise<Payload> => {
   }
 };
 
+const menu = async (payload: Payload): Promise<Payload> => {
+  const menu = payload.files.map((file) => {
+    return {
+      name: file.html?.meta?.title || file.name,
+      path: makePath(file.path),
+    };
+  });
+  log.BLOCK_MID("Navigation");
+
+  let menuItems = {};
+  menu.forEach((item) => {
+    menuItems[item.name] = item.path;
+  });
+  await log.BLOCK_SETTINGS(menuItems);
+
+  return { ...payload, menu };
+};
 /*
 
   Build
@@ -74,32 +104,37 @@ const styles = async (payload: Payload): Promise<Payload> => {
 */
 
 const build = async (payload: Payload): Promise<Payload> => {
-  const menu = payload.files.map((file) => {
-    return {
-      name: file.name,
-      path: makePath(file.path),
-    };
-  });
-
+  log.BLOCK_MID("Pages");
   await asyncForEach(payload.files, async (file: MarkdownFile) => {
-    const html = await buildHtml(file, menu, payload.style);
+    const html = await buildHtml(file, {
+      menu: payload.menu,
+      style: payload.style,
+      project: payload.project,
+    });
     const fileName = makePath(file.path);
 
     await createDir(
       join(payload.settings.output, fileName.split("/").slice(0, -1).join(""))
     );
-
-    await writeFile(join(payload.settings.output, fileName), html, async () => {
-      await log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
-    });
+    try {
+      await writeFile(join(payload.settings.output, fileName), html);
+      log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
+    } catch (err) {
+      throw Error(err);
+    }
   });
   return { ...payload };
 };
 
 hello()
   .then(settings)
+  .then((s) => {
+    log.BLOCK_START("Open Letter");
+    return s;
+  })
   .then(files)
   .then(styles)
+  .then(menu)
   .then(build)
   .then(() => {
     log.BLOCK_END();

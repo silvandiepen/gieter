@@ -42,11 +42,22 @@ const log = __importStar(require("cli-block"));
 */
 const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const files = yield files_1.getFiles(process.cwd());
+    let project = {};
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         const html = yield markdown_1.toHtml(file.data).then((r) => r);
         files[index] = Object.assign(Object.assign({}, file), { html: html });
+        // Merge configs
+        Object.keys(html.meta).forEach((meta) => {
+            if (meta.includes("project")) {
+                project[meta.toLowerCase().replace("project", "")] = html.meta[meta];
+            }
+        });
     }));
-    return Object.assign(Object.assign({}, payload), { files: files });
+    if (Object.keys(project).length) {
+        log.BLOCK_MID("Project settings");
+        log.BLOCK_SETTINGS(project);
+    }
+    return Object.assign(Object.assign({}, payload), { files: files, project });
 });
 /*
 
@@ -78,32 +89,56 @@ const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         return Object.assign(Object.assign({}, payload), { style: styleData });
     }
 });
+const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const menu = payload.files.map((file) => {
+        var _a, _b;
+        return {
+            name: ((_b = (_a = file.html) === null || _a === void 0 ? void 0 : _a.meta) === null || _b === void 0 ? void 0 : _b.title) || file.name,
+            path: files_1.makePath(file.path),
+        };
+    });
+    log.BLOCK_MID("Navigation");
+    let menuItems = {};
+    menu.forEach((item) => {
+        menuItems[item.name] = item.path;
+    });
+    yield log.BLOCK_SETTINGS(menuItems);
+    return Object.assign(Object.assign({}, payload), { menu });
+});
 /*
 
   Build
 
 */
 const build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const menu = payload.files.map((file) => {
-        return {
-            name: file.name,
-            path: files_1.makePath(file.path),
-        };
-    });
+    log.BLOCK_MID("Pages");
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () {
-        const html = yield files_1.buildHtml(file, menu, payload.style);
+        const html = yield files_1.buildHtml(file, {
+            menu: payload.menu,
+            style: payload.style,
+            project: payload.project,
+        });
         const fileName = files_1.makePath(file.path);
         yield helpers_1.createDir(path_1.join(payload.settings.output, fileName.split("/").slice(0, -1).join("")));
-        yield writeFile(path_1.join(payload.settings.output, fileName), html, () => __awaiter(void 0, void 0, void 0, function* () {
-            yield log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
-        }));
+        try {
+            yield writeFile(path_1.join(payload.settings.output, fileName), html);
+            log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
+        }
+        catch (err) {
+            throw Error(err);
+        }
     }));
     return Object.assign({}, payload);
 });
 helpers_1.hello()
     .then(settings)
+    .then((s) => {
+    log.BLOCK_START("Open Letter");
+    return s;
+})
     .then(files)
     .then(styles)
+    .then(menu)
     .then(build)
     .then(() => {
     log.BLOCK_END();

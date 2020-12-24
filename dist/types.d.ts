@@ -1,12 +1,18 @@
 export interface Settings {
     output: string;
 }
+export interface Project {
+    logo?: string;
+    title?: string;
+}
 export interface Payload {
     input?: string;
     output?: string;
     files: MarkdownFile[];
     style?: string;
     settings?: Settings;
+    project?: Project;
+    menu?: MenuItem[];
 }
 export interface MarkdownFile {
     name: string;
@@ -25,4 +31,9 @@ export interface Meta {
 export interface MarkdownData {
     meta?: Meta;
     document?: string;
+}
+export interface buildHtmlArgs {
+    menu: MenuItem[];
+    style: string;
+    project: Project;
 }

@@ -70,17 +70,9 @@ exports.fileTitle = (file) => {
     const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html.document);
     return matches && matches[1] ? matches[1] : file.name;
 };
-exports.buildHtml = (file, menu, style) => __awaiter(void 0, void 0, void 0, function* () {
+exports.buildHtml = (file, args) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const options = {
-        title: ((_a = file.html.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.html.meta.title : exports.fileTitle(file),
-        content: file.html.document,
-        meta: file.html.meta,
-        style: false,
-        menu,
-        pretty: true,
-        formatDate: date_fns_1.format,
-    };
+    const options = Object.assign(Object.assign({}, args), { title: ((_a = file.html.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.html.meta.title : exports.fileTitle(file), content: file.html.document, meta: file.html.meta, pretty: true, formatDate: date_fns_1.format });
     const html = pug_1.default.renderFile(path_1.join(__dirname, "../../src/template.pug"), options);
     return html;
 });
