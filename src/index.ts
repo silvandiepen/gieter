@@ -81,12 +81,13 @@ const styles = async (payload: Payload): Promise<Payload> => {
 };
 
 const menu = async (payload: Payload): Promise<Payload> => {
-  const menu = payload.files.map((file) => {
-    return {
+  const menu = payload.files
+    .map((file) => ({
       name: file.html?.meta?.title || file.name,
       path: makePath(file.path),
-    };
-  });
+      active: !!!file.html.meta.hide,
+    }))
+    .filter((item) => item.active);
   log.BLOCK_MID("Navigation");
 
   let menuItems = {};

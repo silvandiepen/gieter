@@ -1,5 +1,6 @@
 ---
 title: Home
+hide: true
 ---
 
 # Open letter

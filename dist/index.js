@@ -90,14 +90,18 @@ const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const menu = payload.files.map((file) => {
+    const menu = payload.files
+        .map((file) => {
         var _a, _b;
-        return {
+        return ({
             name: ((_b = (_a = file.html) === null || _a === void 0 ? void 0 : _a.meta) === null || _b === void 0 ? void 0 : _b.title) || file.name,
             path: files_1.makePath(file.path),
-        };
-    });
+            active: !!!file.html.meta.hide,
+        });
+    })
+        .filter((item) => item.active);
     log.BLOCK_MID("Navigation");
+    console.log(menu);
     let menuItems = {};
     menu.forEach((item) => {
         menuItems[item.name] = item.path;

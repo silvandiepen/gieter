@@ -24,6 +24,7 @@ export interface MarkdownFile {
 export interface MenuItem {
     name: string;
     path: string;
+    active: boolean;
 }
 export interface Meta {
     [x: string]: string | string[] | any;
