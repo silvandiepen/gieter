@@ -1,9 +1,14 @@
 import { extname, resolve, basename, join } from "path";
-import { MarkdownFile, MenuItem } from "../types";
+import { MarkdownFile, MenuItem, Payload } from "../types";
 import { asyncForEach } from "./helpers";
 import pug from "pug";
+import { format, compareAsc } from "date-fns";
 
-const { readdir, readFile } = require("fs").promises;
+import fetch from "node-fetch";
+import https from "https";
+import { dirname } from "path";
+import { createWriteStream } from "fs";
+const { readdir, readFile, mkdir } = require("fs").promises;
 /*
 	::getFileTree
 	Get all files and folders from the input
@@ -66,23 +71,23 @@ export const getFiles = async (dir: string): Promise<MarkdownFile[]> => {
 };
 
 export const fileTitle = (file: MarkdownFile) => {
-  const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html);
+  const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html.document);
   return matches && matches[1] ? matches[1] : file.name;
 };
 
 export const buildHtml = async (
   file: MarkdownFile,
-  menu: MenuItem[]
+  menu: MenuItem[],
+  style: string
 ): Promise<string> => {
-  const style = await readFile(
-    join(__dirname, "../../dist/style.css")
-  ).then((res) => res.toString());
-
   const options = {
-    title: fileTitle(file),
-    content: file.html,
-    style,
+    title: file.html.meta?.title ? file.html.meta.title : fileTitle(file),
+    content: file.html.document,
+    meta: file.html.meta,
+    style: false,
+    menu,
     pretty: true,
+    formatDate: format,
   };
 
   const html = pug.renderFile(
@@ -100,3 +105,36 @@ export const makePath = (path: string): string =>
     .replace("README", "index")
     .replace("Readme", "index")
     .replace(".md", ".html");
+
+export const createFolder = async (folder: string): Promise<void> => {
+  try {
+    await mkdir(folder, { recursive: true }, () => {
+      return;
+    });
+  } catch (err) {
+    throw Error(err);
+  }
+};
+
+export const download = async (
+  url: string,
+  destination: string
+): Promise<void> => {
+  const agent = new https.Agent({
+    rejectUnauthorized: false,
+  });
+  //@ts-ignore
+  const res: any = await fetch(url, { agent });
+  await createFolder(dirname(destination));
+  await new Promise((resolve, reject) => {
+    const fileStream = createWriteStream(destination);
+    res.body?.pipe(fileStream);
+    res.body?.on("error", (err) => {
+      reject(err);
+    });
+    fileStream.on("finish", () => {
+      //@ts-ignore
+      resolve();
+    });
+  });
+};

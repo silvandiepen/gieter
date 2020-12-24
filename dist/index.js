@@ -30,11 +30,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const markdown_1 = require("./libs/markdown");
-const files_1 = require("./libs/files");
 const helpers_1 = require("./libs/helpers");
-const fs_1 = require("fs");
+const files_1 = require("./libs/files");
+const { readFile, writeFile } = require("fs").promises;
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
+/*
+
+  Files
+
+*/
 const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const files = yield files_1.getFiles(process.cwd());
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
@@ -43,40 +48,64 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }));
     return Object.assign(Object.assign({}, payload), { files: files });
 });
+/*
+
+  Settings
+
+*/
+const settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const settings = {
+        output: path_1.join(process.cwd(), "public"),
+    };
+    return Object.assign(Object.assign({}, payload), { settings });
+});
+/*
+
+  Styles
+
+*/
+const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // Download the style
+    yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
+    const styleData = yield readFile(path_1.join(__dirname, "../dist/style.css")).then((res) => res.toString());
+    if (payload.files.length > 1) {
+        yield helpers_1.createDir(payload.settings.output);
+        const filePath = path_1.join(payload.settings.output, "style.css");
+        yield writeFile(filePath, styleData);
+        return Object.assign(Object.assign({}, payload), { style: null });
+    }
+    else {
+        return Object.assign(Object.assign({}, payload), { style: styleData });
+    }
+});
+/*
+
+  Build
+
+*/
 const build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    // Create an output folder
     const menu = payload.files.map((file) => {
         return {
             name: file.name,
             path: files_1.makePath(file.path),
         };
     });
-    const outputFolder = path_1.join(process.cwd(), "public");
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () {
-        const html = yield files_1.buildHtml(file, menu);
+        const html = yield files_1.buildHtml(file, menu, payload.style);
         const fileName = files_1.makePath(file.path);
-        const fileDir = path_1.join(outputFolder, fileName.split("/").slice(0, -1).join(""));
-        try {
-            !fs_1.existsSync(fileDir) && fs_1.mkdirSync(fileDir, { recursive: true });
-        }
-        catch (error) {
-            console.log(error);
-        }
-        yield fs_1.writeFile(path_1.join(outputFolder, fileName), html, () => __awaiter(void 0, void 0, void 0, function* () {
+        yield helpers_1.createDir(path_1.join(payload.settings.output, fileName.split("/").slice(0, -1).join("")));
+        yield writeFile(path_1.join(payload.settings.output, fileName), html, () => __awaiter(void 0, void 0, void 0, function* () {
             yield log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
         }));
     }));
     return Object.assign({}, payload);
 });
-const hello = () => __awaiter(void 0, void 0, void 0, function* () {
-    log.BLOCK_START("Building your vue");
-    return {};
-});
-const stop = () => __awaiter(void 0, void 0, void 0, function* () {
+helpers_1.hello()
+    .then(settings)
+    .then(files)
+    .then(styles)
+    .then(build)
+    .then(() => {
     log.BLOCK_END();
 });
-hello()
-    .then(files)
-    .then((s) => __awaiter(void 0, void 0, void 0, function* () { return yield build(s); }))
-    .then(stop);
 //# sourceMappingURL=index.js.map

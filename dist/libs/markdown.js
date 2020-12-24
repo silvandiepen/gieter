@@ -15,9 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.toHtml = void 0;
 const MarkdownIt = require("markdown-it");
 const markdown_it_prism_1 = __importDefault(require("markdown-it-prism"));
+const markdown_meta_1 = require("./markdown-meta");
 const md = new MarkdownIt();
 md.use(markdown_it_prism_1.default);
 exports.toHtml = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    return md.render(input);
+    const metaData = yield markdown_meta_1.extractMeta(input);
+    const strippedData = yield markdown_meta_1.removeMeta(input);
+    const renderedDocument = md.render(strippedData);
+    return {
+        document: renderedDocument,
+        meta: metaData,
+    };
 });
 //# sourceMappingURL=markdown.js.map

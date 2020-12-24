@@ -1,1 +1,2 @@
-export declare const toHtml: (input: string) => Promise<string>;
+import { MarkdownData } from "../types";
+export declare const toHtml: (input: string) => Promise<MarkdownData>;

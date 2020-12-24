@@ -2,19 +2,38 @@ doctype html
 html(lang="en")
   head
     meta(name="viewport",content="width=device-width, initial-scale=1")
-    title=title
+    if meta.date
+      meta(name="updated",content=formatDate(meta.date,'yy-MM-dd'))
+    if meta.title
+      title=meta.title
+    else 
+      title=title
     link(rel="preconnect", href="https://fonts.gstatic.com")
     link(href="https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap", rel="stylesheet")
-    style
-        | !{style}
-
+    
+    if style
+      style
+          | !{style}
+    else  
+       link(href="/style.css", rel="stylesheet", type="text/css")
+     
   body
-    .tools 
-      button(onClick="switchMode()") switch
-    section.content
-     | !{content}
+    .toolbar
+      button.color-mode(onClick="switchMode()") switch
+    main.content
+      section.section
+        div.container
+          | !{content}
+
     footer.menu 
-     | !{menu}
+      if menu 
+        nav.navigation.center
+          ul.navigation__list
+            each item in menu
+              li.navigation__item
+                a.navigation__link(href= item.path)
+                  span.navigation__text= item.name
+
 
     script. 
       const isDarkMode = window.matchMedia('prefers-color-scheme: dark').matches;

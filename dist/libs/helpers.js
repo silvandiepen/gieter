@@ -9,10 +9,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.asyncForEach = void 0;
+exports.hello = exports.createDir = exports.nthIndex = exports.getIndexes = exports.asyncForEach = void 0;
+const fs_1 = require("fs");
+const { mkdir } = require("fs").promises;
 exports.asyncForEach = (array, callback) => __awaiter(void 0, void 0, void 0, function* () {
     for (let index = 0; index < array.length; index++) {
         yield callback(array[index], index, array);
     }
+});
+exports.getIndexes = (source, find) => {
+    const result = [];
+    let i = 0;
+    while (i < source.length) {
+        if (source.substring(i, i + find.length) === find) {
+            result.push(i);
+            i += find.length;
+        }
+        else {
+            i++;
+        }
+    }
+    return result;
+};
+exports.nthIndex = (source, find, nth) => {
+    const result = exports.getIndexes(source, find);
+    return result[nth];
+};
+exports.createDir = (dir) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        !fs_1.existsSync(dir) && (yield mkdir(dir, { recursive: true }));
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.hello = (args = {}) => __awaiter(void 0, void 0, void 0, function* () {
+    return args;
 });
 //# sourceMappingURL=helpers.js.map

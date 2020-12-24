@@ -2,14 +2,21 @@
 "use strict";
 
 import { toHtml } from "./libs/markdown";
-import { getFiles, buildHtml, makePath } from "./libs/files";
-import { MarkdownFile, Payload } from "./types";
-import { asyncForEach } from "./libs/helpers";
-import { existsSync, mkdirSync, writeFile } from "fs";
+import { asyncForEach, createDir, hello } from "./libs/helpers";
+import { getFiles, buildHtml, makePath, download } from "./libs/files";
+import { MarkdownFile, Payload, Settings } from "./types";
+
+const { readFile, writeFile } = require("fs").promises;
+
 import { join } from "path";
 import * as log from "cli-block";
 
-const files = async (payload: Payload) => {
+/*
+
+  Files
+
+*/
+const files = async (payload: Payload): Promise<Payload> => {
   const files = await getFiles(process.cwd());
 
   await asyncForEach(files, async (file, index) => {
@@ -20,9 +27,53 @@ const files = async (payload: Payload) => {
   return { ...payload, files: files };
 };
 
-const build = async (payload: Payload) => {
-  // Create an output folder
+/*
 
+  Settings
+
+*/
+const settings = async (payload: Payload): Promise<Payload> => {
+  const settings: Settings = {
+    output: join(process.cwd(), "public"),
+  };
+
+  return { ...payload, settings };
+};
+
+/*
+
+  Styles
+
+*/
+const styles = async (payload: Payload): Promise<Payload> => {
+  // Download the style
+  await download(
+    "https://stil.style/default.css",
+    join(__dirname, "../dist/style.css")
+  );
+
+  const styleData = await readFile(
+    join(__dirname, "../dist/style.css")
+  ).then((res: any) => res.toString());
+
+  if (payload.files.length > 1) {
+    await createDir(payload.settings.output);
+    const filePath = join(payload.settings.output, "style.css");
+    await writeFile(filePath, styleData);
+
+    return { ...payload, style: null };
+  } else {
+    return { ...payload, style: styleData };
+  }
+};
+
+/*
+
+  Build
+
+*/
+
+const build = async (payload: Payload): Promise<Payload> => {
   const menu = payload.files.map((file) => {
     return {
       name: file.name,
@@ -30,39 +81,26 @@ const build = async (payload: Payload) => {
     };
   });
 
-  const outputFolder = join(process.cwd(), "public");
-
   await asyncForEach(payload.files, async (file: MarkdownFile) => {
-    const html = await buildHtml(file, menu);
+    const html = await buildHtml(file, menu, payload.style);
     const fileName = makePath(file.path);
-    const fileDir = join(
-      outputFolder,
-      fileName.split("/").slice(0, -1).join("")
+
+    await createDir(
+      join(payload.settings.output, fileName.split("/").slice(0, -1).join(""))
     );
 
-    try {
-      !existsSync(fileDir) && mkdirSync(fileDir, { recursive: true });
-    } catch (error) {
-      console.log(error);
-    }
-
-    await writeFile(join(outputFolder, fileName), html, async () => {
+    await writeFile(join(payload.settings.output, fileName), html, async () => {
       await log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
     });
   });
   return { ...payload };
 };
 
-const hello = async () => {
-  log.BLOCK_START("Building your vue");
-  return {};
-};
-
-const stop = async () => {
-  log.BLOCK_END();
-};
-
 hello()
+  .then(settings)
   .then(files)
-  .then(async (s) => await build(s))
-  .then(stop);
+  .then(styles)
+  .then(build)
+  .then(() => {
+    log.BLOCK_END();
+  });
