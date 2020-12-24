@@ -33,6 +33,8 @@ const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
 const { readFile, writeFile } = require("fs").promises;
+const { existsSync } = require("fs");
+const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
 /*
@@ -101,7 +103,6 @@ const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     })
         .filter((item) => item.active);
     log.BLOCK_MID("Navigation");
-    console.log(menu);
     let menuItems = {};
     menu.forEach((item) => {
         menuItems[item.name] = item.path;
@@ -134,6 +135,17 @@ const build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }));
     return Object.assign({}, payload);
 });
+const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    yield helpers_1.asyncForEach(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
+        const exists = yield existsSync(path_1.join(process.cwd(), folder));
+        if (exists) {
+            yield fs_extra_1.copy(path_1.join(process.cwd(), folder), payload.settings.output)
+                .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`); }))
+                .catch((err) => console.error(err));
+        }
+    }));
+    return payload;
+});
 helpers_1.hello()
     .then(settings)
     .then((s) => {
@@ -143,6 +155,7 @@ helpers_1.hello()
     .then(files)
     .then(styles)
     .then(menu)
+    .then(media)
     .then(build)
     .then(() => {
     log.BLOCK_END();

@@ -7,6 +7,8 @@ import { getFiles, buildHtml, makePath, download } from "./libs/files";
 import { MarkdownFile, Payload, Settings } from "./types";
 
 const { readFile, writeFile } = require("fs").promises;
+const { existsSync } = require("fs");
+import { copy } from "fs-extra";
 
 import { join } from "path";
 import * as log from "cli-block";
@@ -127,6 +129,22 @@ const build = async (payload: Payload): Promise<Payload> => {
   return { ...payload };
 };
 
+const media = async (payload: Payload): Promise<Payload> => {
+  await asyncForEach(["assets", "media"], async (folder: string) => {
+    const exists = await existsSync(join(process.cwd(), folder));
+
+    if (exists) {
+      await copy(join(process.cwd(), folder), payload.settings.output)
+        .then(
+          async () => await log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`)
+        )
+        .catch((err) => console.error(err));
+    }
+  });
+
+  return payload;
+};
+
 hello()
   .then(settings)
   .then((s) => {
@@ -137,6 +155,7 @@ hello()
   .then(styles)
   .then(menu)
   .then(build)
+  .then(media)
   .then(() => {
     log.BLOCK_END();
   });
