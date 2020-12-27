@@ -22,10 +22,11 @@ html(lang="en")
     .toolbar
       button.color-mode(onClick="switchMode()") switch
 
-    input.navigation-input(type="checkbox",id="nav-toggle")
-    label.navigation-toggle(for="nav-toggle")
-      span
-    div.navigation-background
+    if menu.length > 0
+      input.navigation-input(type="checkbox",id="nav-toggle")
+      label.navigation-toggle(for="nav-toggle")
+        span
+      div.navigation-background
 
     header.header.header--sticky
       if project
@@ -34,7 +35,7 @@ html(lang="en")
             img(src=project.logo)
         else if project.title
           a.logo(href="/")=project.title
-      if menu 
+      if menu.length > 0
         nav.navigation.center
           ul.navigation__list
             each item in menu

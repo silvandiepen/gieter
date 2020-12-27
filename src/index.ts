@@ -107,10 +107,13 @@ const menu = async (payload: Payload): Promise<Payload> => {
   log.BLOCK_MID("Navigation");
 
   let menuItems = {};
-  menu.forEach((item) => {
-    menuItems[item.name] = item.path;
-  });
-  await log.BLOCK_SETTINGS(menuItems);
+  if (menu.length > 1)
+    menu.forEach((item) => {
+      menuItems[item.name] = item.path;
+    });
+
+  if (menu.length < 2) await log.BLOCK_LINE("No menu");
+  else await log.BLOCK_SETTINGS(menuItems);
 
   return { ...payload, menu };
 };

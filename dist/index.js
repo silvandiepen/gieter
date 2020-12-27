@@ -117,10 +117,14 @@ const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         .filter((item) => item.active);
     log.BLOCK_MID("Navigation");
     let menuItems = {};
-    menu.forEach((item) => {
-        menuItems[item.name] = item.path;
-    });
-    yield log.BLOCK_SETTINGS(menuItems);
+    if (menu.length > 1)
+        menu.forEach((item) => {
+            menuItems[item.name] = item.path;
+        });
+    if (menu.length < 2)
+        yield log.BLOCK_LINE("No menu");
+    else
+        yield log.BLOCK_SETTINGS(menuItems);
     return Object.assign(Object.assign({}, payload), { menu });
 });
 /*
