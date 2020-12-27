@@ -1,6 +1,7 @@
 ---
 title: Home
 hide: true
+projectTitle: logo.svg
 ---
 
 # Open letter

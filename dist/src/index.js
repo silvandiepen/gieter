@@ -43,31 +43,18 @@ const log = __importStar(require("cli-block"));
 
 */
 const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    let files = yield files_1.getFiles(process.cwd());
+    const files = yield files_1.getFiles(process.cwd());
     let project = {};
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
-        // Compile file to html
         const html = yield markdown_1.toHtml(file.data).then((r) => r);
         files[index] = Object.assign(Object.assign({}, file), { html: html });
         // Merge configs
         Object.keys(html.meta).forEach((meta) => {
             if (meta.includes("project")) {
-                const key = meta.toLowerCase().replace("project", "");
-                if (key == "ignore") {
-                    project[key] = [];
-                    html.meta[meta].split(",").forEach((meta) => {
-                        project.ignore.push(meta.trim());
-                    });
-                }
-                else
-                    project[key] = html.meta[meta];
+                project[meta.toLowerCase().replace("project", "")] = html.meta[meta];
             }
         });
     }));
-    // Filter files
-    if (project === null || project === void 0 ? void 0 : project.ignore) {
-        files = files.filter((file) => !project.ignore.some((ignore) => file.path.includes(ignore)));
-    }
     if (Object.keys(project).length) {
         log.BLOCK_MID("Project settings");
         log.BLOCK_SETTINGS(project);
@@ -149,11 +136,11 @@ const build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign({}, payload);
 });
 const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    yield helpers_1.asyncForEach(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
+    yield helpers_1.asyncForEach(["assets", "media", "src"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
         const exists = yield existsSync(path_1.join(process.cwd(), folder));
         if (exists) {
             yield fs_extra_1.copy(path_1.join(process.cwd(), folder), payload.settings.output)
-                .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`); }))
+                .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield log.BLOCK_LINE_SUCCESS(folder); }))
                 .catch((err) => console.error(err));
         }
     }));
@@ -168,8 +155,8 @@ helpers_1.hello()
     .then(files)
     .then(styles)
     .then(menu)
-    .then(build)
     .then(media)
+    .then(build)
     .then(() => {
     log.BLOCK_END();
 });

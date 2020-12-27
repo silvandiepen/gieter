@@ -4,7 +4,7 @@
 import { toHtml } from "./libs/markdown";
 import { asyncForEach, createDir, hello } from "./libs/helpers";
 import { getFiles, buildHtml, makePath, download } from "./libs/files";
-import { MarkdownFile, Payload, Settings } from "./types";
+import { MarkdownFile, Payload, Settings, Project } from "./types";
 
 const { readFile, writeFile } = require("fs").promises;
 const { existsSync } = require("fs");
@@ -19,20 +19,34 @@ import * as log from "cli-block";
 
 */
 const files = async (payload: Payload): Promise<Payload> => {
-  const files = await getFiles(process.cwd());
-  let project = {};
+  let files = await getFiles(process.cwd());
+  let project: Project = {};
 
-  await asyncForEach(files, async (file, index) => {
+  await asyncForEach(files, async (file: MarkdownFile, index: number) => {
+    // Compile file to html
     const html = await toHtml(file.data).then((r) => r);
     files[index] = { ...file, html: html };
-    // Merge configs
 
+    // Merge configs
     Object.keys(html.meta).forEach((meta) => {
       if (meta.includes("project")) {
-        project[meta.toLowerCase().replace("project", "")] = html.meta[meta];
+        const key = meta.toLowerCase().replace("project", "");
+        if (key == "ignore") {
+          project[key] = [];
+          html.meta[meta].split(",").forEach((meta) => {
+            project.ignore.push(meta.trim());
+          });
+        } else project[key] = html.meta[meta];
       }
     });
   });
+
+  // Filter files
+  if (project?.ignore) {
+    files = files.filter(
+      (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
+    );
+  }
 
   if (Object.keys(project).length) {
     log.BLOCK_MID("Project settings");

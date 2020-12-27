@@ -4,7 +4,6 @@ export interface Settings {
 export interface Project {
     logo?: string;
     title?: string;
-    ignore?: string[];
 }
 export interface Payload {
     input?: string;
