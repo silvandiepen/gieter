@@ -16,7 +16,7 @@ But if you do want to change some things in your settings, of course you can.
 
 You can alter a few settings in your files them self by adding meta data to your .md files.
 
-##### Title
+###### Title
 
 You can change the title of the file, which will be used in the title and menu by setting the title;
 
@@ -55,8 +55,8 @@ There are also a few project settings you can alter defining them in **any** of 
 projectTitle: My Project Title
 projectLogo: media/my-logo.svg
 projectIgnore: src, test
-projectStyle: my-css.css
-projectStyleOverrule: my-alt-css.css
+projectStyle: assets/my-css.css
+projectStyleOverrule: assets/my-alt-css.css
 ---
 ```
 
