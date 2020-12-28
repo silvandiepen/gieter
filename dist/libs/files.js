@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.download = exports.createFolder = exports.makePath = exports.buildHtml = exports.fileTitle = exports.getFiles = exports.getFileData = exports.getFileTree = void 0;
+exports.getProjectConfig = exports.download = exports.createFolder = exports.makePath = exports.buildHtml = exports.fileTitle = exports.getFiles = exports.getFileData = exports.getFileTree = void 0;
 const path_1 = require("path");
 const helpers_1 = require("./helpers");
 const pug_1 = __importDefault(require("pug"));
@@ -39,6 +39,7 @@ exports.getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, fu
             ? exports.getFileTree(res)
             : {
                 name: path_1.basename(res).replace(ext, ""),
+                relativePath: res.replace(process.cwd(), ""),
                 path: res,
                 ext: ext,
             };
@@ -57,8 +58,8 @@ exports.getFileData = (file) => __awaiter(void 0, void 0, void 0, function* () {
         throw Error(err);
     }
 });
-exports.getFiles = (dir) => __awaiter(void 0, void 0, void 0, function* () {
-    const fileTree = yield exports.getFileTree(dir, ".md");
+exports.getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () {
+    const fileTree = yield exports.getFileTree(dir, ext);
     const files = [];
     yield helpers_1.asyncForEach(fileTree, (file) => __awaiter(void 0, void 0, void 0, function* () {
         const data = yield exports.getFileData(file);
@@ -112,4 +113,22 @@ exports.download = (url, destination) => __awaiter(void 0, void 0, void 0, funct
         });
     });
 });
+exports.getProjectConfig = (meta) => {
+    let project = {};
+    // Merge configs
+    Object.keys(meta).forEach((meta) => {
+        if (meta.includes("project")) {
+            const key = meta.toLowerCase().replace("project", "");
+            if (key == "ignore") {
+                project[key] = [];
+                meta[meta].split(",").forEach((meta) => {
+                    project.ignore.push(meta.trim());
+                });
+            }
+            else
+                project[key] = meta[meta];
+        }
+    });
+    return project;
+};
 //# sourceMappingURL=files.js.map

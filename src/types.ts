@@ -11,15 +11,17 @@ export interface Project {
 export interface Payload {
   input?: string;
   output?: string;
-  files: MarkdownFile[];
+  files: File[];
+  media: File[];
   style?: string;
   settings?: Settings;
   project?: Project;
   menu?: MenuItem[];
 }
-export interface MarkdownFile {
+export interface File {
   name: string;
   path: string;
+  relativePath: string;
   ext?: string;
   data?: string;
   html?: MarkdownData;
@@ -42,4 +44,5 @@ export interface buildHtmlArgs {
   menu: MenuItem[];
   style: string;
   project: Project;
+  media: File[];
 }

@@ -1,15 +1,9 @@
 ---
 title: Home
 hide: true
-projectTitle: logo.svg
+projectTitle: /media/logo.svg
 ---
 
 # Open letter
 
-## Use
-
-You can use **open letter** in any folder where there are markdown files. Open leter will automatically generate html pages out of all the markdown files, ready to deploy.
-
-```bash
-npx open-letter
-```
+Open letter helps you make simple websites or pages just from a markdown file. You don't have to set anything up, just run `npx open-letter` and your website will be generated.

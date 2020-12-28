@@ -3,8 +3,15 @@
 
 import { toHtml } from "./libs/markdown";
 import { asyncForEach, createDir, hello } from "./libs/helpers";
-import { getFiles, buildHtml, makePath, download } from "./libs/files";
-import { MarkdownFile, Payload, Settings, Project } from "./types";
+import {
+  getFiles,
+  getFileTree,
+  buildHtml,
+  makePath,
+  download,
+  getProjectConfig,
+} from "./libs/files";
+import { File, Payload, Settings, Project } from "./types";
 
 const { readFile, writeFile } = require("fs").promises;
 const { existsSync } = require("fs");
@@ -18,27 +25,16 @@ import * as log from "cli-block";
   Files
 
 */
-const files = async (payload: Payload): Promise<Payload> => {
-  let files = await getFiles(process.cwd());
+export const files = async (payload: Payload): Promise<Payload> => {
+  let files = await getFiles(process.cwd(), ".md");
   let project: Project = {};
 
-  await asyncForEach(files, async (file: MarkdownFile, index: number) => {
+  await asyncForEach(files, async (file: File, index: number) => {
     // Compile file to html
     const html = await toHtml(file.data).then((r) => r);
     files[index] = { ...file, html: html };
-
-    // Merge configs
-    Object.keys(html.meta).forEach((meta) => {
-      if (meta.includes("project")) {
-        const key = meta.toLowerCase().replace("project", "");
-        if (key == "ignore") {
-          project[key] = [];
-          html.meta[meta].split(",").forEach((meta) => {
-            project.ignore.push(meta.trim());
-          });
-        } else project[key] = html.meta[meta];
-      }
-    });
+    // Get Project Config
+    project = getProjectConfig(html.meta);
   });
 
   // Filter files
@@ -61,7 +57,7 @@ const files = async (payload: Payload): Promise<Payload> => {
   Settings
 
 */
-const settings = async (payload: Payload): Promise<Payload> => {
+export const settings = async (payload: Payload): Promise<Payload> => {
   const settings: Settings = {
     output: join(process.cwd(), "public"),
   };
@@ -74,7 +70,7 @@ const settings = async (payload: Payload): Promise<Payload> => {
   Styles
 
 */
-const styles = async (payload: Payload): Promise<Payload> => {
+export const styles = async (payload: Payload): Promise<Payload> => {
   // Download the style
   await download(
     "https://stil.style/default.css",
@@ -96,7 +92,7 @@ const styles = async (payload: Payload): Promise<Payload> => {
   }
 };
 
-const menu = async (payload: Payload): Promise<Payload> => {
+export const menu = async (payload: Payload): Promise<Payload> => {
   const menu = payload.files
     .map((file) => ({
       name: file.html?.meta?.title || file.name,
@@ -123,13 +119,14 @@ const menu = async (payload: Payload): Promise<Payload> => {
 
 */
 
-const build = async (payload: Payload): Promise<Payload> => {
+export const build = async (payload: Payload): Promise<Payload> => {
   log.BLOCK_MID("Pages");
-  await asyncForEach(payload.files, async (file: MarkdownFile) => {
+  await asyncForEach(payload.files, async (file: File) => {
     const html = await buildHtml(file, {
       menu: payload.menu,
       style: payload.style,
       project: payload.project,
+      media: payload.media,
     });
     const fileName = makePath(file.path);
 
@@ -146,20 +143,28 @@ const build = async (payload: Payload): Promise<Payload> => {
   return { ...payload };
 };
 
-const media = async (payload: Payload): Promise<Payload> => {
+export const media = async (payload: Payload): Promise<Payload> => {
+  let mediaFiles: File[] = [];
   await asyncForEach(["assets", "media"], async (folder: string) => {
     const exists = await existsSync(join(process.cwd(), folder));
 
     if (exists) {
-      await copy(join(process.cwd(), folder), payload.settings.output)
+      await copy(
+        join(process.cwd(), folder),
+        join(payload.settings.output, folder)
+      )
         .then(
           async () => await log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`)
         )
         .catch((err) => console.error(err));
+
+      mediaFiles = [
+        ...(await getFileTree(join(process.cwd(), folder), ".svg")),
+      ];
     }
   });
 
-  return payload;
+  return { ...payload, media: mediaFiles };
 };
 
 hello()
@@ -170,9 +175,9 @@ hello()
   })
   .then(files)
   .then(styles)
+  .then(media)
   .then(menu)
   .then(build)
-  .then(media)
   .then(() => {
     log.BLOCK_END();
   });

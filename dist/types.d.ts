@@ -18,6 +18,7 @@ export interface Payload {
 export interface MarkdownFile {
     name: string;
     path: string;
+    relativePath: string;
     ext?: string;
     data?: string;
     html?: MarkdownData;

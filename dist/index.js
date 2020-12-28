@@ -29,6 +29,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.media = exports.build = exports.menu = exports.styles = exports.settings = exports.files = void 0;
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
@@ -42,27 +43,15 @@ const log = __importStar(require("cli-block"));
   Files
 
 */
-const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    let files = yield files_1.getFiles(process.cwd());
+exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    let files = yield files_1.getFiles(process.cwd(), ".md");
     let project = {};
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         // Compile file to html
         const html = yield markdown_1.toHtml(file.data).then((r) => r);
         files[index] = Object.assign(Object.assign({}, file), { html: html });
-        // Merge configs
-        Object.keys(html.meta).forEach((meta) => {
-            if (meta.includes("project")) {
-                const key = meta.toLowerCase().replace("project", "");
-                if (key == "ignore") {
-                    project[key] = [];
-                    html.meta[meta].split(",").forEach((meta) => {
-                        project.ignore.push(meta.trim());
-                    });
-                }
-                else
-                    project[key] = html.meta[meta];
-            }
-        });
+        // Get Project Config
+        project = files_1.getProjectConfig(html.meta);
     }));
     // Filter files
     if (project === null || project === void 0 ? void 0 : project.ignore) {
@@ -79,7 +68,7 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
   Settings
 
 */
-const settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const settings = {
         output: path_1.join(process.cwd(), "public"),
     };
@@ -90,7 +79,7 @@ const settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
   Styles
 
 */
-const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Download the style
     yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
     const styleData = yield readFile(path_1.join(__dirname, "../dist/style.css")).then((res) => res.toString());
@@ -104,7 +93,7 @@ const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         return Object.assign(Object.assign({}, payload), { style: styleData });
     }
 });
-const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const menu = payload.files
         .map((file) => {
         var _a, _b;
@@ -132,7 +121,7 @@ const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
   Build
 
 */
-const build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     log.BLOCK_MID("Pages");
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () {
         const html = yield files_1.buildHtml(file, {
@@ -152,28 +141,31 @@ const build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }));
     return Object.assign({}, payload);
 });
-const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    let files = [];
     yield helpers_1.asyncForEach(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
         const exists = yield existsSync(path_1.join(process.cwd(), folder));
         if (exists) {
-            yield fs_extra_1.copy(path_1.join(process.cwd(), folder), payload.settings.output)
+            yield fs_extra_1.copy(path_1.join(process.cwd(), folder), path_1.join(payload.settings.output, folder))
                 .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`); }))
                 .catch((err) => console.error(err));
+            files = [...(yield files_1.getFileTree(path_1.join(process.cwd(), folder), ".svg"))];
         }
     }));
+    console.log(files);
     return payload;
 });
 helpers_1.hello()
-    .then(settings)
+    .then(exports.settings)
     .then((s) => {
     log.BLOCK_START("Open Letter");
     return s;
 })
-    .then(files)
-    .then(styles)
-    .then(menu)
-    .then(build)
-    .then(media)
+    .then(exports.files)
+    .then(exports.styles)
+    .then(exports.media)
+    .then(exports.menu)
+    .then(exports.build)
     .then(() => {
     log.BLOCK_END();
 });

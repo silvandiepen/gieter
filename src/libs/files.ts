@@ -1,5 +1,5 @@
 import { extname, resolve, basename, join } from "path";
-import { MarkdownFile, buildHtmlArgs } from "../types";
+import { File, buildHtmlArgs, Project } from "../types";
 import { asyncForEach } from "./helpers";
 import pug from "pug";
 import { format, compareAsc } from "date-fns";
@@ -17,7 +17,7 @@ const { readdir, readFile, mkdir } = require("fs").promises;
 export const getFileTree = async (
   dir: string,
   filter = ""
-): Promise<MarkdownFile[]> => {
+): Promise<File[]> => {
   // Do not search the following folders;
   const excludes = ["node_modules", ".git"];
   if (excludes.some((sub) => dir.includes(sub))) return;
@@ -33,6 +33,7 @@ export const getFileTree = async (
         ? getFileTree(res)
         : {
             name: basename(res).replace(ext, ""),
+            relativePath: res.replace(process.cwd(), ""),
             path: res,
             ext: ext,
           };
@@ -45,9 +46,7 @@ export const getFileTree = async (
     .filter((file) => (filter ? file.ext == filter : true));
 };
 
-export const getFileData = async (
-  file: MarkdownFile
-): Promise<MarkdownFile> => {
+export const getFileData = async (file: File): Promise<File> => {
   try {
     return await readFile(file.path).then((res) => res.toString());
   } catch (err) {
@@ -55,12 +54,12 @@ export const getFileData = async (
   }
 };
 
-export const getFiles = async (dir: string): Promise<MarkdownFile[]> => {
-  const fileTree = await getFileTree(dir, ".md");
+export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
+  const fileTree = await getFileTree(dir, ext);
 
   const files = [];
 
-  await asyncForEach(fileTree, async (file: MarkdownFile) => {
+  await asyncForEach(fileTree, async (file: File) => {
     const data = await getFileData(file);
     files.push({
       ...file,
@@ -70,13 +69,13 @@ export const getFiles = async (dir: string): Promise<MarkdownFile[]> => {
   return files;
 };
 
-export const fileTitle = (file: MarkdownFile) => {
+export const fileTitle = (file: File) => {
   const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html.document);
   return matches && matches[1] ? matches[1] : file.name;
 };
 
 export const buildHtml = async (
-  file: MarkdownFile,
+  file: File,
   args: buildHtmlArgs
 ): Promise<string> => {
   const options = {
@@ -135,4 +134,21 @@ export const download = async (
       resolve();
     });
   });
+};
+
+export const getProjectConfig = (meta) => {
+  let project: Project = {};
+  // Merge configs
+  Object.keys(meta).forEach((meta) => {
+    if (meta.includes("project")) {
+      const key = meta.toLowerCase().replace("project", "");
+      if (key == "ignore") {
+        project[key] = [];
+        meta[meta].split(",").forEach((meta) => {
+          project.ignore.push(meta.trim());
+        });
+      } else project[key] = meta[meta];
+    }
+  });
+  return project;
 };
