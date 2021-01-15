@@ -152,7 +152,6 @@ export const build = async (payload: Payload): Promise<Payload> => {
       project: payload.project,
       media: payload.media,
     };
-    console.log(data);
 
     const html = await buildHtml(file, data);
     const fileName = makePath(file.path);
