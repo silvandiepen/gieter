@@ -4,16 +4,24 @@ export interface Settings {
 
 export interface Project {
   logo?: string;
+  logoData?: string;
   title?: string;
   ignore?: string[];
+  style?: string;
+  styleOverrule?: string;
 }
 
+export interface Style {
+  path?: string;
+  sheet?: string;
+  add?: string;
+}
 export interface Payload {
   input?: string;
   output?: string;
   files: File[];
   media: File[];
-  style?: string;
+  style?: Style;
   settings?: Settings;
   project?: Project;
   menu?: MenuItem[];
@@ -42,7 +50,7 @@ export interface MarkdownData {
 
 export interface buildHtmlArgs {
   menu: MenuItem[];
-  style: string;
+  style: Style;
   project: Project;
   media: File[];
 }

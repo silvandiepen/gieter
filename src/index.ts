@@ -10,8 +10,10 @@ import {
   makePath,
   download,
   getProjectConfig,
+  getFileData,
 } from "./libs/files";
-import { File, Payload, Settings, Project } from "./types";
+import { cleanupSvg } from "./libs/svg";
+import { File, Payload, Settings, Project, Style } from "./types";
 
 const { readFile, writeFile } = require("fs").promises;
 const { existsSync } = require("fs");
@@ -43,10 +45,24 @@ export const files = async (payload: Payload): Promise<Payload> => {
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
   }
+  // console.log(project);
+  if (project?.logo && project?.logo.includes(".svg")) {
+    const logoData = await getFileData({
+      name: "",
+      path: join(process.cwd(), project.logo),
+      relativePath: project.logo,
+    });
+    try {
+      const svgFile = cleanupSvg(logoData);
+      project.logoData = svgFile;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   if (Object.keys(project).length) {
     log.BLOCK_MID("Project settings");
-    log.BLOCK_SETTINGS(project);
+    log.BLOCK_SETTINGS(project, {}, { exclude: ["logoData"] });
   }
 
   return { ...payload, files: files, project };
@@ -72,6 +88,8 @@ export const settings = async (payload: Payload): Promise<Payload> => {
 */
 export const styles = async (payload: Payload): Promise<Payload> => {
   // Download the style
+  let style: Style = {};
+
   await download(
     "https://stil.style/default.css",
     join(__dirname, "../dist/style.css")
@@ -85,15 +103,19 @@ export const styles = async (payload: Payload): Promise<Payload> => {
     await createDir(payload.settings.output);
     const filePath = join(payload.settings.output, "style.css");
     await writeFile(filePath, styleData);
-
-    return { ...payload, style: null };
+    style.path = "/style.css";
   } else {
-    return { ...payload, style: styleData };
+    style.sheet = styleData;
   }
+
+  if (payload.project.styleOverrule) style.path = payload.project.styleOverrule;
+  if (payload.project.style) style.add = payload.project.style;
+
+  return { ...payload, style };
 };
 
 export const menu = async (payload: Payload): Promise<Payload> => {
-  const menu = payload.files
+  let menu = payload.files
     .map((file) => ({
       name: file.html?.meta?.title || file.name,
       path: makePath(file.path),
@@ -108,8 +130,10 @@ export const menu = async (payload: Payload): Promise<Payload> => {
       menuItems[item.name] = item.path;
     });
 
-  if (menu.length < 2) await log.BLOCK_LINE("No menu");
-  else await log.BLOCK_SETTINGS(menuItems);
+  if (menu.length < 2) {
+    await log.BLOCK_LINE("No menu");
+    menu = [];
+  } else await log.BLOCK_SETTINGS(menuItems);
 
   return { ...payload, menu };
 };
@@ -122,12 +146,15 @@ export const menu = async (payload: Payload): Promise<Payload> => {
 export const build = async (payload: Payload): Promise<Payload> => {
   log.BLOCK_MID("Pages");
   await asyncForEach(payload.files, async (file: File) => {
-    const html = await buildHtml(file, {
+    const data = {
       menu: payload.menu,
       style: payload.style,
       project: payload.project,
       media: payload.media,
-    });
+    };
+    console.log(data);
+
+    const html = await buildHtml(file, data);
     const fileName = makePath(file.path);
 
     await createDir(

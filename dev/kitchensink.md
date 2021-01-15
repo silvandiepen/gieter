@@ -2,6 +2,7 @@
 date: 2-12-2020
 title: KitchenSink
 projectTitle: Open Letter
+projectLogo: media/logo.svg
 ---
 
 # Header 123

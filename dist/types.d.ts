@@ -3,19 +3,28 @@ export interface Settings {
 }
 export interface Project {
     logo?: string;
+    logoData?: string;
     title?: string;
     ignore?: string[];
+    style?: string;
+    styleOverrule?: string;
+}
+export interface Style {
+    path?: string;
+    sheet?: string;
+    add?: string;
 }
 export interface Payload {
     input?: string;
     output?: string;
-    files: MarkdownFile[];
-    style?: string;
+    files: File[];
+    media: File[];
+    style?: Style;
     settings?: Settings;
     project?: Project;
     menu?: MenuItem[];
 }
-export interface MarkdownFile {
+export interface File {
     name: string;
     path: string;
     relativePath: string;
@@ -37,6 +46,7 @@ export interface MarkdownData {
 }
 export interface buildHtmlArgs {
     menu: MenuItem[];
-    style: string;
+    style: Style;
     project: Project;
+    media: File[];
 }

@@ -12,11 +12,14 @@ html(lang="en")
     link(rel="preconnect", href="https://fonts.gstatic.com")
     link(href="https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap", rel="stylesheet")
     
-    if style
+    if style.sheet
       style
-          | !{style}
-    else  
-       link(href="/style.css", rel="stylesheet", type="text/css")
+          | !{style.sheet}
+    else if style.path
+       link(href=style.path, rel="stylesheet", type="text/css")
+    if style.add 
+       link(href=style.add, rel="stylesheet", type="text/css")
+
      
   body
     .toolbar
@@ -30,9 +33,13 @@ html(lang="en")
 
     header.header.header--sticky
       if project
-        if project.logo
+        if project.logoData
+          a.logo(href="/")
+           | !{project.logoData}
+        else if project.logo
           a.logo(href="/")
             img(src=project.logo)
+        else if media
         else if project.title
           a.logo(href="/")=project.title
       if menu.length > 0

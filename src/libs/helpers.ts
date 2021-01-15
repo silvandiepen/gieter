@@ -27,13 +27,13 @@ export const nthIndex = (source: string, find: string, nth: number): number => {
   return result[nth];
 };
 
-export const createDir = async (dir): Promise<void> => {
+export const createDir = async (dir: string): Promise<void> => {
   try {
     !existsSync(dir) && (await mkdir(dir, { recursive: true }));
   } catch (error) {
     console.log(error);
   }
 };
-export const hello = async (args = {}) => {
+export const hello = async (args: any = {}) => {
   return args;
 };

@@ -33,6 +33,7 @@ exports.media = exports.build = exports.menu = exports.styles = exports.settings
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
+const svg_1 = require("./libs/svg");
 const { readFile, writeFile } = require("fs").promises;
 const { existsSync } = require("fs");
 const fs_extra_1 = require("fs-extra");
@@ -57,9 +58,24 @@ exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (project === null || project === void 0 ? void 0 : project.ignore) {
         files = files.filter((file) => !project.ignore.some((ignore) => file.path.includes(ignore)));
     }
+    // console.log(project);
+    if ((project === null || project === void 0 ? void 0 : project.logo) && (project === null || project === void 0 ? void 0 : project.logo.includes(".svg"))) {
+        const logoData = yield files_1.getFileData({
+            name: "",
+            path: path_1.join(process.cwd(), project.logo),
+            relativePath: project.logo,
+        });
+        try {
+            const svgFile = svg_1.cleanupSvg(logoData);
+            project.logoData = svgFile;
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
     if (Object.keys(project).length) {
         log.BLOCK_MID("Project settings");
-        log.BLOCK_SETTINGS(project);
+        log.BLOCK_SETTINGS(project, {}, { exclude: ["logoData"] });
     }
     return Object.assign(Object.assign({}, payload), { files: files, project });
 });
@@ -81,20 +97,26 @@ exports.settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 */
 exports.styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Download the style
+    let style = {};
     yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
     const styleData = yield readFile(path_1.join(__dirname, "../dist/style.css")).then((res) => res.toString());
     if (payload.files.length > 1) {
         yield helpers_1.createDir(payload.settings.output);
         const filePath = path_1.join(payload.settings.output, "style.css");
         yield writeFile(filePath, styleData);
-        return Object.assign(Object.assign({}, payload), { style: null });
+        style.path = "/style.css";
     }
     else {
-        return Object.assign(Object.assign({}, payload), { style: styleData });
+        style.sheet = styleData;
     }
+    if (payload.project.styleOverrule)
+        style.path = payload.project.styleOverrule;
+    if (payload.project.style)
+        style.add = payload.project.style;
+    return Object.assign(Object.assign({}, payload), { style });
 });
 exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const menu = payload.files
+    let menu = payload.files
         .map((file) => {
         var _a, _b;
         return ({
@@ -110,8 +132,10 @@ exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         menu.forEach((item) => {
             menuItems[item.name] = item.path;
         });
-    if (menu.length < 2)
+    if (menu.length < 2) {
         yield log.BLOCK_LINE("No menu");
+        menu = [];
+    }
     else
         yield log.BLOCK_SETTINGS(menuItems);
     return Object.assign(Object.assign({}, payload), { menu });
@@ -124,11 +148,14 @@ exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 exports.build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     log.BLOCK_MID("Pages");
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () {
-        const html = yield files_1.buildHtml(file, {
+        const data = {
             menu: payload.menu,
             style: payload.style,
             project: payload.project,
-        });
+            media: payload.media,
+        };
+        console.log(data);
+        const html = yield files_1.buildHtml(file, data);
         const fileName = files_1.makePath(file.path);
         yield helpers_1.createDir(path_1.join(payload.settings.output, fileName.split("/").slice(0, -1).join("")));
         try {
@@ -142,18 +169,19 @@ exports.build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign({}, payload);
 });
 exports.media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    let files = [];
+    let mediaFiles = [];
     yield helpers_1.asyncForEach(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
         const exists = yield existsSync(path_1.join(process.cwd(), folder));
         if (exists) {
             yield fs_extra_1.copy(path_1.join(process.cwd(), folder), path_1.join(payload.settings.output, folder))
                 .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`); }))
                 .catch((err) => console.error(err));
-            files = [...(yield files_1.getFileTree(path_1.join(process.cwd(), folder), ".svg"))];
+            mediaFiles = [
+                ...(yield files_1.getFileTree(path_1.join(process.cwd(), folder), ".svg")),
+            ];
         }
     }));
-    console.log(files);
-    return payload;
+    return Object.assign(Object.assign({}, payload), { media: mediaFiles });
 });
 helpers_1.hello()
     .then(exports.settings)

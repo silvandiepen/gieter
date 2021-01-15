@@ -46,7 +46,7 @@ export const getFileTree = async (
     .filter((file) => (filter ? file.ext == filter : true));
 };
 
-export const getFileData = async (file: File): Promise<File> => {
+export const getFileData = async (file: File): Promise<string> => {
   try {
     return await readFile(file.path).then((res) => res.toString());
   } catch (err) {
@@ -139,15 +139,15 @@ export const download = async (
 export const getProjectConfig = (meta) => {
   let project: Project = {};
   // Merge configs
-  Object.keys(meta).forEach((meta) => {
-    if (meta.includes("project")) {
-      const key = meta.toLowerCase().replace("project", "");
+  Object.keys(meta).forEach((item) => {
+    if (item.includes("project")) {
+      const key = item.toLowerCase().replace("project", "");
       if (key == "ignore") {
         project[key] = [];
-        meta[meta].split(",").forEach((meta) => {
-          project.ignore.push(meta.trim());
+        meta[item].split(",").forEach((value) => {
+          project.ignore.push(value.trim());
         });
-      } else project[key] = meta[meta];
+      } else project[key] = meta[item];
     }
   });
   return project;

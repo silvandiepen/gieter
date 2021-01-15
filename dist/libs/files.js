@@ -116,17 +116,17 @@ exports.download = (url, destination) => __awaiter(void 0, void 0, void 0, funct
 exports.getProjectConfig = (meta) => {
     let project = {};
     // Merge configs
-    Object.keys(meta).forEach((meta) => {
-        if (meta.includes("project")) {
-            const key = meta.toLowerCase().replace("project", "");
+    Object.keys(meta).forEach((item) => {
+        if (item.includes("project")) {
+            const key = item.toLowerCase().replace("project", "");
             if (key == "ignore") {
                 project[key] = [];
-                meta[meta].split(",").forEach((meta) => {
-                    project.ignore.push(meta.trim());
+                meta[item].split(",").forEach((value) => {
+                    project.ignore.push(value.trim());
                 });
             }
             else
-                project[key] = meta[meta];
+                project[key] = meta[item];
         }
     });
     return project;
