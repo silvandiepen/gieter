@@ -45,7 +45,6 @@ export const files = async (payload: Payload): Promise<Payload> => {
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
   }
-  // console.log(project);
   if (project?.logo && project?.logo.includes(".svg")) {
     const logoData = await getFileData({
       name: "",

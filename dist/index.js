@@ -58,7 +58,6 @@ exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (project === null || project === void 0 ? void 0 : project.ignore) {
         files = files.filter((file) => !project.ignore.some((ignore) => file.path.includes(ignore)));
     }
-    // console.log(project);
     if ((project === null || project === void 0 ? void 0 : project.logo) && (project === null || project === void 0 ? void 0 : project.logo.includes(".svg"))) {
         const logoData = yield files_1.getFileData({
             name: "",
@@ -154,7 +153,6 @@ exports.build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
             project: payload.project,
             media: payload.media,
         };
-        console.log(data);
         const html = yield files_1.buildHtml(file, data);
         const fileName = files_1.makePath(file.path);
         yield helpers_1.createDir(path_1.join(payload.settings.output, fileName.split("/").slice(0, -1).join("")));
