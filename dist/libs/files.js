@@ -63,7 +63,8 @@ exports.getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () 
     const files = [];
     yield helpers_1.asyncForEach(fileTree, (file) => __awaiter(void 0, void 0, void 0, function* () {
         const data = yield exports.getFileData(file);
-        files.push(Object.assign(Object.assign({}, file), { data }));
+        if (file.name.indexOf("_") !== 0)
+            files.push(Object.assign(Object.assign({}, file), { data }));
     }));
     return files;
 });

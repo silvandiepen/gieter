@@ -51,8 +51,11 @@ exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         // Compile file to html
         const html = yield markdown_1.toHtml(file.data).then((r) => r);
         files[index] = Object.assign(Object.assign({}, file), { html: html });
-        // Get Project Config
-        project = files_1.getProjectConfig(html.meta);
+        const projectMeta = files_1.getProjectConfig(html.meta);
+        Object.keys(projectMeta).forEach((key) => {
+            if (!project[key])
+                project[key] = projectMeta[key];
+        });
     }));
     // Filter files
     if (project === null || project === void 0 ? void 0 : project.ignore) {

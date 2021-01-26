@@ -1,5 +1,5 @@
 import { extname, resolve, basename, join } from "path";
-import { File, buildHtmlArgs, Project } from "../types";
+import { File, buildHtmlArgs, Project, Meta } from "../types";
 import { asyncForEach } from "./helpers";
 import pug from "pug";
 import { format, compareAsc } from "date-fns";
@@ -61,11 +61,13 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
 
   await asyncForEach(fileTree, async (file: File) => {
     const data = await getFileData(file);
-    files.push({
-      ...file,
-      data,
-    });
+    if (file.name.indexOf("_") !== 0)
+      files.push({
+        ...file,
+        data,
+      });
   });
+
   return files;
 };
 
@@ -136,7 +138,7 @@ export const download = async (
   });
 };
 
-export const getProjectConfig = (meta) => {
+export const getProjectConfig = (meta: Meta) => {
   let project: Project = {};
   // Merge configs
   Object.keys(meta).forEach((item) => {

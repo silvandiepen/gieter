@@ -5,7 +5,11 @@ html(lang="en")
     if meta.date
       meta(name="updated",content=formatDate(meta.date,'yy-MM-dd'))
 
-    if meta.title
+    if meta.title && project.title
+      title=`${meta.title} | ${project.title}`
+    else if project.title
+      title=project.title
+    else if meta.title
       title=meta.title
     else 
       title=title

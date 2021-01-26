@@ -1,4 +1,4 @@
-import { File, buildHtmlArgs, Project } from "../types";
+import { File, buildHtmlArgs, Project, Meta } from "../types";
 export declare const getFileTree: (dir: string, filter?: string) => Promise<File[]>;
 export declare const getFileData: (file: File) => Promise<string>;
 export declare const getFiles: (dir: string, ext: string) => Promise<File[]>;
@@ -7,4 +7,4 @@ export declare const buildHtml: (file: File, args: buildHtmlArgs) => Promise<str
 export declare const makePath: (path: string) => string;
 export declare const createFolder: (folder: string) => Promise<void>;
 export declare const download: (url: string, destination: string) => Promise<void>;
-export declare const getProjectConfig: (meta: any) => Project;
+export declare const getProjectConfig: (meta: Meta) => Project;

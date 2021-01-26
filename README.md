@@ -1,7 +1,8 @@
 ---
 title: Home
 hide: true
-projectTitle: /media/logo.svg
+projectTitle: media/logo.svg
+projectStyle: media/custom.css
 ---
 
 # Open letter

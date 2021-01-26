@@ -3,6 +3,7 @@ date: 2-12-2020
 title: KitchenSink
 projectTitle: Open Letter
 projectLogo: media/logo.svg
+projectStyle: media/custom.css
 ---
 
 # Header 123
@@ -135,6 +136,14 @@ This is [an example](http://example.com "Example") link.
 [This link](http://example.com) has no title attr.
 
 This is [an example] [id] reference-style link.
+
+[email](mailto:my@email.com)
+
+my@email.com
+
+[phonenumber](tel:+1234567890)
+
++1234567890
 
 [id]: http://example.com "Optional Title"
 

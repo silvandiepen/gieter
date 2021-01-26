@@ -35,8 +35,11 @@ export const files = async (payload: Payload): Promise<Payload> => {
     // Compile file to html
     const html = await toHtml(file.data).then((r) => r);
     files[index] = { ...file, html: html };
-    // Get Project Config
-    project = getProjectConfig(html.meta);
+
+    const projectMeta = getProjectConfig(html.meta);
+    Object.keys(projectMeta).forEach((key) => {
+      if (!project[key]) project[key] = projectMeta[key];
+    });
   });
 
   // Filter files
