@@ -117,6 +117,10 @@ export const styles = async (payload: Payload): Promise<Payload> => {
 };
 
 export const menu = async (payload: Payload): Promise<Payload> => {
+  payload.files.forEach((file) => {
+    console.log(file.html.meta);
+  });
+
   let menu = payload.files
     .map((file) => ({
       name: file.html?.meta?.title || file.name,
@@ -124,6 +128,8 @@ export const menu = async (payload: Payload): Promise<Payload> => {
       active: !!!file.html.meta.hide,
     }))
     .filter((item) => item.active);
+
+  console.log(menu);
   log.BLOCK_MID("Navigation");
 
   let menuItems = {};

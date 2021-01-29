@@ -118,6 +118,9 @@ exports.styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { style });
 });
 exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    payload.files.forEach((file) => {
+        console.log(file.html.meta);
+    });
     let menu = payload.files
         .map((file) => {
         var _a, _b;
@@ -128,6 +131,7 @@ exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         });
     })
         .filter((item) => item.active);
+    console.log(menu);
     log.BLOCK_MID("Navigation");
     let menuItems = {};
     if (menu.length > 1)
