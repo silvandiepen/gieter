@@ -5,9 +5,11 @@
   "main": "dist/index.js",
   "bin": "dist/index.js",
   "scripts": {
-    "test": "rimraf public && node dist/index.js",
+    "test:run": "rimraf public && node dist/index.js",
     "serve": "npx serve public",
-    "build": "tsc"
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -25,15 +27,16 @@
   },
   "homepage": "https://github.com/silvandiepen/open-letter#readme",
   "devDependencies": {
+    "@types/jest": "^26.0.20",
     "@types/node": "^14.14.7",
     "@types/svgo": "^1.3.3",
     "concurrently": "^5.3.0",
     "nodemon": "^2.0.6",
+    "ts-jest": "^26.5.0",
     "typescript": "^4.0.5",
     "watch": "^1.0.2"
   },
   "dependencies": {
-    "@types/jest": "^26.0.19",
     "cli-block": "^1.2.3",
     "date-fns": "^2.16.1",
     "express": "^4.17.1",
@@ -44,6 +47,7 @@
     "markdown-it-emoji": "^2.0.0",
     "markdown-it-highlightjs": "^3.3.0",
     "markdown-it-prism": "^2.1.3",
+    "markdown-it-task-lists": "^2.1.1",
     "mv": "^2.1.1",
     "node-fetch": "^2.6.1",
     "pug": "^3.0.0",

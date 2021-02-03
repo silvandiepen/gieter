@@ -1,14 +1,15 @@
 import { extname, resolve, basename, join } from "path";
-import { File, buildHtmlArgs, Project, Meta } from "../types";
-import { asyncForEach } from "./helpers";
-import pug from "pug";
-import { format, compareAsc } from "date-fns";
-
 import fetch from "node-fetch";
 import https from "https";
 import { dirname } from "path";
-import { createWriteStream } from "fs";
+import { createWriteStream, statSync } from "fs";
 const { readdir, readFile, mkdir } = require("fs").promises;
+import pug from "pug";
+import { format } from "date-fns";
+
+import { File, buildHtmlArgs, Project, Meta } from "../types";
+import { asyncForEach, removeTitle } from "./helpers";
+
 /*
 	::getFileTree
 	Get all files and folders from the input
@@ -26,17 +27,28 @@ export const getFileTree = async (
 
   const files = await Promise.all(
     direntGroup.map(async (dirent: any) => {
-      const res = resolve(dir, dirent.name);
-      const ext = extname(res);
+      const result = resolve(dir, dirent.name);
+      const extension = extname(result);
+      const fileName = basename(result).replace(extension, "");
+      const relativePath = result.replace(process.cwd(), "");
 
-      return dirent.isDirectory()
-        ? getFileTree(res)
-        : {
-            name: basename(res).replace(ext, ""),
-            relativePath: res.replace(process.cwd(), ""),
-            path: res,
-            ext: ext,
-          };
+      const name =
+        fileName == "index"
+          ? relativePath.split("/")[relativePath.split("/").length - 2]
+          : fileName;
+
+      if (dirent.isDirectory()) return getFileTree(result);
+      else {
+        const { birthtime } = statSync(result);
+        return {
+          fileName,
+          name,
+          relativePath,
+          created: birthtime,
+          path: result,
+          ext: extension,
+        };
+      }
     })
   );
   return Array.prototype
@@ -56,24 +68,21 @@ export const getFileData = async (file: File): Promise<string> => {
 
 export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
   const fileTree = await getFileTree(dir, ext);
-
   const files = [];
 
   await asyncForEach(fileTree, async (file: File) => {
     const data = await getFileData(file);
-    if (file.name.indexOf("_") !== 0)
+    if (file.fileName.indexOf("_") !== 0)
       files.push({
         ...file,
         data,
+        parent: file.relativePath.split("/")[
+          file.relativePath.split("/").length - 2
+        ],
       });
   });
 
   return files;
-};
-
-export const fileTitle = (file: File) => {
-  const matches = /<h1>(.+?)<\/h1>/gi.exec(file.html.document);
-  return matches && matches[1] ? matches[1] : file.name;
 };
 
 export const buildHtml = async (
@@ -82,11 +91,14 @@ export const buildHtml = async (
 ): Promise<string> => {
   const options = {
     ...args,
-    title: file.html.meta?.title ? file.html.meta.title : fileTitle(file),
-    content: file.html.document,
-    meta: file.html.meta,
+    name: file.name,
+    title: file.title,
+    content: file.html,
+    meta: file.meta,
     pretty: true,
+    children: file.children,
     formatDate: format,
+    removeTitle: removeTitle,
   };
 
   const html = pug.renderFile(
@@ -97,7 +109,7 @@ export const buildHtml = async (
   return html;
 };
 
-export const makePath = (path: string): string =>
+export const makeLink = (path: string): string =>
   path
     .replace(process.cwd(), "")
     .replace("readme", "index")

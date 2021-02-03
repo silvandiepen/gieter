@@ -2,12 +2,12 @@
 "use strict";
 
 import { toHtml } from "./libs/markdown";
-import { asyncForEach, createDir, hello } from "./libs/helpers";
+import { asyncForEach, createDir, hello, fileTitle } from "./libs/helpers";
 import {
   getFiles,
   getFileTree,
   buildHtml,
-  makePath,
+  makeLink,
   download,
   getProjectConfig,
   getFileData,
@@ -23,34 +23,43 @@ import { join } from "path";
 import * as log from "cli-block";
 
 /*
-
-  Files
-
-*/
+ * Files
+ */
 export const files = async (payload: Payload): Promise<Payload> => {
   let files = await getFiles(process.cwd(), ".md");
   let project: Project = {};
 
   await asyncForEach(files, async (file: File, index: number) => {
     // Compile file to html
-    const html = await toHtml(file.data).then((r) => r);
-    files[index] = { ...file, html: html };
+    const rendered = await toHtml(file.data).then((r) => r);
+    files[index] = { ...file, html: rendered.document, meta: rendered.meta };
 
-    const projectMeta = getProjectConfig(html.meta);
+    const projectMeta = getProjectConfig(rendered.meta);
     Object.keys(projectMeta).forEach((key) => {
       if (!project[key]) project[key] = projectMeta[key];
     });
   });
 
+  // Inherit Parent Metadata
+  await asyncForEach(files, async (file: File, index: number) => {
+    const parentName =
+      file.parent && file.name !== file.parent ? file.parent : "";
+    const parent = files.find((file) => file.name === parentName);
+
+    files[index].title = file.meta?.title ? file.meta.title : fileTitle(file);
+  });
+
   // Filter files
-  if (project?.ignore) {
+  if (project?.ignore)
     files = files.filter(
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
-  }
+
   if (project?.logo && project?.logo.includes(".svg")) {
     const logoData = await getFileData({
       name: "",
+      fileName: "",
+      created: null,
       path: join(process.cwd(), project.logo),
       relativePath: project.logo,
     });
@@ -71,10 +80,8 @@ export const files = async (payload: Payload): Promise<Payload> => {
 };
 
 /*
-
-  Settings
-
-*/
+ *  Settings
+ */
 export const settings = async (payload: Payload): Promise<Payload> => {
   const settings: Settings = {
     output: join(process.cwd(), "public"),
@@ -84,10 +91,8 @@ export const settings = async (payload: Payload): Promise<Payload> => {
 };
 
 /*
-
-  Styles
-
-*/
+ * Styles
+ */
 export const styles = async (payload: Payload): Promise<Payload> => {
   // Download the style
   let style: Style = {};
@@ -117,25 +122,25 @@ export const styles = async (payload: Payload): Promise<Payload> => {
 };
 
 export const menu = async (payload: Payload): Promise<Payload> => {
-  payload.files.forEach((file) => {
-    console.log(file.html.meta);
-  });
-
   let menu = payload.files
-    .map((file) => ({
-      name: file.html?.meta?.title || file.name,
-      path: makePath(file.path),
-      active: !!!file.html.meta.hide,
-    }))
+    .map((file) => {
+      let active = file.meta.hide !== "true" || file.meta.hide;
+
+      if (file.parent !== file.name) active = false;
+      return {
+        name: file.title,
+        link: makeLink(file.path),
+        active,
+      };
+    })
     .filter((item) => item.active);
 
-  console.log(menu);
   log.BLOCK_MID("Navigation");
 
   let menuItems = {};
   if (menu.length > 1)
     menu.forEach((item) => {
-      menuItems[item.name] = item.path;
+      menuItems[item.name] = item.link;
     });
 
   if (menu.length < 2) {
@@ -145,11 +150,42 @@ export const menu = async (payload: Payload): Promise<Payload> => {
 
   return { ...payload, menu };
 };
+
 /*
+ *  Archives
+ */
 
-  Build
+export const archives = async (payload: Payload): Promise<Payload> => {
+  payload.files = payload.files
 
-*/
+    // Map all Archive parents and get their children
+    .map((file) => {
+      let children = [];
+      if (file.parent == file.name) {
+        children = payload.files
+          .filter(
+            (item) => item.parent == file.name && item.parent !== item.name
+          )
+
+          // //  Enrich each child with meta information and a link
+          .map((item) => ({
+            ...item,
+            meta: { ...item.meta, hide: true },
+            link: makeLink(item.path),
+          }));
+      }
+      return {
+        ...file,
+        children,
+      };
+    });
+
+  return payload;
+};
+
+/*
+ *  Build
+ */
 
 export const build = async (payload: Payload): Promise<Payload> => {
   log.BLOCK_MID("Pages");
@@ -162,7 +198,7 @@ export const build = async (payload: Payload): Promise<Payload> => {
     };
 
     const html = await buildHtml(file, data);
-    const fileName = makePath(file.path);
+    const fileName = makeLink(file.path);
 
     await createDir(
       join(payload.settings.output, fileName.split("/").slice(0, -1).join(""))
@@ -210,6 +246,7 @@ hello()
   .then(files)
   .then(styles)
   .then(media)
+  .then(archives)
   .then(menu)
   .then(build)
   .then(() => {

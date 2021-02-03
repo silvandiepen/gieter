@@ -23,18 +23,26 @@ export interface Payload {
     settings?: Settings;
     project?: Project;
     menu?: MenuItem[];
+    archives?: File[];
 }
 export interface File {
     name: string;
+    fileName: string;
     path: string;
-    relativePath: string;
+    created: any;
+    title?: string;
+    relativePath?: string;
+    parent?: string;
+    children?: File[];
     ext?: string;
     data?: string;
-    html?: MarkdownData;
+    html?: string;
+    meta?: Meta;
+    link?: string;
 }
 export interface MenuItem {
     name: string;
-    path: string;
+    link: string;
     active: boolean;
 }
 export interface Meta {
@@ -49,4 +57,5 @@ export interface buildHtmlArgs {
     style: Style;
     project: Project;
     media: File[];
+    archives?: File[];
 }

@@ -43,30 +43,54 @@ html(lang="en")
         else if project.logo
           a.logo(href="/")
             img(src=project.logo)
-        else if media
         else if project.title
           a.logo(href="/")=project.title
+
       if menu.length > 0
         nav.navigation.center
           ul.navigation__list
             each item in menu
               li.navigation__item
-                a.navigation__link(href= item.path)
+                a.navigation__link(href= item.link)
                   span.navigation__text= item.name
 
 
     main.content
       section.section
         div.container
-          | !{content}
+          h1=title
+          if meta.image
+            figure
+              img(src=meta.image)
+          | !{removeTitle(content)}           
 
+      if children.length
+        section.section.archive(class=`archive--${meta.type}`)
+          div.container
+            ul.archive__list
+              each item in children
+                li.archive__item
+                  if item.meta.image
+                    figure.archive__image
+                      img(src=item.meta.image)
+                  a.archive__link(href= item.link)
+                    span.archive__date
+                      span.archive__day= formatDate(item.created, 'dd')
+                      span.archive__month= formatDate(item.created, 'MM')
+                      span.archive__year= formatDate(item.created, 'yyyy')
+                    span.archive__text= item.title
+                  if item.meta.tags
+                    ul.archive__tags.tag__list  
+                      each tag in item.meta.tags
+                        li.tag__item
+                          span.tag__text= tag
     footer.footer 
       if menu 
         nav.navigation.center
           ul.navigation__list
             each item in menu
               li.navigation__item
-                a.navigation__link(href= item.path)
+                a.navigation__link(href= item.link)
                   span.navigation__text= item.name
 
 

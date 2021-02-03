@@ -29,7 +29,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.media = exports.build = exports.menu = exports.styles = exports.settings = exports.files = void 0;
+exports.media = exports.build = exports.archives = exports.menu = exports.styles = exports.settings = exports.files = void 0;
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
@@ -40,30 +40,36 @@ const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
 /*
-
-  Files
-
-*/
+ * Files
+ */
 exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let files = yield files_1.getFiles(process.cwd(), ".md");
     let project = {};
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         // Compile file to html
-        const html = yield markdown_1.toHtml(file.data).then((r) => r);
-        files[index] = Object.assign(Object.assign({}, file), { html: html });
-        const projectMeta = files_1.getProjectConfig(html.meta);
+        const rendered = yield markdown_1.toHtml(file.data).then((r) => r);
+        files[index] = Object.assign(Object.assign({}, file), { html: rendered.document, meta: rendered.meta });
+        const projectMeta = files_1.getProjectConfig(rendered.meta);
         Object.keys(projectMeta).forEach((key) => {
             if (!project[key])
                 project[key] = projectMeta[key];
         });
     }));
+    // Inherit Parent Metadata
+    yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        const parentName = file.parent && file.name !== file.parent ? file.parent : "";
+        const parent = files.find((file) => file.name === parentName);
+        files[index].title = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.meta.title : helpers_1.fileTitle(file);
+    }));
     // Filter files
-    if (project === null || project === void 0 ? void 0 : project.ignore) {
+    if (project === null || project === void 0 ? void 0 : project.ignore)
         files = files.filter((file) => !project.ignore.some((ignore) => file.path.includes(ignore)));
-    }
     if ((project === null || project === void 0 ? void 0 : project.logo) && (project === null || project === void 0 ? void 0 : project.logo.includes(".svg"))) {
         const logoData = yield files_1.getFileData({
             name: "",
+            fileName: "",
+            created: null,
             path: path_1.join(process.cwd(), project.logo),
             relativePath: project.logo,
         });
@@ -82,10 +88,8 @@ exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { files: files, project });
 });
 /*
-
-  Settings
-
-*/
+ *  Settings
+ */
 exports.settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const settings = {
         output: path_1.join(process.cwd(), "public"),
@@ -93,10 +97,8 @@ exports.settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { settings });
 });
 /*
-
-  Styles
-
-*/
+ * Styles
+ */
 exports.styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Download the style
     let style = {};
@@ -118,25 +120,23 @@ exports.styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { style });
 });
 exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    payload.files.forEach((file) => {
-        console.log(file.html.meta);
-    });
     let menu = payload.files
         .map((file) => {
-        var _a, _b;
-        return ({
-            name: ((_b = (_a = file.html) === null || _a === void 0 ? void 0 : _a.meta) === null || _b === void 0 ? void 0 : _b.title) || file.name,
-            path: files_1.makePath(file.path),
-            active: !!!file.html.meta.hide,
-        });
+        let active = file.meta.hide !== "true" || file.meta.hide;
+        if (file.parent !== file.name)
+            active = false;
+        return {
+            name: file.title,
+            link: files_1.makeLink(file.path),
+            active,
+        };
     })
         .filter((item) => item.active);
-    console.log(menu);
     log.BLOCK_MID("Navigation");
     let menuItems = {};
     if (menu.length > 1)
         menu.forEach((item) => {
-            menuItems[item.name] = item.path;
+            menuItems[item.name] = item.link;
         });
     if (menu.length < 2) {
         yield log.BLOCK_LINE("No menu");
@@ -147,10 +147,26 @@ exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { menu });
 });
 /*
-
-  Build
-
-*/
+ *  Archives
+ */
+exports.archives = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    payload.files = payload.files
+        // Map all Archive parents and get their children
+        .map((file) => {
+        let children = [];
+        if (file.parent == file.name) {
+            children = payload.files
+                .filter((item) => item.parent == file.name && item.parent !== item.name)
+                // //  Enrich each child with meta information and a link
+                .map((item) => (Object.assign(Object.assign({}, item), { meta: Object.assign(Object.assign({}, item.meta), { hide: true }), link: files_1.makeLink(item.path) })));
+        }
+        return Object.assign(Object.assign({}, file), { children });
+    });
+    return payload;
+});
+/*
+ *  Build
+ */
 exports.build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     log.BLOCK_MID("Pages");
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () {
@@ -161,7 +177,7 @@ exports.build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
             media: payload.media,
         };
         const html = yield files_1.buildHtml(file, data);
-        const fileName = files_1.makePath(file.path);
+        const fileName = files_1.makeLink(file.path);
         yield helpers_1.createDir(path_1.join(payload.settings.output, fileName.split("/").slice(0, -1).join("")));
         try {
             yield writeFile(path_1.join(payload.settings.output, fileName), html);
@@ -197,6 +213,7 @@ helpers_1.hello()
     .then(exports.files)
     .then(exports.styles)
     .then(exports.media)
+    .then(exports.archives)
     .then(exports.menu)
     .then(exports.build)
     .then(() => {

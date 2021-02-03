@@ -1,6 +1,8 @@
 import { existsSync } from "fs";
 const { mkdir } = require("fs").promises;
 
+import { File } from "../types";
+
 export const asyncForEach = async (array: any, callback: any) => {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
@@ -34,6 +36,19 @@ export const createDir = async (dir: string): Promise<void> => {
     console.log(error);
   }
 };
+
 export const hello = async (args: any = {}) => {
   return args;
 };
+
+export const removeTitle = (input: string): string =>
+  input.replace(/\<h1(.*)\>(.*)\<\/h1\>/gi, "");
+
+export const getTitle = (input: string): string => {
+  const matches = /<h1(.*?)>(.+?)<\/h1>/gi.exec(input);
+  if (!matches) return "";
+  return matches[matches.length - 1];
+};
+
+export const fileTitle = (file: File): string =>
+  getTitle(file.html) || file.name;

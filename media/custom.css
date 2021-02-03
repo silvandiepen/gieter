@@ -1,0 +1,6 @@
+.content a[href*="tel"] {
+  border: 1px solid red;
+}
+.content a[href*="mailto"] {
+  border: 1px solid blue;
+}
