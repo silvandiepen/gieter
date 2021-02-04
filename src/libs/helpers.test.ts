@@ -24,6 +24,13 @@ describe("Remove Title", () => {
 
     expect(result).toStrictEqual(output);
   });
+  it("Shouldn't break when the string is empty", () => {
+    const input = ``;
+    const output = ``;
+    const result = removeTitle(input);
+
+    expect(result).toStrictEqual(output);
+  });
 });
 describe("Get Title", () => {
   it("Should return an empty string", () => {

@@ -70,10 +70,10 @@ html(lang="en")
             ul.archive__list
               each item in children
                 li.archive__item
-                  if item.meta.image
-                    figure.archive__image
-                      img(src=item.meta.image)
                   a.archive__link(href= item.link)
+                    if item.meta.image
+                      figure.archive__image
+                        img(src=item.meta.image)
                     span.archive__date
                       span.archive__day= formatDate(item.created, 'dd')
                       span.archive__month= formatDate(item.created, 'MM')
@@ -83,7 +83,8 @@ html(lang="en")
                     ul.archive__tags.tag__list  
                       each tag in item.meta.tags
                         li.tag__item
-                          span.tag__text= tag
+                          a.tag__link(href=`/tag/${tag}`)
+                            span.tag__text= tag
     footer.footer 
       if menu 
         nav.navigation.center

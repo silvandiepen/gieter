@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 "use strict";
 
+const { readFile, writeFile } = require("fs").promises;
+const { existsSync } = require("fs");
+import { copy } from "fs-extra";
+import { join } from "path";
+import * as log from "cli-block";
+
 import { toHtml } from "./libs/markdown";
 import { asyncForEach, createDir, hello, fileTitle } from "./libs/helpers";
 import {
   getFiles,
   getFileTree,
-  buildHtml,
   makeLink,
   download,
   getProjectConfig,
   getFileData,
 } from "./libs/files";
 import { cleanupSvg } from "./libs/svg";
-import { File, Payload, Settings, Project, Style } from "./types";
-
-const { readFile, writeFile } = require("fs").promises;
-const { existsSync } = require("fs");
-import { copy } from "fs-extra";
-
-import { join } from "path";
-import * as log from "cli-block";
+import { File, Payload, Settings, Project, Style, Tag } from "./types";
+import { createPage } from "./libs/page";
 
 /*
  * Files
@@ -182,33 +181,60 @@ export const archives = async (payload: Payload): Promise<Payload> => {
 
   return payload;
 };
+/*
+ *  Tags
+ */
+
+export const tags = async (payload: Payload): Promise<Payload> => {
+  const tags: Tag[] = [];
+
+  await asyncForEach(payload.files, (file: File) => {
+    if (file.meta.tags) {
+      for (let i = 0; i < file.meta.tags.length; i++) {
+        let parent = payload.files.find((f) => f.name == file.parent);
+        let tag = {
+          name: file.meta.tags[i],
+          parent: file.parent,
+          type: parent.meta?.type,
+        };
+        if (!tags.includes(tag)) tags.push(tag);
+      }
+    }
+  });
+  return { ...payload, tags };
+};
 
 /*
  *  Build
  */
 
-export const build = async (payload: Payload): Promise<Payload> => {
+export const contentPages = async (payload: Payload): Promise<Payload> => {
   log.BLOCK_MID("Pages");
-  await asyncForEach(payload.files, async (file: File) => {
-    const data = {
-      menu: payload.menu,
-      style: payload.style,
-      project: payload.project,
-      media: payload.media,
+  await asyncForEach(
+    payload.files,
+    async (file: File) => await createPage(payload, file)
+  );
+  return { ...payload };
+};
+
+export const tagPages = async (payload: Payload): Promise<Payload> => {
+  log.BLOCK_MID("Tag pages");
+
+  await asyncForEach(payload.tags, async (tag: Tag) => {
+    const file: File = {
+      name: tag.name,
+      title: `#${tag.name}`,
+      path: `tag/${tag.name}/index.html`,
+      created: new Date(),
+      fileName: "index.html",
+      meta: { type: tag.type },
+      children: payload.files.filter(
+        (file) =>
+          file.meta?.tags?.includes(tag.name) && file.parent == tag.parent
+      ),
+      html: `${tag.parent}`,
     };
-
-    const html = await buildHtml(file, data);
-    const fileName = makeLink(file.path);
-
-    await createDir(
-      join(payload.settings.output, fileName.split("/").slice(0, -1).join(""))
-    );
-    try {
-      await writeFile(join(payload.settings.output, fileName), html);
-      log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
-    } catch (err) {
-      throw Error(err);
-    }
+    await createPage(payload, file);
   });
   return { ...payload };
 };
@@ -246,9 +272,11 @@ hello()
   .then(files)
   .then(styles)
   .then(media)
+  .then(tags)
   .then(archives)
   .then(menu)
-  .then(build)
+  .then(contentPages)
+  .then(tagPages)
   .then(() => {
     log.BLOCK_END();
   });

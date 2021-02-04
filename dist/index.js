@@ -29,16 +29,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.media = exports.build = exports.archives = exports.menu = exports.styles = exports.settings = exports.files = void 0;
-const markdown_1 = require("./libs/markdown");
-const helpers_1 = require("./libs/helpers");
-const files_1 = require("./libs/files");
-const svg_1 = require("./libs/svg");
+exports.media = exports.tagPages = exports.contentPages = exports.tags = exports.archives = exports.menu = exports.styles = exports.settings = exports.files = void 0;
 const { readFile, writeFile } = require("fs").promises;
 const { existsSync } = require("fs");
 const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
+const markdown_1 = require("./libs/markdown");
+const helpers_1 = require("./libs/helpers");
+const files_1 = require("./libs/files");
+const svg_1 = require("./libs/svg");
+const page_1 = require("./libs/page");
 /*
  * Files
  */
@@ -165,27 +166,49 @@ exports.archives = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return payload;
 });
 /*
+ *  Tags
+ */
+exports.tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const tags = [];
+    yield helpers_1.asyncForEach(payload.files, (file) => {
+        var _a;
+        if (file.meta.tags) {
+            for (let i = 0; i < file.meta.tags.length; i++) {
+                let parent = payload.files.find((f) => f.name == file.parent);
+                let tag = {
+                    name: file.meta.tags[i],
+                    parent: file.parent,
+                    type: (_a = parent.meta) === null || _a === void 0 ? void 0 : _a.type,
+                };
+                if (!tags.includes(tag))
+                    tags.push(tag);
+            }
+        }
+    });
+    return Object.assign(Object.assign({}, payload), { tags });
+});
+/*
  *  Build
  */
-exports.build = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     log.BLOCK_MID("Pages");
-    yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () {
-        const data = {
-            menu: payload.menu,
-            style: payload.style,
-            project: payload.project,
-            media: payload.media,
+    yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
+    return Object.assign({}, payload);
+});
+exports.tagPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    log.BLOCK_MID("Tag pages");
+    yield helpers_1.asyncForEach(payload.tags, (tag) => __awaiter(void 0, void 0, void 0, function* () {
+        const file = {
+            name: tag.name,
+            title: `#${tag.name}`,
+            path: `tag/${tag.name}/index.html`,
+            created: new Date(),
+            fileName: "index.html",
+            meta: { type: tag.type },
+            children: payload.files.filter((file) => { var _a, _b; return ((_b = (_a = file.meta) === null || _a === void 0 ? void 0 : _a.tags) === null || _b === void 0 ? void 0 : _b.includes(tag.name)) && file.parent == tag.parent; }),
+            html: `${tag.parent}`,
         };
-        const html = yield files_1.buildHtml(file, data);
-        const fileName = files_1.makeLink(file.path);
-        yield helpers_1.createDir(path_1.join(payload.settings.output, fileName.split("/").slice(0, -1).join("")));
-        try {
-            yield writeFile(path_1.join(payload.settings.output, fileName), html);
-            log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
-        }
-        catch (err) {
-            throw Error(err);
-        }
+        yield page_1.createPage(payload, file);
     }));
     return Object.assign({}, payload);
 });
@@ -213,9 +236,11 @@ helpers_1.hello()
     .then(exports.files)
     .then(exports.styles)
     .then(exports.media)
+    .then(exports.tags)
     .then(exports.archives)
     .then(exports.menu)
-    .then(exports.build)
+    .then(exports.contentPages)
+    .then(exports.tagPages)
     .then(() => {
     log.BLOCK_END();
 });

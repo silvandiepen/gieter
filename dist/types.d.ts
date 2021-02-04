@@ -24,6 +24,12 @@ export interface Payload {
     project?: Project;
     menu?: MenuItem[];
     archives?: File[];
+    tags?: Tag[];
+}
+export interface Tag {
+    name: string;
+    parent: string;
+    type: string;
 }
 export interface File {
     name: string;
