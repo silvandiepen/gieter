@@ -1,9 +1,11 @@
 {
   "name": "open-letter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Create an open letter html from Markdown",
   "main": "dist/index.js",
-  "bin": "dist/index.js",
+  "bin": {
+    "open-letter": "dist/index.js"
+  },
   "scripts": {
     "test:run": "rimraf public && node dist/index.js",
     "serve": "npx serve public",
