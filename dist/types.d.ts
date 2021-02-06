@@ -50,6 +50,8 @@ export interface MenuItem {
     name: string;
     link: string;
     active: boolean;
+    current?: boolean;
+    isParent?: boolean;
 }
 export interface Meta {
     [x: string]: string | string[] | any;

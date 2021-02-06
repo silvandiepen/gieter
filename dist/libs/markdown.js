@@ -17,7 +17,7 @@ const MarkdownIt = require("markdown-it");
 const markdown_it_emoji_1 = __importDefault(require("markdown-it-emoji"));
 const markdown_it_prism_1 = __importDefault(require("markdown-it-prism"));
 const markdown_it_anchor_1 = __importDefault(require("markdown-it-anchor"));
-const markdown_it_task_lists_1 = __importDefault(require("markdown-it-task-lists"));
+const markdown_it_tasks_1 = __importDefault(require("markdown-it-tasks"));
 const markdown_meta_1 = require("./markdown-meta");
 const md = new MarkdownIt({
     html: true,
@@ -28,7 +28,7 @@ const md = new MarkdownIt({
 md.use(markdown_it_prism_1.default);
 md.use(markdown_it_emoji_1.default);
 md.use(markdown_it_anchor_1.default);
-md.use(markdown_it_task_lists_1.default, { enabled: true, label: true, labelAfter: true });
+md.use(markdown_it_tasks_1.default, { enabled: true, label: true, labelAfter: true });
 exports.toHtml = (input) => __awaiter(void 0, void 0, void 0, function* () {
     const metaData = yield markdown_meta_1.extractMeta(input);
     const strippedData = yield markdown_meta_1.removeMeta(input);

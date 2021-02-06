@@ -197,7 +197,12 @@ export const tags = async (payload: Payload): Promise<Payload> => {
           parent: file.parent,
           type: parent.meta?.type,
         };
-        if (!tags.includes(tag)) tags.push(tag);
+        if (
+          !tags.some(
+            (item) => item.name === tag.name && item.parent === tag.parent
+          )
+        )
+          tags.push(tag);
       }
     }
   });
@@ -210,6 +215,13 @@ export const tags = async (payload: Payload): Promise<Payload> => {
 
 export const contentPages = async (payload: Payload): Promise<Payload> => {
   log.BLOCK_MID("Pages");
+
+  // Get Siblings
+
+  await asyncForEach(payload.files, async (file: File) => {});
+
+  // Create Content pages
+
   await asyncForEach(
     payload.files,
     async (file: File) => await createPage(payload, file)
@@ -224,9 +236,10 @@ export const tagPages = async (payload: Payload): Promise<Payload> => {
     const file: File = {
       name: tag.name,
       title: `#${tag.name}`,
-      path: `tag/${tag.name}/index.html`,
+      path: `tag/${tag.parent}/${tag.name}/index.html`,
       created: new Date(),
       fileName: "index.html",
+      parent: tag.parent,
       meta: { type: tag.type },
       children: payload.files.filter(
         (file) =>

@@ -46,7 +46,7 @@ exports.getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, fu
             const { birthtime } = fs_1.statSync(result);
             return {
                 fileName,
-                name,
+                name: name.toLowerCase(),
                 relativePath,
                 created: birthtime,
                 path: result,
@@ -83,12 +83,17 @@ exports.buildHtml = (file, args) => __awaiter(void 0, void 0, void 0, function* 
     const html = pug_1.default.renderFile(path_1.join(__dirname, "../../src/template.pug"), options);
     return html;
 });
-exports.makeLink = (path) => path
-    .replace(process.cwd(), "")
-    .replace("readme", "index")
-    .replace("README", "index")
-    .replace("Readme", "index")
-    .replace(".md", ".html");
+exports.makeLink = (path) => {
+    const uri = path
+        .replace(process.cwd(), "")
+        .toLowerCase()
+        .replace("readme", "index")
+        .replace(".md", ".html");
+    return uri.split("/")[uri.split("/").length - 1].replace(".html", "") !==
+        "index"
+        ? uri.replace(".html", "/index.html")
+        : uri;
+};
 exports.createFolder = (folder) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mkdir(folder, { recursive: true }, () => {

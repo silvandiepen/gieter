@@ -34,20 +34,31 @@ const path_1 = require("path");
 const log = __importStar(require("cli-block"));
 const files_1 = require("./files");
 const helpers_1 = require("./helpers");
+const simplifyUrl = (url) => url.replace("/index.html", "");
+const isActiveMenu = (link, current) => {
+    if (simplifyUrl(link) == simplifyUrl(current))
+        return true;
+    return false;
+};
+const isActiveMenuParent = (link, current) => {
+    if (simplifyUrl(current).includes(simplifyUrl(link)))
+        return true;
+    return false;
+};
 exports.createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    const currentLink = files_1.makeLink(file.path);
     const data = {
-        menu: payload.menu,
+        menu: payload.menu.map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) }))),
         style: payload.style,
         project: payload.project,
         media: payload.media,
-        tags: payload.tags,
+        tags: payload.tags.filter((tag) => tag.parent == file.parent),
     };
     const html = yield files_1.buildHtml(file, data);
-    const fileName = files_1.makeLink(file.path);
-    yield helpers_1.createDir(path_1.join(payload.settings.output, fileName.split("/").slice(0, -1).join("/")));
+    yield helpers_1.createDir(path_1.join(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")));
     try {
-        yield writeFile(path_1.join(payload.settings.output, fileName), html);
-        log.BLOCK_LINE_SUCCESS(`${file.name} created → ${fileName}`);
+        yield writeFile(path_1.join(payload.settings.output, currentLink), html);
+        log.BLOCK_LINE_SUCCESS(`${file.name} created → ${currentLink}`);
     }
     catch (err) {
         throw Error(err);

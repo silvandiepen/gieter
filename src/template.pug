@@ -25,7 +25,7 @@ html(lang="en")
        link(href=style.add, rel="stylesheet", type="text/css")
 
      
-  body
+  body(class= `page--${name}`)
     .toolbar
       button.color-mode(onClick="switchMode()") switch
 
@@ -49,8 +49,8 @@ html(lang="en")
       if menu.length > 0
         nav.navigation.center
           ul.navigation__list
-            each item in menu
-              li.navigation__item
+            each item in menu              
+              li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current? 'navigation__item--parent' : ''}`)
                 a.navigation__link(href= item.link)
                   span.navigation__text= item.name
 
@@ -71,8 +71,8 @@ html(lang="en")
               each item in children
                 li.archive__item
                   a.archive__link(href= item.link)
-                    if item.meta.image
-                      figure.archive__image
+                    figure.archive__image(class=`${item.meta.image ? '': 'archive__image--empty'}`)
+                      if item.meta.image
                         img(src=item.meta.image)
                     span.archive__date
                       span.archive__day= formatDate(item.created, 'dd')
@@ -83,14 +83,22 @@ html(lang="en")
                     ul.archive__tags.tag__list  
                       each tag in item.meta.tags
                         li.tag__item
-                          a.tag__link(href=`/tag/${tag}`)
+                          a.tag__link(href=`/tag/${meta.type}/${tag}`)
                             span.tag__text= tag
+      if tags.length
+        section.section.tags
+          ul.tag__list  
+            each tag in tags
+              li.tag__item
+                a.tag__link(href=`/tag/${tag.parent}/${tag.name}`)
+                  span.tag__text= tag.name
+      
     footer.footer 
       if menu 
         nav.navigation.center
           ul.navigation__list
             each item in menu
-              li.navigation__item
+              li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current? 'navigation__item--parent' : ''}`)
                 a.navigation__link(href= item.link)
                   span.navigation__text= item.name
 

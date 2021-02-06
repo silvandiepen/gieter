@@ -2,7 +2,7 @@ const MarkdownIt = require("markdown-it");
 import emoji from "markdown-it-emoji";
 import prism from "markdown-it-prism";
 import anchor from "markdown-it-anchor";
-import taskLists from "markdown-it-task-lists";
+import taskLists from "markdown-it-tasks";
 
 import { extractMeta, removeMeta } from "./markdown-meta";
 import { MarkdownData } from "../types";

@@ -180,7 +180,7 @@ exports.tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
                     parent: file.parent,
                     type: (_a = parent.meta) === null || _a === void 0 ? void 0 : _a.type,
                 };
-                if (!tags.includes(tag))
+                if (!tags.some((item) => item.name === tag.name && item.parent === tag.parent))
                     tags.push(tag);
             }
         }
@@ -192,6 +192,9 @@ exports.tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
  */
 exports.contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     log.BLOCK_MID("Pages");
+    // Get Siblings
+    yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { }));
+    // Create Content pages
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
     return Object.assign({}, payload);
 });
@@ -201,9 +204,10 @@ exports.tagPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         const file = {
             name: tag.name,
             title: `#${tag.name}`,
-            path: `tag/${tag.name}/index.html`,
+            path: `tag/${tag.parent}/${tag.name}/index.html`,
             created: new Date(),
             fileName: "index.html",
+            parent: tag.parent,
             meta: { type: tag.type },
             children: payload.files.filter((file) => { var _a, _b; return ((_b = (_a = file.meta) === null || _a === void 0 ? void 0 : _a.tags) === null || _b === void 0 ? void 0 : _b.includes(tag.name)) && file.parent == tag.parent; }),
             html: `${tag.parent}`,

@@ -42,7 +42,7 @@ export const getFileTree = async (
         const { birthtime } = statSync(result);
         return {
           fileName,
-          name,
+          name: name.toLowerCase(),
           relativePath,
           created: birthtime,
           path: result,
@@ -109,13 +109,18 @@ export const buildHtml = async (
   return html;
 };
 
-export const makeLink = (path: string): string =>
-  path
+export const makeLink = (path: string): string => {
+  const uri = path
     .replace(process.cwd(), "")
+    .toLowerCase()
     .replace("readme", "index")
-    .replace("README", "index")
-    .replace("Readme", "index")
     .replace(".md", ".html");
+
+  return uri.split("/")[uri.split("/").length - 1].replace(".html", "") !==
+    "index"
+    ? uri.replace(".html", "/index.html")
+    : uri;
+};
 
 export const createFolder = async (folder: string): Promise<void> => {
   try {
