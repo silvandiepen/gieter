@@ -41,7 +41,9 @@ const isActiveMenu = (link, current) => {
     return false;
 };
 const isActiveMenuParent = (link, current) => {
-    if (simplifyUrl(current).includes(simplifyUrl(link)))
+    if (simplifyUrl(current).includes(simplifyUrl(link)) &&
+        simplifyUrl(current) !== "" &&
+        simplifyUrl(link) !== "")
         return true;
     return false;
 };

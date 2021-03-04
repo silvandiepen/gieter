@@ -7,12 +7,19 @@ import { makeLink, buildHtml } from "./files";
 import { createDir } from "./helpers";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
+
 const isActiveMenu = (link: string, current: string): boolean => {
   if (simplifyUrl(link) == simplifyUrl(current)) return true;
   return false;
 };
+
 const isActiveMenuParent = (link: string, current: string): boolean => {
-  if (simplifyUrl(current).includes(simplifyUrl(link))) return true;
+  if (
+    simplifyUrl(current).includes(simplifyUrl(link)) &&
+    simplifyUrl(current) !== "" &&
+    simplifyUrl(link) !== ""
+  )
+    return true;
   return false;
 };
 
