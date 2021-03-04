@@ -128,7 +128,8 @@ const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let menu = payload.files
         .map((file) => {
         let active = file.meta.hide !== "true" || file.meta.hide;
-        // if (file.parent !== file.name) active = false;
+        if (file.parent !== "" && file.parent !== file.name)
+            active = false;
         return {
             name: file.title,
             link: files_1.makeLink(file.path),
