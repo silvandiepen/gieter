@@ -9,9 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeMeta = exports.extractMeta = void 0;
+exports.removeMeta = exports.extractMeta = exports.fixType = void 0;
 const helpers_1 = require("./helpers");
-exports.extractMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
+const fixType = (value) => {
+    if (!isNaN(value))
+        return parseInt(value, 10);
+    else
+        return value;
+};
+exports.fixType = fixType;
+const extractMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
     const startLine = helpers_1.nthIndex(input, "---", 0);
     const endLine = helpers_1.nthIndex(input, "---", 1);
     const meta = {};
@@ -23,16 +30,17 @@ exports.extractMeta = (input) => __awaiter(void 0, void 0, void 0, function* () 
             .map((v) => {
             if (v.indexOf(":") > -1) {
                 const valueArray = v.split(":");
+                valueArray[1] = valueArray.splice(1, valueArray.length).join(":");
                 // Get the key
                 const key = valueArray[0].trim().replace(" ", "_");
                 // Set the default string value;
                 let value = valueArray[1].trim();
-                // If the value is a number, convert to a number
-                if (!isNaN(value))
-                    value = parseInt(value, 10);
+                value = exports.fixType(value);
                 // If the value has commas, convert it to an array
-                if (typeof value === "string" && value.indexOf(",") > -1)
-                    value = value.split(",").map((val) => val.trim());
+                if (typeof value === "string" &&
+                    value.indexOf(",") > -1 &&
+                    value.indexOf("http") < 0)
+                    value = value.split(",").map((val) => exports.fixType(val.trim()));
                 // If they key has date in the name, auto convert to a date.
                 if (key.toLowerCase().indexOf("date") > -1)
                     value = new Date(value);
@@ -44,7 +52,8 @@ exports.extractMeta = (input) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return meta;
 });
-exports.removeMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
+exports.extractMeta = extractMeta;
+const removeMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
     const startLine = helpers_1.nthIndex(input, "---", 0);
     const endLine = helpers_1.nthIndex(input, "---", 1);
     if (endLine > -1 && startLine < 10)
@@ -52,4 +61,5 @@ exports.removeMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
     else
         return input.trim();
 });
+exports.removeMeta = removeMeta;
 //# sourceMappingURL=markdown-meta.js.map

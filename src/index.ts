@@ -20,6 +20,7 @@ import {
 import { cleanupSvg } from "./libs/svg";
 import { File, Payload, Settings, Project, Style, Tag } from "./types";
 import { createPage } from "./libs/page";
+const PackageJson = require("../package.json");
 
 /*
  * Files
@@ -279,7 +280,7 @@ export const media = async (payload: Payload): Promise<Payload> => {
 hello()
   .then(settings)
   .then((s) => {
-    log.BLOCK_START("Open Letter");
+    log.BLOCK_START(`Open Letter ${PackageJson.version}`);
     return s;
   })
   .then(files)

@@ -40,6 +40,7 @@ const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
 const svg_1 = require("./libs/svg");
 const page_1 = require("./libs/page");
+const PackageJson = require("../package.json");
 /*
  * Files
  */
@@ -242,7 +243,7 @@ exports.media = media;
 helpers_1.hello()
     .then(exports.settings)
     .then((s) => {
-    log.BLOCK_START("Open Letter");
+    log.BLOCK_START(`Open Letter ${PackageJson.version}`);
     return s;
 })
     .then(exports.files)
