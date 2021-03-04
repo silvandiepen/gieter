@@ -128,8 +128,17 @@ const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let menu = payload.files
         .map((file) => {
         let active = file.meta.hide !== "true" || file.meta.hide;
-        if (file.parent !== "" && file.parent !== file.name)
+        const relativePath = file.path.replace(process.cwd(), "");
+        const pathGroup = relativePath.split("/");
+        const depth = pathGroup.length - 2;
+        const isHome = pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
+            pathGroup[pathGroup.length - 1].toLowerCase().includes("index");
+        // Only items from the main depth sholud be in the menu
+        if (depth > 0)
             active = false;
+        // Index in first depth can also be in menu
+        if (depth === 1 && isHome)
+            active = true;
         return {
             name: file.title,
             link: files_1.makeLink(file.path),
