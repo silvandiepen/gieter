@@ -36,6 +36,7 @@ export interface File {
     fileName: string;
     path: string;
     created: any;
+    home?: boolean;
     title?: string;
     relativePath?: string;
     parent?: string;

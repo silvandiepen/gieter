@@ -57,6 +57,14 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
                 project[key] = projectMeta[key];
         });
     }));
+    // Define if the page is home
+    yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+        const relativePath = file.path.replace(process.cwd(), "");
+        const pathGroup = relativePath.split("/");
+        const isHome = pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
+            pathGroup[pathGroup.length - 1].toLowerCase().includes("index");
+        files[index].home = isHome;
+    }));
     // Inherit Parent Metadata
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
@@ -106,7 +114,10 @@ exports.settings = settings;
 const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Download the style
     let style = {};
-    yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
+    // await download(
+    //   "https://stil.style/default.css",
+    //   join(__dirname, "../dist/style.css")
+    // );
     const styleData = yield readFile(path_1.join(__dirname, "../dist/style.css")).then((res) => res.toString());
     if (payload.files.length > 1) {
         yield helpers_1.createDir(payload.settings.output);
@@ -131,13 +142,11 @@ const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         const relativePath = file.path.replace(process.cwd(), "");
         const pathGroup = relativePath.split("/");
         const depth = pathGroup.length - 2;
-        const isHome = pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
-            pathGroup[pathGroup.length - 1].toLowerCase().includes("index");
         // Only items from the main depth sholud be in the menu
         if (depth > 0)
             active = false;
         // Index in first depth can also be in menu
-        if (depth === 1 && isHome)
+        if (depth === 1 && file.home)
             active = true;
         return {
             name: file.title,
@@ -169,11 +178,23 @@ const archives = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         // Map all Archive parents and get their children
         .map((file) => {
         let children = [];
-        if (file.parent == file.name) {
+        if (file.home) {
             children = payload.files
-                .filter((item) => item.parent == file.name && item.parent !== item.name)
+                .filter((item) => { var _a; return item.parent == ((_a = file === null || file === void 0 ? void 0 : file.meta) === null || _a === void 0 ? void 0 : _a.type) && !item.home; })
                 // //  Enrich each child with meta information and a link
-                .map((item) => (Object.assign(Object.assign({}, item), { meta: Object.assign(Object.assign({}, item.meta), { hide: true }), link: files_1.makeLink(item.path) })));
+                .map((item) => {
+                var _a;
+                return ({
+                    // ...item,
+                    title: item.title,
+                    created: ((_a = item === null || item === void 0 ? void 0 : item.meta) === null || _a === void 0 ? void 0 : _a.date) || item.created,
+                    meta: Object.assign(Object.assign({}, item.meta), { hide: true }),
+                    link: files_1.makeLink(item.path),
+                });
+            })
+                .sort((a, b) => {
+                return b.created - a.created;
+            });
         }
         return Object.assign(Object.assign({}, file), { children });
     });
@@ -187,13 +208,13 @@ const tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const tags = [];
     yield helpers_1.asyncForEach(payload.files, (file) => {
         var _a;
-        if (file.meta.tags) {
+        if (file.meta && ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.tags)) {
             for (let i = 0; i < file.meta.tags.length; i++) {
                 let parent = payload.files.find((f) => f.name == file.parent);
                 let tag = {
                     name: file.meta.tags[i],
                     parent: file.parent,
-                    type: (_a = parent.meta) === null || _a === void 0 ? void 0 : _a.type,
+                    type: (parent === null || parent === void 0 ? void 0 : parent.meta.type) || "",
                 };
                 if (!tags.some((item) => item.name === tag.name && item.parent === tag.parent))
                     tags.push(tag);

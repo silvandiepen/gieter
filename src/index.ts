@@ -40,6 +40,19 @@ export const files = async (payload: Payload): Promise<Payload> => {
     });
   });
 
+  // Define if the page is home
+
+  await asyncForEach(files, async (file: File, index: number) => {
+    const relativePath = file.path.replace(process.cwd(), "");
+    const pathGroup = relativePath.split("/");
+
+    const isHome =
+      pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
+      pathGroup[pathGroup.length - 1].toLowerCase().includes("index");
+
+    files[index].home = isHome;
+  });
+
   // Inherit Parent Metadata
   await asyncForEach(files, async (file: File, index: number) => {
     const parentName =
@@ -97,10 +110,10 @@ export const styles = async (payload: Payload): Promise<Payload> => {
   // Download the style
   let style: Style = {};
 
-  await download(
-    "https://stil.style/default.css",
-    join(__dirname, "../dist/style.css")
-  );
+  // await download(
+  //   "https://stil.style/default.css",
+  //   join(__dirname, "../dist/style.css")
+  // );
 
   const styleData = await readFile(
     join(__dirname, "../dist/style.css")
@@ -129,15 +142,12 @@ export const menu = async (payload: Payload): Promise<Payload> => {
       const relativePath = file.path.replace(process.cwd(), "");
       const pathGroup = relativePath.split("/");
       const depth = pathGroup.length - 2;
-      const isHome =
-        pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
-        pathGroup[pathGroup.length - 1].toLowerCase().includes("index");
 
       // Only items from the main depth sholud be in the menu
       if (depth > 0) active = false;
 
       // Index in first depth can also be in menu
-      if (depth === 1 && isHome) active = true;
+      if (depth === 1 && file.home) active = true;
 
       return {
         name: file.title,
@@ -173,19 +183,22 @@ export const archives = async (payload: Payload): Promise<Payload> => {
     // Map all Archive parents and get their children
     .map((file) => {
       let children = [];
-      if (file.parent == file.name) {
+      if (file.home) {
         children = payload.files
-          .filter(
-            (item) => item.parent == file.name && item.parent !== item.name
-          )
-
+          .filter((item) => item.parent == file?.meta?.type && !item.home)
           // //  Enrich each child with meta information and a link
           .map((item) => ({
-            ...item,
+            // ...item,
+            title: item.title,
+            created: item?.meta?.date || item.created,
             meta: { ...item.meta, hide: true },
             link: makeLink(item.path),
-          }));
+          }))
+          .sort((a, b) => {
+            return b.created - a.created;
+          });
       }
+
       return {
         ...file,
         children,
@@ -202,13 +215,14 @@ export const tags = async (payload: Payload): Promise<Payload> => {
   const tags: Tag[] = [];
 
   await asyncForEach(payload.files, (file: File) => {
-    if (file.meta.tags) {
+    if (file.meta && file.meta?.tags) {
       for (let i = 0; i < file.meta.tags.length; i++) {
         let parent = payload.files.find((f) => f.name == file.parent);
+
         let tag = {
           name: file.meta.tags[i],
           parent: file.parent,
-          type: parent.meta?.type,
+          type: parent?.meta.type || "",
         };
         if (
           !tags.some(
