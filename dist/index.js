@@ -43,7 +43,7 @@ const page_1 = require("./libs/page");
 /*
  * Files
  */
-exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let files = yield files_1.getFiles(process.cwd(), ".md");
     let project = {};
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,19 +88,21 @@ exports.files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return Object.assign(Object.assign({}, payload), { files: files, project });
 });
+exports.files = files;
 /*
  *  Settings
  */
-exports.settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const settings = {
         output: path_1.join(process.cwd(), "public"),
     };
     return Object.assign(Object.assign({}, payload), { settings });
 });
+exports.settings = settings;
 /*
  * Styles
  */
-exports.styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Download the style
     let style = {};
     yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
@@ -120,12 +122,12 @@ exports.styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         style.add = payload.project.style;
     return Object.assign(Object.assign({}, payload), { style });
 });
-exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.styles = styles;
+const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let menu = payload.files
         .map((file) => {
         let active = file.meta.hide !== "true" || file.meta.hide;
-        if (file.parent !== file.name)
-            active = false;
+        // if (file.parent !== file.name) active = false;
         return {
             name: file.title,
             link: files_1.makeLink(file.path),
@@ -147,10 +149,11 @@ exports.menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         yield log.BLOCK_SETTINGS(menuItems);
     return Object.assign(Object.assign({}, payload), { menu });
 });
+exports.menu = menu;
 /*
  *  Archives
  */
-exports.archives = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const archives = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     payload.files = payload.files
         // Map all Archive parents and get their children
         .map((file) => {
@@ -165,10 +168,11 @@ exports.archives = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return payload;
 });
+exports.archives = archives;
 /*
  *  Tags
  */
-exports.tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const tags = [];
     yield helpers_1.asyncForEach(payload.files, (file) => {
         var _a;
@@ -187,10 +191,11 @@ exports.tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return Object.assign(Object.assign({}, payload), { tags });
 });
+exports.tags = tags;
 /*
  *  Build
  */
-exports.contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     log.BLOCK_MID("Pages");
     // Get Siblings
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { }));
@@ -198,7 +203,8 @@ exports.contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* 
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
     return Object.assign({}, payload);
 });
-exports.tagPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.contentPages = contentPages;
+const tagPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     log.BLOCK_MID("Tag pages");
     yield helpers_1.asyncForEach(payload.tags, (tag) => __awaiter(void 0, void 0, void 0, function* () {
         const file = {
@@ -216,7 +222,8 @@ exports.tagPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }));
     return Object.assign({}, payload);
 });
-exports.media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+exports.tagPages = tagPages;
+const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let mediaFiles = [];
     yield helpers_1.asyncForEach(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
         const exists = yield existsSync(path_1.join(process.cwd(), folder));
@@ -231,6 +238,7 @@ exports.media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }));
     return Object.assign(Object.assign({}, payload), { media: mediaFiles });
 });
+exports.media = media;
 helpers_1.hello()
     .then(exports.settings)
     .then((s) => {

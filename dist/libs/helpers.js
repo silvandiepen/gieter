@@ -12,12 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.fileTitle = exports.getTitle = exports.removeTitle = exports.hello = exports.createDir = exports.nthIndex = exports.getIndexes = exports.asyncForEach = void 0;
 const fs_1 = require("fs");
 const { mkdir } = require("fs").promises;
-exports.asyncForEach = (array, callback) => __awaiter(void 0, void 0, void 0, function* () {
+const asyncForEach = (array, callback) => __awaiter(void 0, void 0, void 0, function* () {
     for (let index = 0; index < array.length; index++) {
         yield callback(array[index], index, array);
     }
 });
-exports.getIndexes = (source, find) => {
+exports.asyncForEach = asyncForEach;
+const getIndexes = (source, find) => {
     const result = [];
     let i = 0;
     while (i < source.length) {
@@ -31,11 +32,13 @@ exports.getIndexes = (source, find) => {
     }
     return result;
 };
-exports.nthIndex = (source, find, nth) => {
+exports.getIndexes = getIndexes;
+const nthIndex = (source, find, nth) => {
     const result = exports.getIndexes(source, find);
     return result[nth];
 };
-exports.createDir = (dir) => __awaiter(void 0, void 0, void 0, function* () {
+exports.nthIndex = nthIndex;
+const createDir = (dir) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         !fs_1.existsSync(dir) && (yield mkdir(dir, { recursive: true }));
     }
@@ -43,15 +46,20 @@ exports.createDir = (dir) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(error);
     }
 });
-exports.hello = (args = {}) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createDir = createDir;
+const hello = (args = {}) => __awaiter(void 0, void 0, void 0, function* () {
     return args;
 });
-exports.removeTitle = (input) => input.replace(/\<h1(.*)\>(.*)\<\/h1\>/gi, "");
-exports.getTitle = (input) => {
+exports.hello = hello;
+const removeTitle = (input) => input.replace(/\<h1(.*)\>(.*)\<\/h1\>/gi, "");
+exports.removeTitle = removeTitle;
+const getTitle = (input) => {
     const matches = /<h1(.*?)>(.+?)<\/h1>/gi.exec(input);
     if (!matches)
         return "";
     return matches[matches.length - 1];
 };
-exports.fileTitle = (file) => exports.getTitle(file.html) || file.name;
+exports.getTitle = getTitle;
+const fileTitle = (file) => exports.getTitle(file.html) || file.name;
+exports.fileTitle = fileTitle;
 //# sourceMappingURL=helpers.js.map

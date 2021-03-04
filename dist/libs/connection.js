@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkConnection = void 0;
 const url_1 = __importDefault(require("url"));
 const net_1 = __importDefault(require("net"));
-exports.checkConnection = (config = {}) => __awaiter(void 0, void 0, void 0, function* () {
+const checkConnection = (config = {}) => __awaiter(void 0, void 0, void 0, function* () {
     const { timeout = 5000, retries = 5, domain = "https://google.com" } = config;
     const urlInfo = url_1.default.parse(domain);
     if (urlInfo.port === null) {
@@ -56,4 +56,5 @@ exports.checkConnection = (config = {}) => __awaiter(void 0, void 0, void 0, fun
         }
     }
 });
+exports.checkConnection = checkConnection;
 //# sourceMappingURL=connection.js.map

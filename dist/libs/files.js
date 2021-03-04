@@ -26,7 +26,7 @@ const helpers_1 = require("./helpers");
     ::getFileTree
     Get all files and folders from the input
 */
-exports.getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, function* () {
+const getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, function* () {
     // Do not search the following folders;
     const excludes = ["node_modules", ".git"];
     if (excludes.some((sub) => dir.includes(sub)))
@@ -60,7 +60,8 @@ exports.getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, fu
         .filter((file) => file)
         .filter((file) => (filter ? file.ext == filter : true));
 });
-exports.getFileData = (file) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getFileTree = getFileTree;
+const getFileData = (file) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         return yield readFile(file.path).then((res) => res.toString());
     }
@@ -68,7 +69,8 @@ exports.getFileData = (file) => __awaiter(void 0, void 0, void 0, function* () {
         throw Error(err);
     }
 });
-exports.getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getFileData = getFileData;
+const getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () {
     const fileTree = yield exports.getFileTree(dir, ext);
     const files = [];
     yield helpers_1.asyncForEach(fileTree, (file) => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,12 +80,14 @@ exports.getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () 
     }));
     return files;
 });
-exports.buildHtml = (file, args) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getFiles = getFiles;
+const buildHtml = (file, args) => __awaiter(void 0, void 0, void 0, function* () {
     const options = Object.assign(Object.assign({}, args), { name: file.name, title: file.title, content: file.html, meta: file.meta, pretty: true, children: file.children, formatDate: date_fns_1.format, removeTitle: helpers_1.removeTitle });
     const html = pug_1.default.renderFile(path_1.join(__dirname, "../../src/template.pug"), options);
     return html;
 });
-exports.makeLink = (path) => {
+exports.buildHtml = buildHtml;
+const makeLink = (path) => {
     const uri = path
         .replace(process.cwd(), "")
         .toLowerCase()
@@ -94,7 +98,8 @@ exports.makeLink = (path) => {
         ? uri.replace(".html", "/index.html")
         : uri;
 };
-exports.createFolder = (folder) => __awaiter(void 0, void 0, void 0, function* () {
+exports.makeLink = makeLink;
+const createFolder = (folder) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mkdir(folder, { recursive: true }, () => {
             return;
@@ -104,7 +109,8 @@ exports.createFolder = (folder) => __awaiter(void 0, void 0, void 0, function* (
         throw Error(err);
     }
 });
-exports.download = (url, destination) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createFolder = createFolder;
+const download = (url, destination) => __awaiter(void 0, void 0, void 0, function* () {
     const agent = new https_1.default.Agent({
         rejectUnauthorized: false,
     });
@@ -124,7 +130,8 @@ exports.download = (url, destination) => __awaiter(void 0, void 0, void 0, funct
         });
     });
 });
-exports.getProjectConfig = (meta) => {
+exports.download = download;
+const getProjectConfig = (meta) => {
     let project = {};
     // Merge configs
     Object.keys(meta).forEach((item) => {
@@ -142,4 +149,5 @@ exports.getProjectConfig = (meta) => {
     });
     return project;
 };
+exports.getProjectConfig = getProjectConfig;
 //# sourceMappingURL=files.js.map

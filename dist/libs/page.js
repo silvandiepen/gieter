@@ -45,7 +45,7 @@ const isActiveMenuParent = (link, current) => {
         return true;
     return false;
 };
-exports.createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     const currentLink = files_1.makeLink(file.path);
     const data = {
         menu: payload.menu.map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) }))),
@@ -64,4 +64,5 @@ exports.createPage = (payload, file) => __awaiter(void 0, void 0, void 0, functi
         throw Error(err);
     }
 });
+exports.createPage = createPage;
 //# sourceMappingURL=page.js.map

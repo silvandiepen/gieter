@@ -11,13 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeMeta = exports.extractMeta = exports.fixType = void 0;
 const helpers_1 = require("./helpers");
-exports.fixType = (value) => {
+const fixType = (value) => {
     if (!isNaN(value))
         return parseInt(value, 10);
     else
         return value;
 };
-exports.extractMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
+exports.fixType = fixType;
+const extractMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
     const startLine = helpers_1.nthIndex(input, "---", 0);
     const endLine = helpers_1.nthIndex(input, "---", 1);
     const meta = {};
@@ -51,7 +52,8 @@ exports.extractMeta = (input) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return meta;
 });
-exports.removeMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
+exports.extractMeta = extractMeta;
+const removeMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
     const startLine = helpers_1.nthIndex(input, "---", 0);
     const endLine = helpers_1.nthIndex(input, "---", 1);
     if (endLine > -1 && startLine < 10)
@@ -59,4 +61,5 @@ exports.removeMeta = (input) => __awaiter(void 0, void 0, void 0, function* () {
     else
         return input.trim();
 });
+exports.removeMeta = removeMeta;
 //# sourceMappingURL=markdown-meta.js.map

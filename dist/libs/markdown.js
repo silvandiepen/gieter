@@ -29,7 +29,7 @@ md.use(markdown_it_prism_1.default);
 md.use(markdown_it_emoji_1.default);
 md.use(markdown_it_anchor_1.default);
 md.use(markdown_it_tasks_1.default, { enabled: true, label: true, labelAfter: true });
-exports.toHtml = (input) => __awaiter(void 0, void 0, void 0, function* () {
+const toHtml = (input) => __awaiter(void 0, void 0, void 0, function* () {
     const metaData = yield markdown_meta_1.extractMeta(input);
     const strippedData = yield markdown_meta_1.removeMeta(input);
     const renderedDocument = md.render(strippedData);
@@ -38,4 +38,5 @@ exports.toHtml = (input) => __awaiter(void 0, void 0, void 0, function* () {
         meta: metaData,
     };
 });
+exports.toHtml = toHtml;
 //# sourceMappingURL=markdown.js.map

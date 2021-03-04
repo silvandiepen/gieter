@@ -23,7 +23,7 @@ String.prototype.removeAttributes = function (attributes) {
     });
     return str.toString();
 };
-exports.cleanupSvg = (file) => {
+const cleanupSvg = (file) => {
     let logoData = file;
     let logoData_Converted = logoData
         .removeHtmlComments()
@@ -32,4 +32,5 @@ exports.cleanupSvg = (file) => {
         .removeAttributes(["version", "id"]);
     return logoData;
 };
+exports.cleanupSvg = cleanupSvg;
 //# sourceMappingURL=svg.js.map

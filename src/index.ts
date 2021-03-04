@@ -125,7 +125,7 @@ export const menu = async (payload: Payload): Promise<Payload> => {
     .map((file) => {
       let active = file.meta.hide !== "true" || file.meta.hide;
 
-      if (file.parent !== file.name) active = false;
+      // if (file.parent !== file.name) active = false;
       return {
         name: file.title,
         link: makeLink(file.path),
