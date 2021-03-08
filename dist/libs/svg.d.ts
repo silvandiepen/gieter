@@ -7,4 +7,4 @@ declare global {
     }
 }
 export declare const cleanupSvg: (file: string) => string;
-export {};
+export declare const replaceImageSvg: (file: string) => Promise<string>;

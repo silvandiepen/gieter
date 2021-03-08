@@ -50,7 +50,8 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         // Compile file to html
         const rendered = yield markdown_1.toHtml(file.data).then((r) => r);
-        files[index] = Object.assign(Object.assign({}, file), { html: rendered.document, meta: rendered.meta });
+        const document = yield svg_1.replaceImageSvg(rendered.document);
+        files[index] = Object.assign(Object.assign({}, file), { html: document, meta: rendered.meta });
         const projectMeta = files_1.getProjectConfig(rendered.meta);
         Object.keys(projectMeta).forEach((key) => {
             if (!project[key])
@@ -114,10 +115,7 @@ exports.settings = settings;
 const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Download the style
     let style = {};
-    // await download(
-    //   "https://stil.style/default.css",
-    //   join(__dirname, "../dist/style.css")
-    // );
+    yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
     const styleData = yield readFile(path_1.join(__dirname, "../dist/style.css")).then((res) => res.toString());
     if (payload.files.length > 1) {
         yield helpers_1.createDir(payload.settings.output);

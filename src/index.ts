@@ -17,7 +17,7 @@ import {
   getProjectConfig,
   getFileData,
 } from "./libs/files";
-import { cleanupSvg } from "./libs/svg";
+import { cleanupSvg, replaceImageSvg } from "./libs/svg";
 import { File, Payload, Settings, Project, Style, Tag } from "./types";
 import { createPage } from "./libs/page";
 const PackageJson = require("../package.json");
@@ -32,7 +32,14 @@ export const files = async (payload: Payload): Promise<Payload> => {
   await asyncForEach(files, async (file: File, index: number) => {
     // Compile file to html
     const rendered = await toHtml(file.data).then((r) => r);
-    files[index] = { ...file, html: rendered.document, meta: rendered.meta };
+
+    const document = await replaceImageSvg(rendered.document);
+
+    files[index] = {
+      ...file,
+      html: document,
+      meta: rendered.meta,
+    };
 
     const projectMeta = getProjectConfig(rendered.meta);
     Object.keys(projectMeta).forEach((key) => {
@@ -110,10 +117,10 @@ export const styles = async (payload: Payload): Promise<Payload> => {
   // Download the style
   let style: Style = {};
 
-  // await download(
-  //   "https://stil.style/default.css",
-  //   join(__dirname, "../dist/style.css")
-  // );
+  await download(
+    "https://stil.style/default.css",
+    join(__dirname, "../dist/style.css")
+  );
 
   const styleData = await readFile(
     join(__dirname, "../dist/style.css")

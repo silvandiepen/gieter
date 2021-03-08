@@ -36,8 +36,8 @@ export const getFileTree = async (
         fileName == "index"
           ? relativePath.split("/")[relativePath.split("/").length - 2]
           : fileName;
-
-      if (dirent.isDirectory()) return getFileTree(result);
+      if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0)
+        return getFileTree(result);
       else {
         const { birthtime } = statSync(result);
         return {

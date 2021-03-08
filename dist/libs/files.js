@@ -40,7 +40,7 @@ const getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, func
         const name = fileName == "index"
             ? relativePath.split("/")[relativePath.split("/").length - 2]
             : fileName;
-        if (dirent.isDirectory())
+        if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0)
             return exports.getFileTree(result);
         else {
             const { birthtime } = fs_1.statSync(result);
