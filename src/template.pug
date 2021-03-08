@@ -79,6 +79,7 @@ html(lang="en")
                       span.archive__month= formatDate(item.created, 'MM')
                       span.archive__year= formatDate(item.created, 'yyyy')
                     span.archive__text= item.title
+                    
                   if item.meta.tags
                     ul.archive__tags.tag__list  
                       each tag in item.meta.tags

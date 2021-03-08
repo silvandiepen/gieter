@@ -226,6 +226,8 @@ export const tags = async (payload: Payload): Promise<Payload> => {
       for (let i = 0; i < file.meta.tags.length; i++) {
         let parent = payload.files.find((f) => f.name == file.parent);
 
+        console.log(file.parent);
+
         let tag = {
           name: file.meta.tags[i],
           parent: file.parent,

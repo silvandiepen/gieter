@@ -57,18 +57,14 @@ String.prototype.splice = function (idx, rem, str) {
 const replaceImageSvg = (file) => __awaiter(void 0, void 0, void 0, function* () {
     var regex = /<img.*?src=['"](.*?)['"].*?>/g;
     var images = findMatches(regex, file);
-    // var filtered = images.filter((v) => v);
-    // console.log(images);
     if (images && images.length > 0) {
         yield helpers_1.asyncForEach(images, (img) => __awaiter(void 0, void 0, void 0, function* () {
             if (img) {
-                console.log(img);
                 if (img[1].includes(".svg")) {
                     const filename = img[1].split("/")[img[1].split("/").length - 1];
                     const tempFile = `../../temp/${filename}`;
                     yield files_1.download(img[1], path_1.join(__dirname, tempFile));
                     const svgFile = yield readFile(path_1.join(__dirname, tempFile)).then((res) => res.toString());
-                    // console.log(`file`, img[0], img.index);
                     const index = file.indexOf(img[0]);
                     file =
                         file.slice(0, index) + svgFile + file.slice(index + img[0].length);

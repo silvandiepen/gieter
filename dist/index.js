@@ -209,6 +209,7 @@ const tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         if (file.meta && ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.tags)) {
             for (let i = 0; i < file.meta.tags.length; i++) {
                 let parent = payload.files.find((f) => f.name == file.parent);
+                console.log(file.parent);
                 let tag = {
                     name: file.meta.tags[i],
                     parent: file.parent,

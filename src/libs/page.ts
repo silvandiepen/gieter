@@ -28,6 +28,7 @@ export const createPage = async (
   file: File
 ): Promise<void> => {
   const currentLink = makeLink(file.path);
+
   const data = {
     menu: payload.menu.map((item) => ({
       ...item,
@@ -38,7 +39,9 @@ export const createPage = async (
     project: payload.project,
     media: payload.media,
     tags: payload.tags.filter((tag) => tag.parent == file.parent),
+    meta: file.meta,
   };
+
   const html = await buildHtml(file, data);
 
   await createDir(

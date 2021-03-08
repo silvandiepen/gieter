@@ -55,6 +55,7 @@ const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function
         project: payload.project,
         media: payload.media,
         tags: payload.tags.filter((tag) => tag.parent == file.parent),
+        meta: file.meta,
     };
     const html = yield files_1.buildHtml(file, data);
     yield helpers_1.createDir(path_1.join(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")));
