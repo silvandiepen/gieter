@@ -56,30 +56,30 @@ function findMatches(regex, str, matches = []) {
 };
 
 export const replaceImageSvg = async (file: string): Promise<string> => {
-  var regex = /<img.*?src=['"](.*?)['"].*?>/g;
-  var images = findMatches(regex, file);
+  // var regex = /<img.*?src=['"](.*?)['"].*?>/g;
+  // var images = findMatches(regex, file);
 
-  if (images && images.length > 0) {
-    await asyncForEach(images, async (img: unknown) => {
-      if (img) {
-        if (img[1].includes(".svg")) {
-          const filename = img[1].split("/")[img[1].split("/").length - 1];
-          const tempFile = `../../temp/${filename}`;
+  // if (images && images.length > 0) {
+  //   await asyncForEach(images, async (img: unknown) => {
+  //     if (img) {
+  //       if (img[1].includes(".svg")) {
+  //         const filename = img[1].split("/")[img[1].split("/").length - 1];
+  //         const tempFile = `../../temp/${filename}`;
 
-          await download(img[1], join(__dirname, tempFile));
+  //         await download(img[1], join(__dirname, tempFile));
 
-          const svgFile = await readFile(
-            join(__dirname, tempFile)
-          ).then((res: any) => res.toString());
+  //         const svgFile = await readFile(
+  //           join(__dirname, tempFile)
+  //         ).then((res: any) => res.toString());
 
-          const index = file.indexOf(img[0]);
+  //         const index = file.indexOf(img[0]);
 
-          file =
-            file.slice(0, index) + svgFile + file.slice(index + img[0].length);
-        }
-      }
-    });
-  }
+  //         file =
+  //           file.slice(0, index) + svgFile + file.slice(index + img[0].length);
+  //       }
+  //     }
+  //   });
+  // }
 
   return file;
 };

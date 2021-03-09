@@ -10,9 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.replaceImageSvg = exports.cleanupSvg = void 0;
-const files_1 = require("./files");
-const helpers_1 = require("./helpers");
-const path_1 = require("path");
 const { readFile } = require("fs").promises;
 const blankLines = new RegExp(/(^[ \t]*\n)/, "gm");
 const attrRegex = (attr) => new RegExp(` ${attr}="[^"]*"`, "gi");
@@ -55,23 +52,25 @@ String.prototype.splice = function (idx, rem, str) {
     return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
 };
 const replaceImageSvg = (file) => __awaiter(void 0, void 0, void 0, function* () {
-    var regex = /<img.*?src=['"](.*?)['"].*?>/g;
-    var images = findMatches(regex, file);
-    if (images && images.length > 0) {
-        yield helpers_1.asyncForEach(images, (img) => __awaiter(void 0, void 0, void 0, function* () {
-            if (img) {
-                if (img[1].includes(".svg")) {
-                    const filename = img[1].split("/")[img[1].split("/").length - 1];
-                    const tempFile = `../../temp/${filename}`;
-                    yield files_1.download(img[1], path_1.join(__dirname, tempFile));
-                    const svgFile = yield readFile(path_1.join(__dirname, tempFile)).then((res) => res.toString());
-                    const index = file.indexOf(img[0]);
-                    file =
-                        file.slice(0, index) + svgFile + file.slice(index + img[0].length);
-                }
-            }
-        }));
-    }
+    // var regex = /<img.*?src=['"](.*?)['"].*?>/g;
+    // var images = findMatches(regex, file);
+    // if (images && images.length > 0) {
+    //   await asyncForEach(images, async (img: unknown) => {
+    //     if (img) {
+    //       if (img[1].includes(".svg")) {
+    //         const filename = img[1].split("/")[img[1].split("/").length - 1];
+    //         const tempFile = `../../temp/${filename}`;
+    //         await download(img[1], join(__dirname, tempFile));
+    //         const svgFile = await readFile(
+    //           join(__dirname, tempFile)
+    //         ).then((res: any) => res.toString());
+    //         const index = file.indexOf(img[0]);
+    //         file =
+    //           file.slice(0, index) + svgFile + file.slice(index + img[0].length);
+    //       }
+    //     }
+    //   });
+    // }
     return file;
 });
 exports.replaceImageSvg = replaceImageSvg;
