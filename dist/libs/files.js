@@ -81,9 +81,10 @@ const getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () {
     return files;
 });
 exports.getFiles = getFiles;
-const buildHtml = (file, args) => __awaiter(void 0, void 0, void 0, function* () {
+const buildHtml = (file, args, template = "") => __awaiter(void 0, void 0, void 0, function* () {
     const options = Object.assign(Object.assign({}, args), { name: file.name, title: file.title, content: file.html, meta: file.meta, pretty: true, children: file.children, formatDate: date_fns_1.format, removeTitle: helpers_1.removeTitle });
-    const html = pug_1.default.renderFile(path_1.join(__dirname, "../../src/template.pug"), options);
+    const templatePath = path_1.join(__dirname, `../../src/${template ? template : "template/page.pug"}`);
+    const html = pug_1.default.renderFile(templatePath, options);
     return html;
 });
 exports.buildHtml = buildHtml;

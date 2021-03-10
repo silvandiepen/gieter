@@ -1,0 +1,29 @@
+head
+    meta(name="viewport",content="width=device-width, initial-scale=1")
+    if meta.date
+        meta(name="updated",content=formatDate(meta.date,'yy-MM-dd'))
+
+    if meta.description
+        meta(name="description",content=`${project.description}`)
+    else if project.description
+        meta(name="description",content=`${project.description}`)
+
+    if meta.title && project.title
+        title=`${meta.title} | ${project.title}`
+    else if project.title
+        title=project.title
+    else if meta.title
+        title=meta.title
+    else 
+        title=title
+    
+    if style.sheet
+        style
+        | !{style.sheet}
+    else if style.path
+        link(href=style.path, rel="stylesheet", type="text/css")
+        
+    if style.page 
+        link(href=style.page, rel="stylesheet", type="text/css")
+    if style.add 
+        link(href=style.add, rel="stylesheet", type="text/css")

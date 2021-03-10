@@ -28,12 +28,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPage = void 0;
+exports.createApiPage = exports.createPage = exports.buildPage = void 0;
 const { writeFile } = require("fs").promises;
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
 const files_1 = require("./files");
 const helpers_1 = require("./helpers");
+const style_1 = require("./style");
 const simplifyUrl = (url) => url.replace("/index.html", "");
 const isActiveMenu = (link, current) => {
     if (simplifyUrl(link) == simplifyUrl(current))
@@ -47,25 +48,66 @@ const isActiveMenuParent = (link, current) => {
         return true;
     return false;
 };
-const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     const currentLink = files_1.makeLink(file.path);
     const data = {
-        menu: payload.menu.map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) }))),
-        style: payload.style,
+        menu: payload.menu
+            ? payload.menu.map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) })))
+            : [],
+        style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
         project: payload.project,
         media: payload.media,
-        tags: payload.tags.filter((tag) => tag.parent == file.parent),
+        tags: payload.tags
+            ? payload.tags.filter((tag) => tag.parent == file.parent)
+            : [],
         meta: file.meta,
+        contentOnly: false,
     };
     const html = yield files_1.buildHtml(file, data);
-    yield helpers_1.createDir(path_1.join(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")));
+    // Custom Css
+    const customCssFilePath = path_1.join(payload.settings.output, currentLink).replace(".html", ".css");
+    const customHtml = yield files_1.buildHtml(file, Object.assign(Object.assign({}, data), { contentOnly: true }), "template/content.pug");
+    // console.log(customHtml);
+    const customCss = yield style_1.createCss(customHtml, payload.style.og);
+    return {
+        dir: path_1.join(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")),
+        css: {
+            data: customCss,
+            file: customCssFilePath,
+        },
+        html: {
+            data: html,
+            file: path_1.join(payload.settings.output, currentLink),
+        },
+        name: file.name,
+        link: currentLink,
+    };
+});
+exports.buildPage = buildPage;
+const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    const page = yield exports.buildPage(payload, file);
+    yield helpers_1.createDir(page.dir);
     try {
-        yield writeFile(path_1.join(payload.settings.output, currentLink), html);
-        log.BLOCK_LINE_SUCCESS(`${file.name} created → ${currentLink}`);
+        yield writeFile(page.html.file, page.html.data);
+        yield writeFile(page.css.file, page.css.data);
+        log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link}`);
     }
     catch (err) {
         throw Error(err);
     }
 });
 exports.createPage = createPage;
+const createApiPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    // const page = await buildPage(payload, file);
+    // console.log(file);
+    // await createDir(page.dir);
+    // try {
+    //   await writeFile(page.html.file, page.html.data);
+    //   await writeFile(page.css.file, page.css.data);
+    //   log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link}`);
+    // } catch (err) {
+    //   throw Error(err);
+    // }
+});
+exports.createApiPage = createApiPage;
 //# sourceMappingURL=page.js.map

@@ -64,7 +64,7 @@ const svgImages = (md, config) => {
         }
         else {
             const svg = getImage(url);
-            return svg ? svg : "couldnt-load-yet";
+            return svg ? svg : "";
         }
     };
 };

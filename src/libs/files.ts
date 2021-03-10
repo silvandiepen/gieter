@@ -87,7 +87,8 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
 
 export const buildHtml = async (
   file: File,
-  args: buildHtmlArgs
+  args: buildHtmlArgs,
+  template = ""
 ): Promise<string> => {
   const options = {
     ...args,
@@ -101,10 +102,12 @@ export const buildHtml = async (
     removeTitle: removeTitle,
   };
 
-  const html = pug.renderFile(
-    join(__dirname, "../../src/template.pug"),
-    options
+  const templatePath = join(
+    __dirname,
+    `../../src/${template ? template : "template/page.pug"}`
   );
+
+  const html = pug.renderFile(templatePath, options);
 
   return html;
 };

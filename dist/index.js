@@ -29,17 +29,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.media = exports.tagPages = exports.contentPages = exports.tags = exports.archives = exports.menu = exports.styles = exports.settings = exports.files = void 0;
+exports.media = exports.tagPages = exports.contentPages = exports.tags = exports.archives = exports.menu = exports.settings = exports.files = void 0;
 const { readFile, writeFile } = require("fs").promises;
 const { existsSync } = require("fs");
 const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
+// import { PurgeCSS } from "purgecss";
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
 const svg_1 = require("./libs/svg");
 const page_1 = require("./libs/page");
+const style_1 = require("./libs/style");
 const PackageJson = require("../package.json");
 /*
  * Files
@@ -109,30 +111,6 @@ const settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { settings });
 });
 exports.settings = settings;
-/*
- * Styles
- */
-const styles = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    // Download the style
-    let style = {};
-    yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
-    const styleData = yield readFile(path_1.join(__dirname, "../dist/style.css")).then((res) => res.toString());
-    if (payload.files.length > 1) {
-        yield helpers_1.createDir(payload.settings.output);
-        const filePath = path_1.join(payload.settings.output, "style.css");
-        yield writeFile(filePath, styleData);
-        style.path = "/style.css";
-    }
-    else {
-        style.sheet = styleData;
-    }
-    if (payload.project.styleOverrule)
-        style.path = payload.project.styleOverrule;
-    if (payload.project.style)
-        style.add = payload.project.style;
-    return Object.assign(Object.assign({}, payload), { style });
-});
-exports.styles = styles;
 const menu = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let menu = payload.files
         .map((file) => {
@@ -209,7 +187,6 @@ const tags = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         if (file.meta && ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.tags)) {
             for (let i = 0; i < file.meta.tags.length; i++) {
                 let parent = payload.files.find((f) => f.name == file.parent);
-                console.log(file.parent);
                 let tag = {
                     name: file.meta.tags[i],
                     parent: file.parent,
@@ -232,6 +209,8 @@ const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { }));
     // Create Content pages
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
+    // Create API
+    yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createApiPage(payload, file); }));
     return Object.assign({}, payload);
 });
 exports.contentPages = contentPages;
@@ -270,6 +249,33 @@ const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { media: mediaFiles });
 });
 exports.media = media;
+// export const reduceCss = async (payload: Payload): Promise<Payload> => {
+//   // const content = ["./public/index.html"];
+//   // const css = payload.style.sheet;
+//   // const options = {
+//   //   output: "./public/purified.css",
+//   //   minify: true,
+//   //   rejected: true,
+//   // };
+//   // purify(content, css, options);
+//   console.log(payload.files[0].html);
+//   const purgeCSSResult = await new PurgeCSS().purge({
+//     content: ["./public/index.html"],
+//     // content: [
+//     //   {
+//     //     raw: payload.files[0].html,
+//     //     extension: "html",
+//     //   },
+//     // ],
+//     css: ["public/*.css"],
+//     fontFace: true,
+//     keyframes: true,
+//     variables: true,
+//     // rejected: true,
+//   });
+//   console.log(purgeCSSResult);
+//   return payload;
+// };
 helpers_1.hello()
     .then(exports.settings)
     .then((s) => {
@@ -277,13 +283,14 @@ helpers_1.hello()
     return s;
 })
     .then(exports.files)
-    .then(exports.styles)
+    .then(style_1.generateStyles)
     .then(exports.media)
     .then(exports.tags)
     .then(exports.archives)
     .then(exports.menu)
     .then(exports.contentPages)
     .then(exports.tagPages)
+    // .then(reduceCss)
     .then(() => {
     log.BLOCK_END();
 });

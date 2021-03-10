@@ -23,13 +23,20 @@ md.use(tasks, { enabled: true, label: true, labelAfter: true });
 md.use(alert, { bem: true });
 md.use(svgImages);
 
+export const unp = (input: string): string => {
+  const regex = new RegExp("<p>(?:<img[^>]+>|<svg[^>]+>(.*?)</svg>)</p>", "g");
+  const images = input.match(regex);
+  // console.log(images);
+  return input;
+};
+
 export const toHtml = async (input: string): Promise<MarkdownData> => {
   const metaData = await extractMeta(input);
   const strippedData = await removeMeta(input);
   const renderedDocument = await md.render(strippedData);
 
   return {
-    document: renderedDocument,
+    document: unp(renderedDocument),
     meta: metaData,
   };
 };

@@ -13,6 +13,8 @@ export interface Style {
     path?: string;
     sheet?: string;
     add?: string;
+    page?: string;
+    og?: string;
 }
 export interface Payload {
     input?: string;
@@ -67,4 +69,5 @@ export interface buildHtmlArgs {
     project: Project;
     media: File[];
     archives?: File[];
+    contentOnly: boolean;
 }

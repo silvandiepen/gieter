@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toHtml = void 0;
+exports.toHtml = exports.unp = void 0;
 const MarkdownIt = require("markdown-it");
 const markdown_it_emoji_1 = __importDefault(require("markdown-it-emoji"));
 const markdown_it_prism_1 = __importDefault(require("markdown-it-prism"));
@@ -33,12 +33,19 @@ md.use(markdown_it_anchor_1.default);
 md.use(markdown_it_tasks_1.default, { enabled: true, label: true, labelAfter: true });
 md.use(markdown_it_alert_1.default, { bem: true });
 md.use(markdown_it_svg_1.default);
+const unp = (input) => {
+    const regex = new RegExp("<p>(?:<img[^>]+>|<svg[^>]+>(.*?)</svg>)</p>", "g");
+    const images = input.match(regex);
+    // console.log(images);
+    return input;
+};
+exports.unp = unp;
 const toHtml = (input) => __awaiter(void 0, void 0, void 0, function* () {
     const metaData = yield markdown_meta_1.extractMeta(input);
     const strippedData = yield markdown_meta_1.removeMeta(input);
     const renderedDocument = yield md.render(strippedData);
     return {
-        document: renderedDocument,
+        document: exports.unp(renderedDocument),
         meta: metaData,
     };
 });

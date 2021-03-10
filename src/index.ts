@@ -3,23 +3,27 @@
 
 const { readFile, writeFile } = require("fs").promises;
 const { existsSync } = require("fs");
+
 import { copy } from "fs-extra";
 import { join } from "path";
 import * as log from "cli-block";
 
+// import { PurgeCSS } from "purgecss";
+
 import { toHtml } from "./libs/markdown";
-import { asyncForEach, createDir, hello, fileTitle } from "./libs/helpers";
+import { asyncForEach, hello, fileTitle } from "./libs/helpers";
 import {
   getFiles,
   getFileTree,
   makeLink,
-  download,
   getProjectConfig,
   getFileData,
 } from "./libs/files";
 import { cleanupSvg, replaceImageSvg } from "./libs/svg";
-import { File, Payload, Settings, Project, Style, Tag } from "./types";
-import { createPage } from "./libs/page";
+import { File, Payload, Settings, Project, Tag } from "./types";
+import { createPage, createApiPage } from "./libs/page";
+import { generateStyles } from "./libs/style";
+
 const PackageJson = require("../package.json");
 
 /*
@@ -110,37 +114,6 @@ export const settings = async (payload: Payload): Promise<Payload> => {
   return { ...payload, settings };
 };
 
-/*
- * Styles
- */
-export const styles = async (payload: Payload): Promise<Payload> => {
-  // Download the style
-  let style: Style = {};
-
-  await download(
-    "https://stil.style/default.css",
-    join(__dirname, "../dist/style.css")
-  );
-
-  const styleData = await readFile(
-    join(__dirname, "../dist/style.css")
-  ).then((res: any) => res.toString());
-
-  if (payload.files.length > 1) {
-    await createDir(payload.settings.output);
-    const filePath = join(payload.settings.output, "style.css");
-    await writeFile(filePath, styleData);
-    style.path = "/style.css";
-  } else {
-    style.sheet = styleData;
-  }
-
-  if (payload.project.styleOverrule) style.path = payload.project.styleOverrule;
-  if (payload.project.style) style.add = payload.project.style;
-
-  return { ...payload, style };
-};
-
 export const menu = async (payload: Payload): Promise<Payload> => {
   let menu = payload.files
     .map((file) => {
@@ -226,8 +199,6 @@ export const tags = async (payload: Payload): Promise<Payload> => {
       for (let i = 0; i < file.meta.tags.length; i++) {
         let parent = payload.files.find((f) => f.name == file.parent);
 
-        console.log(file.parent);
-
         let tag = {
           name: file.meta.tags[i],
           parent: file.parent,
@@ -261,6 +232,12 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
   await asyncForEach(
     payload.files,
     async (file: File) => await createPage(payload, file)
+  );
+
+  // Create API
+  await asyncForEach(
+    payload.files,
+    async (file: File) => await createApiPage(payload, file)
   );
   return { ...payload };
 };
@@ -312,6 +289,38 @@ export const media = async (payload: Payload): Promise<Payload> => {
   return { ...payload, media: mediaFiles };
 };
 
+// export const reduceCss = async (payload: Payload): Promise<Payload> => {
+//   // const content = ["./public/index.html"];
+//   // const css = payload.style.sheet;
+
+//   // const options = {
+//   //   output: "./public/purified.css",
+//   //   minify: true,
+//   //   rejected: true,
+//   // };
+
+//   // purify(content, css, options);
+
+//   console.log(payload.files[0].html);
+
+//   const purgeCSSResult = await new PurgeCSS().purge({
+//     content: ["./public/index.html"],
+//     // content: [
+//     //   {
+//     //     raw: payload.files[0].html,
+//     //     extension: "html",
+//     //   },
+//     // ],
+//     css: ["public/*.css"],
+//     fontFace: true,
+//     keyframes: true,
+//     variables: true,
+//     // rejected: true,
+//   });
+//   console.log(purgeCSSResult);
+//   return payload;
+// };
+
 hello()
   .then(settings)
   .then((s) => {
@@ -319,13 +328,14 @@ hello()
     return s;
   })
   .then(files)
-  .then(styles)
+  .then(generateStyles)
   .then(media)
   .then(tags)
   .then(archives)
   .then(menu)
   .then(contentPages)
   .then(tagPages)
+  // .then(reduceCss)
   .then(() => {
     log.BLOCK_END();
   });

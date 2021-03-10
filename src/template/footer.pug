@@ -1,0 +1,37 @@
+footer.footer 
+    if menu 
+        nav.navigation.center
+            ul.navigation__list
+                each item in menu
+                    li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current? 'navigation__item--parent' : ''}`)
+                        a.navigation__link(href= item.link)
+                            span.navigation__text= item.name
+
+
+script. 
+    const isDarkMode = window.matchMedia('prefers-color-scheme: dark').matches;
+    let localMode = isDarkMode ? 'dark' : 'light';
+
+    function init(){
+    localMode = localStorage.getItem('colorMode');
+    setCurrentMode(localMode ? localMode : (isDarkMode ? 'dark' : 'light'));        
+    }
+
+    function setCurrentMode(mode) {
+    // Set current variable
+    localMode = mode;
+    // Set local Storage
+    const colorMode = { 'mode': localMode };
+
+    localStorage.setItem('colorMode',localMode);
+    // Set body attribute
+    document.body.setAttribute('color-mode',mode);
+    }
+    
+    function switchMode(){
+    console.log(`switching to ${localMode ? 'darkMode' : 'lightMode'}`);
+    if(localMode == 'dark') setCurrentMode('light');
+    else setCurrentMode('dark');
+    }
+
+    init();

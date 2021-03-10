@@ -78,7 +78,7 @@ const svgImages = (md: MarkdownIt, config) => {
       return `<img src="${url}" alt="${caption}" ${imgClass} ${otherAttributes}>`;
     } else {
       const svg = getImage(url);
-      return svg ? svg : "couldnt-load-yet";
+      return svg ? svg : "";
     }
   };
 };
