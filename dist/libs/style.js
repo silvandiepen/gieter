@@ -46,14 +46,12 @@ const createBaseCss = (payload, css) => __awaiter(void 0, void 0, void 0, functi
         created: "",
         title: "",
         html: null,
-        menu: [],
+        menu: payload.menu,
         meta: {},
         children: [],
     };
     const customHtml = yield page_1.buildPage(Object.assign(Object.assign({}, payload), { style: { og: "" } }), emptyFile);
-    const customCss = yield exports.createCss(customHtml.html.data, css, {
-        safelist: ["navigation-input", "navigation-toggle"],
-    });
+    const customCss = yield exports.createCss(customHtml.html.data, css, {});
     return customCss;
 });
 exports.createBaseCss = createBaseCss;

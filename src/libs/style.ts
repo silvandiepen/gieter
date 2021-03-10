@@ -54,7 +54,7 @@ export const createBaseCss = async (
     created: "",
     title: "",
     html: null,
-    menu: [],
+    menu: payload.menu,
     meta: {},
     children: [],
   };
@@ -64,9 +64,7 @@ export const createBaseCss = async (
     emptyFile
   );
 
-  const customCss = await createCss(customHtml.html.data, css, {
-    safelist: ["navigation-input", "navigation-toggle"],
-  });
+  const customCss = await createCss(customHtml.html.data, css, {});
   return customCss;
 };
 
