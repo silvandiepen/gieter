@@ -12,7 +12,7 @@ header.header.header--sticky
     if project.logoData
         a.logo(href="/", class= `${project.logoData ? 'logo--image-only' : ''}`)
             | !{project.logoData}
-            | !{project.title}
+            span=project.title
     else if project.logo
         a.logo(href="/")=project.title
             img(src=project.logo)

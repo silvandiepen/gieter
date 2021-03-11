@@ -74,7 +74,8 @@ const generateStyles = (payload) => __awaiter(void 0, void 0, void 0, function* 
         style.path = "/style.css";
     }
     else {
-        style.sheet = styleData;
+        const customCss = yield exports.createBaseCss(payload, styleData);
+        style.sheet = customCss;
     }
     style.og = styleData;
     if (payload.project.styleOverrule)

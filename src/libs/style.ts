@@ -96,7 +96,8 @@ export const generateStyles = async (payload: Payload): Promise<Payload> => {
 
     style.path = "/style.css";
   } else {
-    style.sheet = styleData;
+    const customCss = await createBaseCss(payload, styleData);
+    style.sheet = customCss;
   }
 
   style.og = styleData;
