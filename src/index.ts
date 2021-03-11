@@ -243,7 +243,7 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
 };
 
 export const tagPages = async (payload: Payload): Promise<Payload> => {
-  log.BLOCK_MID("Tag pages");
+  if (payload.tags.length) log.BLOCK_MID("Tag pages");
 
   await asyncForEach(payload.tags, async (tag: Tag) => {
     const file: File = {

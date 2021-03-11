@@ -215,7 +215,8 @@ const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.contentPages = contentPages;
 const tagPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    log.BLOCK_MID("Tag pages");
+    if (payload.tags.length)
+        log.BLOCK_MID("Tag pages");
     yield helpers_1.asyncForEach(payload.tags, (tag) => __awaiter(void 0, void 0, void 0, function* () {
         const file = {
             name: tag.name,
