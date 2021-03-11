@@ -3,6 +3,9 @@ head
     if meta.date
         meta(name="updated",content=formatDate(meta.date,'yy-MM-dd'))
 
+    if type
+        meta(name="type",content=`${type}`)
+
     if meta.description
         meta(name="description",content=`${project.description}`)
     else if project.description

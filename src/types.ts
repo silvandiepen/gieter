@@ -35,6 +35,12 @@ export interface Tag {
   parent: string;
   type: string;
 }
+
+export enum FileType {
+  CONTENT = "content",
+  TAG = "tag",
+  ARCHIVE = "archive",
+}
 export interface File {
   name: string;
   fileName: string;
@@ -50,6 +56,7 @@ export interface File {
   html?: string;
   meta?: Meta;
   link?: string;
+  type?: FileType;
 }
 export interface MenuItem {
   name: string;

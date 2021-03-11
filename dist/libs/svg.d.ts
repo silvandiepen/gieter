@@ -1,3 +1,4 @@
+import { Project } from "../types";
 declare global {
     interface String {
         removeBlankLines(): string;
@@ -7,4 +8,4 @@ declare global {
     }
 }
 export declare const cleanupSvg: (file: string) => string;
-export declare const replaceImageSvg: (file: string) => Promise<string>;
+export declare const getSVGLogo: (project: Project) => Promise<string>;

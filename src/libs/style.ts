@@ -32,8 +32,6 @@ export const createCss = async (
     ...options,
   });
 
-  //   console.log(purgeCSSResult[0], content);
-  //   return "";
   return purgeCSSResult[0].css;
 };
 
@@ -87,16 +85,14 @@ export const generateStyles = async (payload: Payload): Promise<Payload> => {
     join(__dirname, "../dist/style.css")
   ).then((res: any) => res.toString());
 
+  const customCss = await createBaseCss(payload, styleData);
+
   if (payload.files.length > 1) {
     await createDir(payload.settings.output);
     const filePath = join(payload.settings.output, "style.css");
-    const customCss = await createBaseCss(payload, styleData);
-
     await writeFile(filePath, customCss);
-
     style.path = "/style.css";
   } else {
-    const customCss = await createBaseCss(payload, styleData);
     style.sheet = customCss;
   }
 

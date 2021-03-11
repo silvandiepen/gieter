@@ -1,0 +1,6 @@
+section.section.tags
+    ul.tag__list  
+        each tag in tags
+            li.tag__item
+                a.tag__link(href=`/tag/${tag.parent}/${tag.name}`)
+                    span.tag__text= tag.name

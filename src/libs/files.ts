@@ -7,7 +7,7 @@ const { readdir, readFile, mkdir } = require("fs").promises;
 import pug from "pug";
 import { format } from "date-fns";
 
-import { File, buildHtmlArgs, Project, Meta } from "../types";
+import { File, buildHtmlArgs, Project, Meta, FileType } from "../types";
 import { asyncForEach, removeTitle } from "./helpers";
 
 /*
@@ -75,6 +75,7 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
     if (file.fileName.indexOf("_") !== 0)
       files.push({
         ...file,
+        type: FileType.CONTENT,
         data,
         parent: file.relativePath.split("/")[
           file.relativePath.split("/").length - 2
@@ -98,6 +99,7 @@ export const buildHtml = async (
     meta: file.meta,
     pretty: true,
     children: file.children,
+    type: file.type,
     formatDate: format,
     removeTitle: removeTitle,
   };

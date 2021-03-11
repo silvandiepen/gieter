@@ -46,6 +46,9 @@ export const buildPage = async (
 ): Promise<Page> => {
   const currentLink = makeLink(file.path);
 
+  /*
+   * Generate the html for this page
+   */
   const data = {
     menu: payload.menu
       ? payload.menu.map((item) => ({
@@ -66,7 +69,9 @@ export const buildPage = async (
 
   const html = await buildHtml(file, data);
 
-  // Custom Css
+  /*
+   * Generate the custom CSS for this page
+   */
   const customCssFilePath = join(payload.settings.output, currentLink).replace(
     ".html",
     ".css"
@@ -80,9 +85,11 @@ export const buildPage = async (
     "template/content.pug"
   );
 
-  // console.log(customHtml);
   const customCss = await createCss(customHtml, payload.style.og);
 
+  /*
+   * Return the page
+   */
   return {
     dir: join(
       payload.settings.output,
@@ -112,7 +119,9 @@ export const createPage = async (
     await writeFile(page.html.file, page.html.data);
     await writeFile(page.css.file, page.css.data);
 
-    log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link}`);
+    log.BLOCK_LINE_SUCCESS(
+      `${page.name} created → ${page.link.replace("/index.html", "")}`
+    );
   } catch (err) {
     throw Error(err);
   }

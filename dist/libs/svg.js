@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.replaceImageSvg = exports.cleanupSvg = void 0;
-const { readFile } = require("fs").promises;
+exports.getSVGLogo = exports.cleanupSvg = void 0;
+const files_1 = require("./files");
+const path_1 = require("path");
 const blankLines = new RegExp(/(^[ \t]*\n)/, "gm");
 const attrRegex = (attr) => new RegExp(` ${attr}="[^"]*"`, "gi");
 const htmlCommentRegex = new RegExp("<!--(.*?)-->", "g");
@@ -40,38 +41,28 @@ const cleanupSvg = (file) => {
         .removeXmlDoctype()
         .removeBlankLines()
         .removeAttributes(["version", "id"]);
-    return logoData;
+    return logoData_Converted;
 };
 exports.cleanupSvg = cleanupSvg;
-function findMatches(regex, str, matches = []) {
-    const res = regex.exec(str);
-    res && matches.push(res) && findMatches(regex, str, matches);
-    return matches;
-}
-String.prototype.splice = function (idx, rem, str) {
-    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
-};
-const replaceImageSvg = (file) => __awaiter(void 0, void 0, void 0, function* () {
-    // var regex = /<img.*?src=['"](.*?)['"].*?>/g;
-    // var images = findMatches(regex, file);
-    // if (images && images.length > 0) {
-    //   await asyncForEach(images, async (img: unknown) => {
-    //     if (img) {
-    //       if (img[1].includes(".svg")) {
-    //         const filename = img[1].split("/")[img[1].split("/").length - 1];
-    //         const tempFile = `../../temp/${filename}`;
-    //         await download(img[1], join(__dirname, tempFile));
-    //         const svgFile = await readFile(
-    //           join(__dirname, tempFile)
-    //         ).then((res: any) => res.toString());
-    //         const index = file.indexOf(img[0]);
-    //         file =
-    //           file.slice(0, index) + svgFile + file.slice(index + img[0].length);
-    //       }
-    //     }
-    //   });
-    // }
-    return file;
+const getSVGLogo = (project) => __awaiter(void 0, void 0, void 0, function* () {
+    let logo = "";
+    if ((project === null || project === void 0 ? void 0 : project.logo) && (project === null || project === void 0 ? void 0 : project.logo.includes(".svg"))) {
+        const logoData = yield files_1.getFileData({
+            name: "",
+            fileName: "",
+            created: null,
+            path: path_1.join(process.cwd(), project.logo),
+            relativePath: project.logo,
+        });
+        try {
+            const svgFile = exports.cleanupSvg(logoData);
+            logo = svgFile;
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    return logo;
 });
-exports.replaceImageSvg = replaceImageSvg;
+exports.getSVGLogo = getSVGLogo;
 //# sourceMappingURL=svg.js.map

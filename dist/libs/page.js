@@ -50,6 +50,9 @@ const isActiveMenuParent = (link, current) => {
 };
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     const currentLink = files_1.makeLink(file.path);
+    /*
+     * Generate the html for this page
+     */
     const data = {
         menu: payload.menu
             ? payload.menu.map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) })))
@@ -64,11 +67,15 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         contentOnly: false,
     };
     const html = yield files_1.buildHtml(file, data);
-    // Custom Css
+    /*
+     * Generate the custom CSS for this page
+     */
     const customCssFilePath = path_1.join(payload.settings.output, currentLink).replace(".html", ".css");
     const customHtml = yield files_1.buildHtml(file, Object.assign(Object.assign({}, data), { contentOnly: true }), "template/content.pug");
-    // console.log(customHtml);
     const customCss = yield style_1.createCss(customHtml, payload.style.og);
+    /*
+     * Return the page
+     */
     return {
         dir: path_1.join(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")),
         css: {
@@ -90,7 +97,7 @@ const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function
     try {
         yield writeFile(page.html.file, page.html.data);
         yield writeFile(page.css.file, page.css.data);
-        log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link}`);
+        log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link.replace("/index.html", "")}`);
     }
     catch (err) {
         throw Error(err);

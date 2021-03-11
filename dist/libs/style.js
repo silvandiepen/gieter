@@ -28,8 +28,6 @@ const createCss = (content, css, options = {}) => __awaiter(void 0, void 0, void
                 extension: "html",
             },
         ], css: [{ raw: css }], fontFace: true, keyframes: true, variables: true }, options));
-    //   console.log(purgeCSSResult[0], content);
-    //   return "";
     return purgeCSSResult[0].css;
 });
 exports.createCss = createCss;
@@ -66,15 +64,14 @@ const generateStyles = (payload) => __awaiter(void 0, void 0, void 0, function* 
     let style = {};
     yield files_1.download("https://stil.style/default.css", path_1.join(__dirname, "../dist/style.css"));
     const styleData = yield readFile(path_1.join(__dirname, "../dist/style.css")).then((res) => res.toString());
+    const customCss = yield exports.createBaseCss(payload, styleData);
     if (payload.files.length > 1) {
         yield helpers_1.createDir(payload.settings.output);
         const filePath = path_1.join(payload.settings.output, "style.css");
-        const customCss = yield exports.createBaseCss(payload, styleData);
         yield writeFile(filePath, customCss);
         style.path = "/style.css";
     }
     else {
-        const customCss = yield exports.createBaseCss(payload, styleData);
         style.sheet = customCss;
     }
     style.og = styleData;

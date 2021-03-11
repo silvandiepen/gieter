@@ -21,6 +21,7 @@ const fs_1 = require("fs");
 const { readdir, readFile, mkdir } = require("fs").promises;
 const pug_1 = __importDefault(require("pug"));
 const date_fns_1 = require("date-fns");
+const types_1 = require("../types");
 const helpers_1 = require("./helpers");
 /*
     ::getFileTree
@@ -76,13 +77,13 @@ const getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () {
     yield helpers_1.asyncForEach(fileTree, (file) => __awaiter(void 0, void 0, void 0, function* () {
         const data = yield exports.getFileData(file);
         if (file.fileName.indexOf("_") !== 0)
-            files.push(Object.assign(Object.assign({}, file), { data, parent: file.relativePath.split("/")[file.relativePath.split("/").length - 2] }));
+            files.push(Object.assign(Object.assign({}, file), { type: types_1.FileType.CONTENT, data, parent: file.relativePath.split("/")[file.relativePath.split("/").length - 2] }));
     }));
     return files;
 });
 exports.getFiles = getFiles;
 const buildHtml = (file, args, template = "") => __awaiter(void 0, void 0, void 0, function* () {
-    const options = Object.assign(Object.assign({}, args), { name: file.name, title: file.title, content: file.html, meta: file.meta, pretty: true, children: file.children, formatDate: date_fns_1.format, removeTitle: helpers_1.removeTitle });
+    const options = Object.assign(Object.assign({}, args), { name: file.name, title: file.title, content: file.html, meta: file.meta, pretty: true, children: file.children, type: file.type, formatDate: date_fns_1.format, removeTitle: helpers_1.removeTitle });
     const templatePath = path_1.join(__dirname, `../../src/${template ? template : "template/page.pug"}`);
     const html = pug_1.default.renderFile(templatePath, options);
     return html;
