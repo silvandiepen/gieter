@@ -19,10 +19,10 @@ head
     
     if style.sheet
         style
-        | !{style.sheet}
+            | !{style.sheet}
     else if style.path
         link(href=style.path, rel="stylesheet", type="text/css")
-        
+
     if style.page 
         link(href=style.page, rel="stylesheet", type="text/css")
     if style.add 

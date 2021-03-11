@@ -10,9 +10,9 @@ if menu.length > 0
 header.header.header--sticky
     if project
     if project.logoData
-        a.logo(href="/")
+        a.logo(href="/", class= `${project.logoData ? 'logo--image-only' : ''}`)
             | !{project.logoData}
-            span=project.title
+            | !{project.title}
     else if project.logo
         a.logo(href="/")=project.title
             img(src=project.logo)
