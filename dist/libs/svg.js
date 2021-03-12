@@ -35,13 +35,14 @@ String.prototype.removeAttributes = function (attributes) {
     return str.toString();
 };
 const cleanupSvg = (file) => {
-    let logoData = file;
-    let logoData_Converted = logoData
-        .removeHtmlComments()
-        .removeXmlDoctype()
-        .removeBlankLines()
-        .removeAttributes(["version", "id"]);
-    return logoData_Converted;
+    return file;
+    // let logoData: string = file;
+    // let logoData_Converted = logoData
+    //   .removeHtmlComments()
+    //   .removeXmlDoctype()
+    //   .removeBlankLines()
+    //   .removeAttributes(["version", "id"]);
+    // return logoData_Converted;
 };
 exports.cleanupSvg = cleanupSvg;
 const getSVGLogo = (project) => __awaiter(void 0, void 0, void 0, function* () {

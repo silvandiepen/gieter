@@ -34,15 +34,16 @@ String.prototype.removeAttributes = function (attributes: string | string[]) {
 };
 
 export const cleanupSvg = (file: string): string => {
-  let logoData: string = file;
+  return file;
+  // let logoData: string = file;
 
-  let logoData_Converted = logoData
-    .removeHtmlComments()
-    .removeXmlDoctype()
-    .removeBlankLines()
-    .removeAttributes(["version", "id"]);
+  // let logoData_Converted = logoData
+  //   .removeHtmlComments()
+  //   .removeXmlDoctype()
+  //   .removeBlankLines()
+  //   .removeAttributes(["version", "id"]);
 
-  return logoData_Converted;
+  // return logoData_Converted;
 };
 
 export const getSVGLogo = async (project: Project): Promise<string> => {

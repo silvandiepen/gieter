@@ -10,7 +10,7 @@
     "test:run": "rimraf public && node dist/index.js",
     "serve": "npx serve public",
     "build": "tsc",
-    "build:watch": "tsc -w",
+    "dev": "tsc -w",
     "test": "jest"
   },
   "repository": {

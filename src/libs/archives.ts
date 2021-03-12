@@ -10,9 +10,9 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
     // Map all Archive parents and get their children
     .map((file) => {
       let children = [];
-      if (file.home) {
+      if (file.home && file.meta.isArchive) {
         children = payload.files
-          .filter((item) => item.parent == file.name && !item.home)
+          .filter((item) => item.parent == file.parent && !item.home)
 
           //  Enrich each child with meta information and a link
           .map((item) => ({
