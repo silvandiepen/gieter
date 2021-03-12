@@ -17,6 +17,7 @@ import { generateTags, createTagPages } from "./libs/tags";
 import { generateStyles } from "./libs/style";
 import { generateMenu } from "./libs/menu";
 import { generateArchives } from "./libs/archives";
+import { generateFavicon } from "./libs/favicon";
 
 const PackageJson = require("../package.json");
 
@@ -170,6 +171,7 @@ hello()
   .then(generateArchives)
   .then(generateMenu)
   .then(generateStyles)
+  .then(generateFavicon)
   .then(contentPages)
   .then(createTagPages)
   .then(() => {

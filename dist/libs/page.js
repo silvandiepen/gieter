@@ -65,6 +65,7 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
             : [],
         meta: file.meta,
         contentOnly: false,
+        favicon: payload.favicon,
     };
     const html = yield files_1.buildHtml(file, data);
     /*

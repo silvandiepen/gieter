@@ -3,6 +3,7 @@ head
     if meta.date
         meta(name="updated",content=formatDate(meta.date,'yy-MM-dd'))
 
+        
     if type
         meta(name="type",content=`${type}`)
 
@@ -20,6 +21,9 @@ head
     else 
         title=title
     
+    if favicon
+        link(rel="icon", href=`/assets/favicon/favicon.ico`)
+
     if style.sheet
         style
             | !{style.sheet}

@@ -65,6 +65,7 @@ export const buildPage = async (
       : [],
     meta: file.meta,
     contentOnly: false,
+    favicon: payload.favicon,
   };
 
   const html = await buildHtml(file, data);

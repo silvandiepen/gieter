@@ -29,6 +29,7 @@ export interface Payload {
   menu?: MenuItem[];
   archives?: File[];
   tags?: Tag[];
+  favicon?: string;
 }
 export interface Tag {
   name: string;

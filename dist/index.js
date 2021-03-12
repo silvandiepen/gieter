@@ -43,6 +43,7 @@ const tags_1 = require("./libs/tags");
 const style_1 = require("./libs/style");
 const menu_1 = require("./libs/menu");
 const archives_1 = require("./libs/archives");
+const favicon_1 = require("./libs/favicon");
 const PackageJson = require("../package.json");
 /*
  * Files
@@ -155,6 +156,7 @@ helpers_1.hello()
     .then(archives_1.generateArchives)
     .then(menu_1.generateMenu)
     .then(style_1.generateStyles)
+    .then(favicon_1.generateFavicon)
     .then(exports.contentPages)
     .then(tags_1.createTagPages)
     .then(() => {

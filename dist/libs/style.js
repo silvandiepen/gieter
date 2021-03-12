@@ -37,6 +37,17 @@ exports.createCss = createCss;
  * Create a base CSS based on an empty page. This CSS is automatically applied to all pages.
  */
 const createBaseCss = (payload, css) => __awaiter(void 0, void 0, void 0, function* () {
+    // If there is a menu, enrich the menu with active and parent items so these will be picked up by purgeCss
+    const mockMenu = [...payload.menu];
+    if (mockMenu.length > 0) {
+        const placeholder = {
+            name: "placeholder",
+            link: "/",
+            active: true,
+        };
+        mockMenu.push(Object.assign(Object.assign({}, placeholder), { active: true, current: true, isParent: false }), Object.assign(Object.assign({}, placeholder), { active: true, current: false, isParent: true }));
+    }
+    console.log(mockMenu);
     const emptyFile = {
         name: "",
         fileName: "",
@@ -44,12 +55,14 @@ const createBaseCss = (payload, css) => __awaiter(void 0, void 0, void 0, functi
         created: "",
         title: "",
         html: null,
-        menu: payload.menu,
         meta: {},
         children: [],
     };
-    const customHtml = yield page_1.buildPage(Object.assign(Object.assign({}, payload), { style: { og: "" } }), emptyFile);
-    const customCss = yield exports.createCss(customHtml.html.data, css, {});
+    const customHtml = yield page_1.buildPage(Object.assign(Object.assign({}, payload), { menu: mockMenu, style: { og: "" } }), emptyFile);
+    console.log(customHtml.html.data.includes("navigation__item--parent"));
+    const customCss = yield exports.createCss(customHtml.html.data, css, {
+        whitelistPatternsChildren: [/$__item/],
+    });
     return customCss;
 });
 exports.createBaseCss = createBaseCss;

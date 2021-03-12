@@ -45,6 +45,21 @@ export const createBaseCss = async (
   payload: Payload,
   css: string
 ): Promise<string> => {
+  // If there is a menu, enrich the menu with active and parent items so these will be picked up by purgeCss
+  const mockMenu = [...payload.menu];
+
+  if (mockMenu.length > 0) {
+    const placeholder = {
+      name: "placeholder",
+      link: "/",
+      active: true,
+    };
+    mockMenu.push(
+      { ...placeholder, active: true, current: true, isParent: false },
+      { ...placeholder, active: true, current: false, isParent: true }
+    );
+  }
+  console.log(mockMenu);
   const emptyFile = {
     name: "",
     fileName: "",
@@ -52,17 +67,20 @@ export const createBaseCss = async (
     created: "",
     title: "",
     html: null,
-    menu: payload.menu,
     meta: {},
     children: [],
   };
 
   const customHtml = await buildPage(
-    { ...payload, style: { og: "" } },
+    { ...payload, menu: mockMenu, style: { og: "" } },
     emptyFile
   );
 
-  const customCss = await createCss(customHtml.html.data, css, {});
+  console.log(customHtml.html.data.includes("navigation__item--parent"));
+
+  const customCss = await createCss(customHtml.html.data, css, {
+    whitelistPatternsChildren: [/$__item/],
+  });
   return customCss;
 };
 
