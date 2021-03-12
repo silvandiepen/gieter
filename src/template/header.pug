@@ -2,17 +2,16 @@
     button.color-mode(onClick="switchMode()") switch
 
 if menu.length > 0
-    input.navigation__input(type="checkbox",id="navToggle")
-    label.navigation__toggle(for="navToggle")
+    input.navigation__input(type="checkbox",id="navToggleControl",aria-labelledBy="navToggle")
+    label.navigation__toggle(for="navToggleControl",id="navToggle")
         span
     div.navigation__background
 
 header.header.header--sticky
     if project
     if project.logoData
-        a.logo(href="/", class= `${project.logoData ? 'logo--image-only' : ''}`)
+        a.logo(href="/", class= `${project.logoData ? 'logo--image-only' : ''}`, aria-label=`${project.title}`)
             | !{project.logoData}
-            span=project.title
     else if project.logo
         a.logo(href="/")=project.title
             img(src=project.logo)
@@ -22,9 +21,7 @@ header.header.header--sticky
     if menu.length > 0
     nav.navigation.center
         ul.navigation__list
-            div.navigation__item--parent
-            each item in menu              
-                li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current? 'navigation__item--parent' : ''}`)
+            each item in menu
+                li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current ? 'navigation__item--parent' : ''}`)
                     a.navigation__link(href= item.link)
                         span.navigation__text= item.name
-

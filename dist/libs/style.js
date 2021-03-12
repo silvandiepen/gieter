@@ -40,18 +40,16 @@ const createBaseCss = (payload, css) => __awaiter(void 0, void 0, void 0, functi
     // If there is a menu, enrich the menu with active and parent items so these will be picked up by purgeCss
     const mockMenu = [...payload.menu];
     if (mockMenu.length > 0) {
-        const placeholder = {
+        const ph = {
             name: "placeholder",
-            link: "/",
             active: true,
         };
-        mockMenu.push(Object.assign(Object.assign({}, placeholder), { active: true, current: true, isParent: false }), Object.assign(Object.assign({}, placeholder), { active: true, current: false, isParent: true }));
+        mockMenu.push(Object.assign(Object.assign({}, ph), { link: "parent" }), Object.assign(Object.assign({}, ph), { link: "parent/child" }));
     }
-    console.log(mockMenu);
     const emptyFile = {
         name: "",
         fileName: "",
-        path: "",
+        path: "parent/child",
         created: "",
         title: "",
         html: null,
@@ -59,7 +57,6 @@ const createBaseCss = (payload, css) => __awaiter(void 0, void 0, void 0, functi
         children: [],
     };
     const customHtml = yield page_1.buildPage(Object.assign(Object.assign({}, payload), { menu: mockMenu, style: { og: "" } }), emptyFile);
-    console.log(customHtml.html.data.includes("navigation__item--parent"));
     const customCss = yield exports.createCss(customHtml.html.data, css, {
         whitelistPatternsChildren: [/$__item/],
     });

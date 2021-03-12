@@ -16,7 +16,7 @@ export const generateFavicon = async (payload: Payload): Promise<Payload> => {
       output: "public/assets/favicon",
       logging: ["inline", "minimal"],
       sets: ["favicons"],
-      meta: ["none"],
+      //   meta: ["none"],
     });
 
   return { ...payload, favicon };

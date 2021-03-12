@@ -49,21 +49,17 @@ export const createBaseCss = async (
   const mockMenu = [...payload.menu];
 
   if (mockMenu.length > 0) {
-    const placeholder = {
+    const ph = {
       name: "placeholder",
-      link: "/",
       active: true,
     };
-    mockMenu.push(
-      { ...placeholder, active: true, current: true, isParent: false },
-      { ...placeholder, active: true, current: false, isParent: true }
-    );
+    mockMenu.push({ ...ph, link: "parent" }, { ...ph, link: "parent/child" });
   }
-  console.log(mockMenu);
+
   const emptyFile = {
     name: "",
     fileName: "",
-    path: "",
+    path: "parent/child",
     created: "",
     title: "",
     html: null,
@@ -75,8 +71,6 @@ export const createBaseCss = async (
     { ...payload, menu: mockMenu, style: { og: "" } },
     emptyFile
   );
-
-  console.log(customHtml.html.data.includes("navigation__item--parent"));
 
   const customCss = await createCss(customHtml.html.data, css, {
     whitelistPatternsChildren: [/$__item/],
