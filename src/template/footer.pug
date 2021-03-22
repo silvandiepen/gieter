@@ -9,12 +9,12 @@ footer.footer
 
 
 
-if langMenu.length > 1
-    ul.language
-        each language in langMenu 
-            li.language__item(class= `${language.active ? 'language__item--active' : ''}`)
-                a.language__link(href=`${language.link}`)
-                    span.language__text=language.name
+    if langMenu.length > 1
+        ul.language
+            each language in langMenu 
+                li.language__item(class= `${language.active ? 'language__item--active' : ''}`)
+                    a.language__link(href=`${language.link}`)
+                        span.language__text=language.name
 
 script. 
     const isDarkMode = window.matchMedia('prefers-color-scheme: dark').matches;
