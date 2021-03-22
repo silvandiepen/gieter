@@ -54,6 +54,7 @@ export declare enum Language {
     AM = "am"
 }
 export interface File {
+    id: string;
     name: string;
     fileName: string;
     path: string;
@@ -76,8 +77,14 @@ export interface MenuItem {
     name: string;
     link: string;
     active: boolean;
+    language: Language;
     current?: boolean;
     isParent?: boolean;
+}
+export interface LanguageMenuItem {
+    name: string;
+    link: string;
+    active: boolean;
 }
 export interface Meta {
     [x: string]: string | string[] | any;

@@ -28,11 +28,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createApiPage = exports.createPage = exports.buildPage = void 0;
+exports.createPage = exports.buildPage = void 0;
 const { writeFile } = require("fs").promises;
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
-const types_1 = require("../types");
+const language_1 = require("../libs/language");
 const files_1 = require("./files");
 const helpers_1 = require("./helpers");
 const style_1 = require("./style");
@@ -41,24 +41,18 @@ const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current
 const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
     simplifyUrl(current) !== "" &&
     simplifyUrl(link) !== "";
-const getLanguage = (payload, file = null) => {
-    var _a;
-    if (file && file.meta.language)
-        return file.meta.language;
-    else if ((_a = payload.project) === null || _a === void 0 ? void 0 : _a.language)
-        return payload.project.language;
-    else
-        return types_1.Language.EN;
-};
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const currentLink = files_1.makePath(file, payload);
+    const currentLink = files_1.makePath(file);
+    const currentLanguage = file.language;
     /*
      * Generate the html for this page
      */
     const data = {
         menu: payload.menu
-            ? payload.menu.map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) })))
+            ? payload.menu
+                .map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) })))
+                .filter((item) => item.language == currentLanguage)
             : [],
         style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
         project: payload.project,
@@ -70,8 +64,9 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         contentOnly: false,
         showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
         favicon: payload.favicon,
-        languages: payload.languages,
-        language: getLanguage(payload, file),
+        homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
+        langMenu: language_1.getLanguageMenu(payload, file),
+        language: currentLanguage,
     };
     const html = yield files_1.buildHtml(file, data);
     /*
@@ -111,17 +106,4 @@ const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.createPage = createPage;
-const createApiPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    // const page = await buildPage(payload, file);
-    // console.log(file);
-    // await createDir(page.dir);
-    // try {
-    //   await writeFile(page.html.file, page.html.data);
-    //   await writeFile(page.css.file, page.css.data);
-    //   log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link}`);
-    // } catch (err) {
-    //   throw Error(err);
-    // }
-});
-exports.createApiPage = createApiPage;
 //# sourceMappingURL=page.js.map

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProjectConfig = exports.download = exports.createFolder = exports.makeLink = exports.makePath = exports.buildHtml = exports.getFiles = exports.getFileData = exports.getFileTree = void 0;
+exports.getProjectConfig = exports.download = exports.createFolder = exports.makeLink = exports.makePath = exports.buildHtml = exports.getFiles = exports.getFileData = exports.getFileTree = exports.fileId = void 0;
 const path_1 = require("path");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const https_1 = __importDefault(require("https"));
@@ -22,33 +22,14 @@ const { readdir, readFile, mkdir } = require("fs").promises;
 const pug_1 = __importDefault(require("pug"));
 const date_fns_1 = require("date-fns");
 const types_1 = require("../types");
+const language_1 = require("./language");
 const helpers_1 = require("./helpers");
-const getLangFromFilename = (fileName) => {
-    if (fileName.indexOf(":") > 0) {
-        let lang = fileName.split(":")[1];
-        switch (lang) {
-            case "en":
-                return types_1.Language.EN;
-            case "nl":
-                return types_1.Language.NL;
-            case "ru":
-                return types_1.Language.RU;
-            case "mt":
-                return types_1.Language.MT;
-            case "am":
-                return types_1.Language.AM;
-            default:
-                return types_1.Language.EN;
-        }
-    }
-    else {
-        return null;
-    }
-};
 /*
     ::getFileTree
     Get all files and folders from the input
 */
+const fileId = (path) => language_1.fixLangInPath(path, false).replace(/\//g, "-").substring(1).split(".")[0];
+exports.fileId = fileId;
 const getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, function* () {
     // Do not search the following folders;
     const excludes = ["node_modules", ".git"];
@@ -60,7 +41,7 @@ const getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, func
         const extension = path_1.extname(result);
         const fileName = path_1.basename(result).replace(extension, "");
         const relativePath = result.replace(process.cwd(), "");
-        const lang = fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
+        const lang = fileName.indexOf(":") > 0 ? language_1.getLangFromFilename(fileName) : "en";
         let name = (fileName == "index"
             ? relativePath.split("/")[relativePath.split("/").length - 2]
             : fileName).toLowerCase();
@@ -69,6 +50,7 @@ const getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, func
         else {
             const { birthtime } = fs_1.statSync(result);
             return {
+                id: exports.fileId(relativePath),
                 fileName: fileName.split(":")[0],
                 name: name.split(":")[0],
                 relativePath,
@@ -113,17 +95,24 @@ const buildHtml = (file, args, template = "") => __awaiter(void 0, void 0, void 
     return html;
 });
 exports.buildHtml = buildHtml;
-const makePath = (file, payload) => {
-    // console.log(payload.project.language, file.language);
-    return exports.makeLink(file.path);
+const renamePath = (ogLink, rename) => {
+    const pathGroup = ogLink.split("/");
+    pathGroup[pathGroup.length - 2] = rename;
+    return pathGroup.join("/").toLowerCase();
+};
+const makePath = (file) => {
+    let link = exports.makeLink(file.path);
+    if (file.meta.name)
+        link = renamePath(link, file.meta.name);
+    return link;
 };
 exports.makePath = makePath;
 const makeLink = (path) => {
-    const uri = path
+    const uri = language_1.fixLangInPath(path
         .replace(process.cwd(), "")
         .toLowerCase()
         .replace("readme", "index")
-        .replace(".md", ".html");
+        .replace(".md", ".html"));
     return uri.split("/")[uri.split("/").length - 1].replace(".html", "") !==
         "index"
         ? uri.replace(".html", "/index.html")

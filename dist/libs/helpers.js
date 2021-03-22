@@ -43,7 +43,7 @@ const createDir = (dir) => __awaiter(void 0, void 0, void 0, function* () {
         !fs_1.existsSync(dir) && (yield mkdir(dir, { recursive: true }));
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
     }
 });
 exports.createDir = createDir;

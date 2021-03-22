@@ -45,9 +45,10 @@ const createBaseCss = (payload, css) => __awaiter(void 0, void 0, void 0, functi
             name: "placeholder",
             active: true,
         };
-        mockMenu.push(Object.assign(Object.assign({}, ph), { link: "parent" }), Object.assign(Object.assign({}, ph), { link: "parent/child" }));
+        mockMenu.push(Object.assign(Object.assign({}, ph), { link: "parent", language: types_1.Language.EN }), Object.assign(Object.assign({}, ph), { link: "parent/child", language: types_1.Language.EN }));
     }
     const emptyFile = {
+        id: "",
         name: "",
         fileName: "",
         path: "parent/child",

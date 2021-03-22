@@ -33,7 +33,7 @@ export const createDir = async (dir: string): Promise<void> => {
   try {
     !existsSync(dir) && (await mkdir(dir, { recursive: true }));
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

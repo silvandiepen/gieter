@@ -6,6 +6,7 @@ export const getSVGLogo = async (project: Project): Promise<string> => {
   let logo = "";
   if (project?.logo && project?.logo.includes(".svg")) {
     const logoData = await getFileData({
+      id: "",
       name: "",
       fileName: "",
       created: null,

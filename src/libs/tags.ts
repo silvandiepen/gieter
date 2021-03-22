@@ -1,6 +1,8 @@
 import { asyncForEach } from "./helpers";
 import { Payload, File, FileType, Tag, Language } from "../types";
 import { createPage } from "./page";
+import { fileId } from "./files";
+
 import * as log from "cli-block";
 
 /*
@@ -36,10 +38,13 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
   if (payload.tags.length) log.BLOCK_MID("Tag pages");
 
   await asyncForEach(payload.tags, async (tag: Tag) => {
+    let path = `/tag/${tag.parent}/${tag.name}/index.html`;
+
     const file: File = {
+      id: fileId(path),
       name: tag.name,
       title: `#${tag.name}`,
-      path: `/tag/${tag.parent}/${tag.name}/index.html`,
+      path,
       created: new Date(),
       language: Language.EN,
       fileName: "index.html",

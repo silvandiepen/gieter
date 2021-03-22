@@ -132,8 +132,6 @@ const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { }));
     // Create Content pages
     yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
-    // Create API
-    yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createApiPage(payload, file); }));
     return Object.assign({}, payload);
 });
 exports.contentPages = contentPages;

@@ -17,6 +17,7 @@ const getSVGLogo = (project) => __awaiter(void 0, void 0, void 0, function* () {
     let logo = "";
     if ((project === null || project === void 0 ? void 0 : project.logo) && (project === null || project === void 0 ? void 0 : project.logo.includes(".svg"))) {
         const logoData = yield files_1.getFileData({
+            id: "",
             name: "",
             fileName: "",
             created: null,

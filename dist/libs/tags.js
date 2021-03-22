@@ -32,6 +32,7 @@ exports.createTagPages = exports.generateTags = void 0;
 const helpers_1 = require("./helpers");
 const types_1 = require("../types");
 const page_1 = require("./page");
+const files_1 = require("./files");
 const log = __importStar(require("cli-block"));
 /*
  *  Tags
@@ -60,10 +61,12 @@ const createTagPages = (payload) => __awaiter(void 0, void 0, void 0, function* 
     if (payload.tags.length)
         log.BLOCK_MID("Tag pages");
     yield helpers_1.asyncForEach(payload.tags, (tag) => __awaiter(void 0, void 0, void 0, function* () {
+        let path = `/tag/${tag.parent}/${tag.name}/index.html`;
         const file = {
+            id: files_1.fileId(path),
             name: tag.name,
             title: `#${tag.name}`,
-            path: `/tag/${tag.parent}/${tag.name}/index.html`,
+            path,
             created: new Date(),
             language: types_1.Language.EN,
             fileName: "index.html",

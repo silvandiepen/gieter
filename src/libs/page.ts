@@ -2,7 +2,8 @@ const { writeFile } = require("fs").promises;
 import { join } from "path";
 import * as log from "cli-block";
 
-import { Payload, File, Language, Page } from "../types";
+import { Payload, File, Page } from "../types";
+import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml } from "./files";
 import { createDir } from "./helpers";
 import { createCss } from "./style";
@@ -17,28 +18,25 @@ const isActiveMenuParent = (link: string, current: string): boolean =>
   simplifyUrl(current) !== "" &&
   simplifyUrl(link) !== "";
 
-const getLanguage = (payload: Payload, file: File | null = null): Language => {
-  if (file && file.meta.language) return file.meta.language;
-  else if (payload.project?.language) return payload.project.language;
-  else return Language.EN;
-};
-
 export const buildPage = async (
   payload: Payload,
   file: File
 ): Promise<Page> => {
-  const currentLink = makePath(file, payload);
+  const currentLink = makePath(file);
+  const currentLanguage = file.language;
 
   /*
    * Generate the html for this page
    */
   const data = {
     menu: payload.menu
-      ? payload.menu.map((item) => ({
-          ...item,
-          current: isActiveMenu(item.link, currentLink),
-          isParent: isActiveMenuParent(item.link, currentLink),
-        }))
+      ? payload.menu
+          .map((item) => ({
+            ...item,
+            current: isActiveMenu(item.link, currentLink),
+            isParent: isActiveMenuParent(item.link, currentLink),
+          }))
+          .filter((item) => item.language == currentLanguage)
       : [],
     style: { ...payload.style, page: currentLink.replace(".html", ".css") },
     project: payload.project,
@@ -50,8 +48,9 @@ export const buildPage = async (
     contentOnly: false,
     showContentImage: file.meta?.image && file.meta.type !== "photo",
     favicon: payload.favicon,
-    languages: payload.languages,
-    language: getLanguage(payload, file),
+    homeLink: file.language == defaultLanguage ? "/" : `/${file.language}`,
+    langMenu: getLanguageMenu(payload, file),
+    language: currentLanguage,
   };
 
   const html = await buildHtml(file, data);
@@ -112,20 +111,4 @@ export const createPage = async (
   } catch (err) {
     throw Error(err);
   }
-};
-
-export const createApiPage = async (
-  payload: Payload,
-  file: File
-): Promise<void> => {
-  // const page = await buildPage(payload, file);
-  // console.log(file);
-  // await createDir(page.dir);
-  // try {
-  //   await writeFile(page.html.file, page.html.data);
-  //   await writeFile(page.css.file, page.css.data);
-  //   log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link}`);
-  // } catch (err) {
-  //   throw Error(err);
-  // }
 };

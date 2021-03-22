@@ -33,7 +33,7 @@ const generateArchives = (payload) => __awaiter(void 0, void 0, void 0, function
                     date: (_a = item === null || item === void 0 ? void 0 : item.meta) === null || _a === void 0 ? void 0 : _a.date,
                     created: ((_b = item === null || item === void 0 ? void 0 : item.meta) === null || _b === void 0 ? void 0 : _b.date) || item.created,
                     meta: Object.assign(Object.assign({}, item.meta), { hide: true }),
-                    link: files_1.makePath(item, payload),
+                    link: files_1.makePath(item),
                     parent: item.parent,
                 });
             })

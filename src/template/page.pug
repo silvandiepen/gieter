@@ -10,3 +10,10 @@ html(lang=`${language}`)
     include content.pug
     
     include footer.pug
+
+
+
+if meta.redirect
+  script.
+    window.location.replace("#{meta.redirect}");
+

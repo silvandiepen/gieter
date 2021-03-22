@@ -20,8 +20,9 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
 
       return {
         name: file.title,
-        link: makePath(file, payload),
+        link: makePath(file),
         active,
+        language: file.language,
       };
     })
     .filter((item) => item.active);

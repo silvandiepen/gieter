@@ -12,7 +12,7 @@ import { asyncForEach, hello, fileTitle } from "./libs/helpers";
 import { getFiles, getFileTree, getProjectConfig } from "./libs/files";
 import { getSVGLogo } from "./libs/svg";
 import { File, Payload, Settings, Project } from "./types";
-import { createPage, createApiPage } from "./libs/page";
+import { createPage } from "./libs/page";
 import { generateTags, createTagPages } from "./libs/tags";
 import { generateStyles } from "./libs/style";
 import { generateMenu } from "./libs/menu";
@@ -137,11 +137,6 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
     async (file: File) => await createPage(payload, file)
   );
 
-  // Create API
-  await asyncForEach(
-    payload.files,
-    async (file: File) => await createApiPage(payload, file)
-  );
   return { ...payload };
 };
 

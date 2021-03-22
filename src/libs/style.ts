@@ -53,10 +53,14 @@ export const createBaseCss = async (
       name: "placeholder",
       active: true,
     };
-    mockMenu.push({ ...ph, link: "parent" }, { ...ph, link: "parent/child" });
+    mockMenu.push(
+      { ...ph, link: "parent", language: Language.EN },
+      { ...ph, link: "parent/child", language: Language.EN }
+    );
   }
 
   const emptyFile = {
+    id: "",
     name: "",
     fileName: "",
     path: "parent/child",

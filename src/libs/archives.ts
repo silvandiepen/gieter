@@ -27,7 +27,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             date: item?.meta?.date,
             created: item?.meta?.date || item.created,
             meta: { ...item.meta, hide: true },
-            link: makePath(item, payload),
+            link: makePath(item),
             parent: item.parent,
           }))
           .sort((a, b) => b.created - a.created);
