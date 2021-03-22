@@ -4,6 +4,7 @@ describe("Make Link", () => {
   it("Should return the right url from readme", () => {
     const input = "some/link/to/blabla/readme.md";
     const output = "some/link/to/blabla/index.html";
+
     const result = makeLink(input);
 
     expect(result).toStrictEqual(output);

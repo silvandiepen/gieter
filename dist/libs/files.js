@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProjectConfig = exports.download = exports.createFolder = exports.makeLink = exports.buildHtml = exports.getFiles = exports.getFileData = exports.getFileTree = void 0;
+exports.getProjectConfig = exports.download = exports.createFolder = exports.makeLink = exports.makePath = exports.buildHtml = exports.getFiles = exports.getFileData = exports.getFileTree = void 0;
 const path_1 = require("path");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const https_1 = __importDefault(require("https"));
@@ -23,6 +23,28 @@ const pug_1 = __importDefault(require("pug"));
 const date_fns_1 = require("date-fns");
 const types_1 = require("../types");
 const helpers_1 = require("./helpers");
+const getLangFromFilename = (fileName) => {
+    if (fileName.indexOf(":") > 0) {
+        let lang = fileName.split(":")[1];
+        switch (lang) {
+            case "en":
+                return types_1.Language.EN;
+            case "nl":
+                return types_1.Language.NL;
+            case "ru":
+                return types_1.Language.RU;
+            case "mt":
+                return types_1.Language.MT;
+            case "am":
+                return types_1.Language.AM;
+            default:
+                return types_1.Language.EN;
+        }
+    }
+    else {
+        return null;
+    }
+};
 /*
     ::getFileTree
     Get all files and folders from the input
@@ -38,20 +60,22 @@ const getFileTree = (dir, filter = "") => __awaiter(void 0, void 0, void 0, func
         const extension = path_1.extname(result);
         const fileName = path_1.basename(result).replace(extension, "");
         const relativePath = result.replace(process.cwd(), "");
-        const name = fileName == "index"
+        const lang = fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
+        let name = (fileName == "index"
             ? relativePath.split("/")[relativePath.split("/").length - 2]
-            : fileName;
+            : fileName).toLowerCase();
         if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0)
             return exports.getFileTree(result);
         else {
             const { birthtime } = fs_1.statSync(result);
             return {
-                fileName,
-                name: name.toLowerCase(),
+                fileName: fileName.split(":")[0],
+                name: name.split(":")[0],
                 relativePath,
                 created: birthtime,
                 path: result,
                 ext: extension,
+                language: lang,
             };
         }
     })));
@@ -83,12 +107,17 @@ const getFiles = (dir, ext) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getFiles = getFiles;
 const buildHtml = (file, args, template = "") => __awaiter(void 0, void 0, void 0, function* () {
-    const options = Object.assign(Object.assign({}, args), { name: file.name, title: file.title, content: file.html, meta: file.meta, pretty: true, children: file.children, type: file.type, formatDate: date_fns_1.format, removeTitle: helpers_1.removeTitle });
+    const options = Object.assign(Object.assign({}, args), { name: file.name, title: file.title, content: file.html, meta: file.meta, pretty: true, archives: file.archives || [], type: file.type, formatDate: date_fns_1.format, removeTitle: helpers_1.removeTitle });
     const templatePath = path_1.join(__dirname, `../../src/${template ? template : "template/page.pug"}`);
     const html = pug_1.default.renderFile(templatePath, options);
     return html;
 });
 exports.buildHtml = buildHtml;
+const makePath = (file, payload) => {
+    // console.log(payload.project.language, file.language);
+    return exports.makeLink(file.path);
+};
+exports.makePath = makePath;
 const makeLink = (path) => {
     const uri = path
         .replace(process.cwd(), "")

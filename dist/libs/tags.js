@@ -65,10 +65,17 @@ const createTagPages = (payload) => __awaiter(void 0, void 0, void 0, function* 
             title: `#${tag.name}`,
             path: `/tag/${tag.parent}/${tag.name}/index.html`,
             created: new Date(),
+            language: types_1.Language.EN,
             fileName: "index.html",
             parent: tag.parent,
             meta: { type: tag.type },
-            children: payload.files.filter((file) => { var _a, _b; return ((_b = (_a = file.meta) === null || _a === void 0 ? void 0 : _a.tags) === null || _b === void 0 ? void 0 : _b.includes(tag.name)) && file.parent == tag.parent; }),
+            archives: [
+                {
+                    name: tag.name,
+                    type: "",
+                    children: payload.files.filter((file) => { var _a, _b; return ((_b = (_a = file.meta) === null || _a === void 0 ? void 0 : _a.tags) === null || _b === void 0 ? void 0 : _b.includes(tag.name)) && file.parent == tag.parent; }),
+                },
+            ],
             html: `<h1>#${tag.name}</h1>`,
             type: types_1.FileType.TAG,
         };

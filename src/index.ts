@@ -29,6 +29,15 @@ export const files = async (payload: Payload): Promise<Payload> => {
   let project: Project = {};
 
   /*
+   * Languages
+   */
+  const languages = [];
+  for (let i = 0; i < files.length; i++) {
+    if (!languages.includes(files[i].language))
+      languages.push(files[i].language);
+  }
+
+  /*
    * Generate all files into html and extract metadata
    */
   await asyncForEach(files, async (file: File, index: number) => {
@@ -95,7 +104,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
     log.BLOCK_SETTINGS(project, {}, { exclude: ["logoData"] });
   }
 
-  return { ...payload, files: files, project };
+  return { ...payload, files: files, project, languages };
 };
 
 /*
@@ -104,6 +113,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
 export const settings = async (payload: Payload): Promise<Payload> => {
   const settings: Settings = {
     output: join(process.cwd(), "public"),
+    languages: [],
   };
 
   return { ...payload, settings };

@@ -1,6 +1,6 @@
 import { PurgeCSS } from "purgecss";
 
-import { Style, Payload } from "../types";
+import { Style, Payload, Language } from "../types";
 import { buildPage } from "./page";
 import { download } from "./files";
 import { createDir } from "./helpers";
@@ -60,11 +60,12 @@ export const createBaseCss = async (
     name: "",
     fileName: "",
     path: "parent/child",
-    created: "",
+    created: new Date(),
+    language: Language.EN,
     title: "",
     html: null,
     meta: {},
-    children: [],
+    archive: [],
   };
 
   const customHtml = await buildPage(

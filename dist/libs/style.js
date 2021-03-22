@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateStyles = exports.createBaseCss = exports.createCss = void 0;
 const purgecss_1 = require("purgecss");
+const types_1 = require("../types");
 const page_1 = require("./page");
 const files_1 = require("./files");
 const helpers_1 = require("./helpers");
@@ -50,11 +51,12 @@ const createBaseCss = (payload, css) => __awaiter(void 0, void 0, void 0, functi
         name: "",
         fileName: "",
         path: "parent/child",
-        created: "",
+        created: new Date(),
+        language: types_1.Language.EN,
         title: "",
         html: null,
         meta: {},
-        children: [],
+        archive: [],
     };
     const customHtml = yield page_1.buildPage(Object.assign(Object.assign({}, payload), { menu: mockMenu, style: { og: "" } }), emptyFile);
     const customCss = yield exports.createCss(customHtml.html.data, css, {

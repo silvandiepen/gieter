@@ -1,20 +1,23 @@
-section.section.archive(class=`archive--${meta.type}`)
-    div.container
-        ul.archive__list
-            each item in children             
-                li.archive__item
-                    a.archive__link(href= item.link)
-                        figure.archive__image(class=`${item.meta.image ? '': 'archive__image--empty'}`)
-                            if item.meta.image
-                                img(src=item.meta.image)
-                        span.archive__date
-                            span.archive__day= formatDate(item.created, 'dd')
-                            span.archive__month= formatDate(item.created, 'MM')
-                            span.archive__year= formatDate(item.created, 'yyyy')
-                        span.archive__text= item.title
-                    if item.meta.tags
-                        ul.archive__tags.tag__list  
-                            each tag in item.meta.tags
-                                li.tag__item
-                                    a.tag__link(href=`/tag/${item.parent}/${tag}`)
-                                        span.tag__text= tag
+each archive in archives            
+    section.section.archive(class=`archive--${archive.type}`)
+        div.container
+            ul.archive__list
+                each item in archive.children             
+                    li.archive__item
+                        a.archive__link(href= item.link)
+                            figure.archive__image(class=`${item.meta.image ? '': 'archive__image--empty'}`)
+                                if item.meta.image
+                                    img(src=item.meta.image)
+                            span.archive__info
+                                if item.date
+                                    span.archive__date
+                                        span.archive__day= formatDate(item.created, 'dd')
+                                        span.archive__month= formatDate(item.created, 'MM')
+                                        span.archive__year= formatDate(item.created, 'yyyy')
+                                span.archive__text= item.title
+                        if item.meta.tags
+                            ul.archive__tags.tag__list  
+                                each tag in item.meta.tags
+                                    li.tag__item
+                                        a.tag__link(href=`/tag/${item.parent}/${tag}`)
+                                            span.tag__text= tag

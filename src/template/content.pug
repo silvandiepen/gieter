@@ -1,7 +1,7 @@
-main.main.content
+main.main.content(class=`${meta.type ? 'content--'+ meta.type : ''}`)
     section.section
         div.container
-            if meta.image   
+            if showContentImage
                 h1=title
                 figure
                     img(src=meta.image)
@@ -9,7 +9,7 @@ main.main.content
             else 
                 | !{content}  
 
-    if children.length
+    if archives.length
         include archive.pug
         
     if tags.length

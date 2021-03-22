@@ -1,4 +1,3 @@
-
 ### Archives
 
 You can create archives in specific types, archive pages won't be added to the menu and will be displayed in their parent as a list.
@@ -22,7 +21,4 @@ This will create a blog page. All other `.md` files will be shown as a list on t
 
 ### Archive Types
 
-There are two types of archives, the "article" and the "blog", the difference is in how they articles are displayed. 
-
-
-
+There are two types of archives, the "article" and the "blog", the difference is in how they articles are displayed.

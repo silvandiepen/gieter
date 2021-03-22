@@ -46,7 +46,7 @@ const generateMenu = (payload) => __awaiter(void 0, void 0, void 0, function* ()
             active = true;
         return {
             name: file.title,
-            link: files_1.makeLink(file.path),
+            link: files_1.makePath(file, payload),
             active,
         };
     })

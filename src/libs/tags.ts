@@ -1,5 +1,5 @@
 import { asyncForEach } from "./helpers";
-import { Payload, File, FileType, Tag } from "../types";
+import { Payload, File, FileType, Tag, Language } from "../types";
 import { createPage } from "./page";
 import * as log from "cli-block";
 
@@ -41,13 +41,20 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
       title: `#${tag.name}`,
       path: `/tag/${tag.parent}/${tag.name}/index.html`,
       created: new Date(),
+      language: Language.EN,
       fileName: "index.html",
       parent: tag.parent,
       meta: { type: tag.type },
-      children: payload.files.filter(
-        (file) =>
-          file.meta?.tags?.includes(tag.name) && file.parent == tag.parent
-      ),
+      archives: [
+        {
+          name: tag.name,
+          type: "",
+          children: payload.files.filter(
+            (file) =>
+              file.meta?.tags?.includes(tag.name) && file.parent == tag.parent
+          ),
+        },
+      ],
       html: `<h1>#${tag.name}</h1>`,
       type: FileType.TAG,
     };

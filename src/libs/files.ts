@@ -7,9 +7,38 @@ const { readdir, readFile, mkdir } = require("fs").promises;
 import pug from "pug";
 import { format } from "date-fns";
 
-import { File, buildHtmlArgs, Project, Meta, FileType } from "../types";
+import {
+  File,
+  buildHtmlArgs,
+  Project,
+  Meta,
+  FileType,
+  Language,
+  Payload,
+} from "../types";
 import { asyncForEach, removeTitle } from "./helpers";
 
+const getLangFromFilename = (fileName: string): Language => {
+  if (fileName.indexOf(":") > 0) {
+    let lang = fileName.split(":")[1];
+    switch (lang) {
+      case "en":
+        return Language.EN;
+      case "nl":
+        return Language.NL;
+      case "ru":
+        return Language.RU;
+      case "mt":
+        return Language.MT;
+      case "am":
+        return Language.AM;
+      default:
+        return Language.EN;
+    }
+  } else {
+    return null;
+  }
+};
 /*
 	::getFileTree
 	Get all files and folders from the input
@@ -32,21 +61,27 @@ export const getFileTree = async (
       const fileName = basename(result).replace(extension, "");
       const relativePath = result.replace(process.cwd(), "");
 
-      const name =
-        fileName == "index"
-          ? relativePath.split("/")[relativePath.split("/").length - 2]
-          : fileName;
+      const lang =
+        fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
+
+      let name = (fileName == "index"
+        ? relativePath.split("/")[relativePath.split("/").length - 2]
+        : fileName
+      ).toLowerCase();
+
       if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0)
         return getFileTree(result);
       else {
         const { birthtime } = statSync(result);
+
         return {
-          fileName,
-          name: name.toLowerCase(),
+          fileName: fileName.split(":")[0],
+          name: name.split(":")[0],
           relativePath,
           created: birthtime,
           path: result,
           ext: extension,
+          language: lang,
         };
       }
     })
@@ -98,7 +133,7 @@ export const buildHtml = async (
     content: file.html,
     meta: file.meta,
     pretty: true,
-    children: file.children,
+    archives: file.archives || [],
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,
@@ -112,6 +147,12 @@ export const buildHtml = async (
   const html = pug.renderFile(templatePath, options);
 
   return html;
+};
+
+export const makePath = (file: File, payload: Payload): string => {
+  // console.log(payload.project.language, file.language);
+
+  return makeLink(file.path);
 };
 
 export const makeLink = (path: string): string => {

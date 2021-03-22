@@ -1,6 +1,6 @@
 import * as log from "cli-block";
 
-import { makeLink } from "./files";
+import { makePath } from "./files";
 import { Payload } from "../types";
 
 export const generateMenu = async (payload: Payload): Promise<Payload> => {
@@ -20,7 +20,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
 
       return {
         name: file.title,
-        link: makeLink(file.path),
+        link: makePath(file, payload),
         active,
       };
     })

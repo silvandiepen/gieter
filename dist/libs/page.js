@@ -32,24 +32,27 @@ exports.createApiPage = exports.createPage = exports.buildPage = void 0;
 const { writeFile } = require("fs").promises;
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
+const types_1 = require("../types");
 const files_1 = require("./files");
 const helpers_1 = require("./helpers");
 const style_1 = require("./style");
 const simplifyUrl = (url) => url.replace("/index.html", "");
-const isActiveMenu = (link, current) => {
-    if (simplifyUrl(link) == simplifyUrl(current))
-        return true;
-    return false;
-};
-const isActiveMenuParent = (link, current) => {
-    if (simplifyUrl(current).includes(simplifyUrl(link)) &&
-        simplifyUrl(current) !== "" &&
-        simplifyUrl(link) !== "")
-        return true;
-    return false;
+const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current);
+const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
+    simplifyUrl(current) !== "" &&
+    simplifyUrl(link) !== "";
+const getLanguage = (payload, file = null) => {
+    var _a;
+    if (file && file.meta.language)
+        return file.meta.language;
+    else if ((_a = payload.project) === null || _a === void 0 ? void 0 : _a.language)
+        return payload.project.language;
+    else
+        return types_1.Language.EN;
 };
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    const currentLink = files_1.makeLink(file.path);
+    var _a;
+    const currentLink = files_1.makePath(file, payload);
     /*
      * Generate the html for this page
      */
@@ -65,7 +68,10 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
             : [],
         meta: file.meta,
         contentOnly: false,
+        showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
         favicon: payload.favicon,
+        languages: payload.languages,
+        language: getLanguage(payload, file),
     };
     const html = yield files_1.buildHtml(file, data);
     /*

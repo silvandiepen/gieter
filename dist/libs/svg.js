@@ -9,42 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSVGLogo = exports.cleanupSvg = void 0;
+exports.getSVGLogo = void 0;
+const types_1 = require("../types");
 const files_1 = require("./files");
 const path_1 = require("path");
-const blankLines = new RegExp(/(^[ \t]*\n)/, "gm");
-const attrRegex = (attr) => new RegExp(` ${attr}="[^"]*"`, "gi");
-const htmlCommentRegex = new RegExp("<!--(.*?)-->", "g");
-const xmlDoctypeRegex = new RegExp("<?xml(.*?)?>", "g");
-String.prototype.removeBlankLines = function () {
-    return String(this).replace(blankLines, "").toString();
-};
-String.prototype.removeHtmlComments = function () {
-    return String(this).replace(htmlCommentRegex, "").toString();
-};
-String.prototype.removeXmlDoctype = function () {
-    return String(this).replace(xmlDoctypeRegex, "").toString();
-};
-String.prototype.removeAttributes = function (attributes) {
-    let str = String(this);
-    (typeof attributes == "string"
-        ? [attributes]
-        : attributes).forEach((attr) => {
-        str = str.replace(attrRegex(attr), "");
-    });
-    return str.toString();
-};
-const cleanupSvg = (file) => {
-    return file;
-    // let logoData: string = file;
-    // let logoData_Converted = logoData
-    //   .removeHtmlComments()
-    //   .removeXmlDoctype()
-    //   .removeBlankLines()
-    //   .removeAttributes(["version", "id"]);
-    // return logoData_Converted;
-};
-exports.cleanupSvg = cleanupSvg;
 const getSVGLogo = (project) => __awaiter(void 0, void 0, void 0, function* () {
     let logo = "";
     if ((project === null || project === void 0 ? void 0 : project.logo) && (project === null || project === void 0 ? void 0 : project.logo.includes(".svg"))) {
@@ -54,14 +22,9 @@ const getSVGLogo = (project) => __awaiter(void 0, void 0, void 0, function* () {
             created: null,
             path: path_1.join(process.cwd(), project.logo),
             relativePath: project.logo,
+            language: types_1.Language.EN,
         });
-        try {
-            const svgFile = exports.cleanupSvg(logoData);
-            logo = svgFile;
-        }
-        catch (err) {
-            console.log(err);
-        }
+        logo = logoData;
     }
     return logo;
 });

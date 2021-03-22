@@ -1,13 +1,16 @@
 export interface Settings {
     output: string;
+    languages: Language[];
 }
 export interface Project {
     logo?: string;
     logoData?: string;
     title?: string;
+    description?: string;
     ignore?: string[];
     style?: string;
     styleOverrule?: string;
+    language?: Language;
 }
 export interface Style {
     path?: string;
@@ -16,9 +19,8 @@ export interface Style {
     page?: string;
     og?: string;
 }
-export interface Payload {
+export interface Payload extends Settings {
     input?: string;
-    output?: string;
     files: File[];
     media: File[];
     style?: Style;
@@ -39,17 +41,31 @@ export declare enum FileType {
     TAG = "tag",
     ARCHIVE = "archive"
 }
+interface Archive {
+    name: string;
+    type: string;
+    children: File[];
+}
+export declare enum Language {
+    EN = "en",
+    NL = "nl",
+    RU = "ru",
+    MT = "mt",
+    AM = "am"
+}
 export interface File {
     name: string;
     fileName: string;
     path: string;
-    created: any;
+    created: Date;
+    language: Language;
     home?: boolean;
     title?: string;
     relativePath?: string;
     parent?: string;
-    children?: File[];
+    archives?: Archive[];
     ext?: string;
+    date?: Date;
     data?: string;
     html?: string;
     meta?: Meta;
@@ -78,3 +94,19 @@ export interface buildHtmlArgs {
     archives?: File[];
     contentOnly: boolean;
 }
+interface PageCss {
+    data: string;
+    file: string;
+}
+interface PageHtml {
+    data: string;
+    file: string;
+}
+export interface Page {
+    dir: string;
+    css: PageCss;
+    html: PageHtml;
+    link: string;
+    name: string;
+}
+export {};

@@ -52,6 +52,14 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let files = yield files_1.getFiles(process.cwd(), ".md");
     let project = {};
     /*
+     * Languages
+     */
+    const languages = [];
+    for (let i = 0; i < files.length; i++) {
+        if (!languages.includes(files[i].language))
+            languages.push(files[i].language);
+    }
+    /*
      * Generate all files into html and extract metadata
      */
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
@@ -101,7 +109,7 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         log.BLOCK_MID("Project settings");
         log.BLOCK_SETTINGS(project, {}, { exclude: ["logoData"] });
     }
-    return Object.assign(Object.assign({}, payload), { files: files, project });
+    return Object.assign(Object.assign({}, payload), { files: files, project, languages });
 });
 exports.files = files;
 /*
@@ -110,6 +118,7 @@ exports.files = files;
 const settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const settings = {
         output: path_1.join(process.cwd(), "public"),
+        languages: [],
     };
     return Object.assign(Object.assign({}, payload), { settings });
 });

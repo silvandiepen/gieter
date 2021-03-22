@@ -8,6 +8,14 @@ footer.footer
                             span.navigation__text= item.name
 
 
+
+if languages.length > 1
+    ul.language
+        each language in languages 
+            li.language__item
+                a.language__link(href=`/${project.language == language ? '' : language}`)
+                    span.language__text=language
+
 script. 
     const isDarkMode = window.matchMedia('prefers-color-scheme: dark').matches;
     let localMode = isDarkMode ? 'dark' : 'light';

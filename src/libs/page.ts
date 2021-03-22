@@ -2,49 +2,32 @@ const { writeFile } = require("fs").promises;
 import { join } from "path";
 import * as log from "cli-block";
 
-import { Payload, File } from "../types";
-import { makeLink, buildHtml } from "./files";
+import { Payload, File, Language, Page } from "../types";
+import { makePath, buildHtml } from "./files";
 import { createDir } from "./helpers";
 import { createCss } from "./style";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
 
-const isActiveMenu = (link: string, current: string): boolean => {
-  if (simplifyUrl(link) == simplifyUrl(current)) return true;
-  return false;
+const isActiveMenu = (link: string, current: string): boolean =>
+  simplifyUrl(link) == simplifyUrl(current);
+
+const isActiveMenuParent = (link: string, current: string): boolean =>
+  simplifyUrl(current).includes(simplifyUrl(link)) &&
+  simplifyUrl(current) !== "" &&
+  simplifyUrl(link) !== "";
+
+const getLanguage = (payload: Payload, file: File | null = null): Language => {
+  if (file && file.meta.language) return file.meta.language;
+  else if (payload.project?.language) return payload.project.language;
+  else return Language.EN;
 };
 
-const isActiveMenuParent = (link: string, current: string): boolean => {
-  if (
-    simplifyUrl(current).includes(simplifyUrl(link)) &&
-    simplifyUrl(current) !== "" &&
-    simplifyUrl(link) !== ""
-  )
-    return true;
-  return false;
-};
-
-interface PageCss {
-  data: string;
-  file: string;
-}
-interface PageHtml {
-  data: string;
-  file: string;
-}
-
-interface Page {
-  dir: string;
-  css: PageCss;
-  html: PageHtml;
-  link: string;
-  name: string;
-}
 export const buildPage = async (
   payload: Payload,
   file: File
 ): Promise<Page> => {
-  const currentLink = makeLink(file.path);
+  const currentLink = makePath(file, payload);
 
   /*
    * Generate the html for this page
@@ -65,7 +48,10 @@ export const buildPage = async (
       : [],
     meta: file.meta,
     contentOnly: false,
+    showContentImage: file.meta?.image && file.meta.type !== "photo",
     favicon: payload.favicon,
+    languages: payload.languages,
+    language: getLanguage(payload, file),
   };
 
   const html = await buildHtml(file, data);
