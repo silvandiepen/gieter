@@ -1,5 +1,5 @@
 ---
-type: article
+type: articles
 isArchive: true
 ---
 

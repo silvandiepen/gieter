@@ -56,7 +56,7 @@ const svgImages = (md, config) => {
         const srcIndex = token.attrIndex("src");
         const url = token.attrs[srcIndex][1];
         const caption = md.utils.escapeHtml(token.content);
-        const isSvg = url.indexOf(".svg") > 0;
+        const isSvg = url.indexOf(".svg") >= url.length - 5;
         const imgClass = generateClass(localConfig.imgClass);
         const otherAttributes = generateAttributes(md, token);
         if (!isSvg) {
