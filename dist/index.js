@@ -98,6 +98,19 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
      */
     if (project === null || project === void 0 ? void 0 : project.ignore)
         files = files.filter((file) => !project.ignore.some((ignore) => file.path.includes(ignore)));
+    /**
+     *
+     *  Process Partial files
+     *
+     */
+    yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+        if (file.name.charAt(0) == "-") {
+            const parentName = file.parent && file.name !== file.parent ? file.parent : "";
+            // files.forEach((f) => console.log(f.name));
+            // const parent = files.find((f) => f.name === parentName);
+            // console.log(parentName);
+        }
+    }));
     /*
      * If the logo is set in project settings, the logo will be downloaded and injected.
      */

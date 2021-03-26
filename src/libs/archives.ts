@@ -1,4 +1,4 @@
-import { makePath } from "./files";
+import { makePath, getParent } from "./files";
 import { Payload } from "../types";
 
 /*
@@ -17,9 +17,11 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
       let archiveType = file.meta.type;
 
       let children = [];
+      
+
       if (file.home && file.meta.isArchive) {
         children = payload.files
-          .filter((item) => item.parent == file.parent && !item.home)
+          .filter((item) => item.parent == file.id && !item.home)
 
           //  Enrich each child with meta information and a link
           .map((item) => ({
@@ -31,18 +33,15 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             parent: item.parent,
           }))
           .sort((a, b) => b.created - a.created);
+        
+      
       } else {
         /*
          * Inherit the parents type on each child
          */
         if (file.parent && !file.meta.type) {
-          let parent = payload.files.find((parentFile) => {
-            if (!parentFile.home) return false;
-            return (
-              parentFile.path.toLowerCase() ==
-              (parentPath(file.path) + "/readme.md").toLowerCase()
-            );
-          });
+
+          const parent = getParent(payload,file.parent);
 
           if (parent?.meta && parent.meta.type)
             if (file?.meta)
