@@ -90,6 +90,23 @@ export const files = async (payload: Payload): Promise<Payload> => {
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
 
+  /**
+   *
+   *  Process Partial files
+   *
+   */
+
+  await asyncForEach(files, async (file: File, index: number) => {
+    if (file.name.charAt(0) == "-") {
+      const parentName =
+        file.parent && file.name !== file.parent ? file.parent : "";
+
+      // files.forEach((f) => console.log(f.name));
+      // const parent = files.find((f) => f.name === parentName);
+      // console.log(parentName);
+    }
+  });
+
   /*
    * If the logo is set in project settings, the logo will be downloaded and injected.
    */

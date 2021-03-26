@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { File, buildHtmlArgs, Project, Meta, FileType } from "../types";
 
 import {
+  defaultLanguage,
   fixLangInPath,
   getLangFromFilename,
   getLangFromPath,
@@ -48,11 +49,11 @@ export const getFileTree = async (
         : fileName
       ).toLowerCase();
 
-      if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0)
-        return getFileTree(result);
-      else {
+      if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0) {
+        return getFileTree(result, filter);
+      } else if (extension == filter) {
         const { birthtime } = statSync(result);
-
+        console.log(extension, filter);
         return {
           id: fileId(relativePath),
           fileName: fileName.split(":")[0],
@@ -66,10 +67,10 @@ export const getFileTree = async (
       }
     })
   );
+
   return Array.prototype
     .concat(...files)
     .filter((r) => r !== null)
-    .filter((file) => file)
     .filter((file) => (filter ? file.ext == filter : true));
 };
 
@@ -88,7 +89,24 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
 
   await asyncForEach(fileTree, async (file: File) => {
     const data = await getFileData(file);
-    if (file.fileName.indexOf("_") !== 0)
+    if (file.fileName.indexOf("_") !== 0) {
+      const parentPath = dirname(file.relativePath).replace(process.cwd(), "");
+      const fileLanguage = getLangFromPath(file.relativePath);
+      const fileLanguageExtension =
+        fileLanguage == defaultLanguage ? "" : `:${fileLanguage}`;
+
+      const parentFile1 = join(parentPath, `readme${fileLanguageExtension}.md`);
+      const parentFile2 = join(parentPath, `readme${fileLanguageExtension}.md`);
+
+      // console.log(parentPath, fileLanguage);
+      // console.log(parentFile1, parentFile2);
+
+      const parent = fileTree.find((f) => {
+        return f.relativePath == parentFile1 || parentFile2;
+      });
+
+      console.log(parent);
+
       files.push({
         ...file,
         type: FileType.CONTENT,
@@ -97,6 +115,7 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
           file.relativePath.split("/").length - 2
         ],
       });
+    }
   });
 
   return files;
