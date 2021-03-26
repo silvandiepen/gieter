@@ -7,6 +7,8 @@ import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml } from "./files";
 import { createDir } from "./helpers";
 import { createCss } from "./style";
+import kleur from 'kleur'
+
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
 
@@ -106,8 +108,11 @@ export const createPage = async (
     await writeFile(page.css.file, page.css.data);
 
     log.BLOCK_LINE_SUCCESS(
-      `${page.name} created → ${page.link.replace("/index.html", "")}`
+      `${page.name}`
     );
+    log.BLOCK_LINE(
+      kleur.blue(`   ${page.link.replace("/index.html", "")}`)
+    )
   } catch (err) {
     throw Error(err);
   }

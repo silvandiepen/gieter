@@ -127,11 +127,17 @@ exports.settings = settings;
  *  Build
  */
 const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    log.BLOCK_MID("Pages");
-    // Get Siblings
-    yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { }));
-    // Create Content pages
-    yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
+    if (payload.languages.length > 1) {
+        // Create Content pages
+        yield helpers_1.asyncForEach(payload.languages, (language) => __awaiter(void 0, void 0, void 0, function* () {
+            log.BLOCK_MID(`Pages ${language}`);
+            yield helpers_1.asyncForEach(payload.files.filter((file) => file.language == language), (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
+        }));
+    }
+    else {
+        log.BLOCK_MID("Pages");
+        yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
+    }
     return Object.assign({}, payload);
 });
 exports.contentPages = contentPages;
