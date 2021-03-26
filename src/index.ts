@@ -141,18 +141,24 @@ export const settings = async (payload: Payload): Promise<Payload> => {
  */
 
 export const contentPages = async (payload: Payload): Promise<Payload> => {
-  log.BLOCK_MID("Pages");
 
-  // Get Siblings
-
-  await asyncForEach(payload.files, async (file: File) => {});
-
+if(payload.languages.length > 1){
   // Create Content pages
+   await asyncForEach(payload.languages,async(language)=>{
+    log.BLOCK_MID(`Pages ${language}`);
+    await asyncForEach(
+      payload.files.filter((file:File)=>file.language==language),
+      async (file: File) => await createPage(payload, file)
+    );
+  })
+} else {
+  log.BLOCK_MID("Pages");
 
   await asyncForEach(
     payload.files,
     async (file: File) => await createPage(payload, file)
   );
+}
 
   return { ...payload };
 };

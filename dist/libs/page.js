@@ -27,6 +27,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPage = exports.buildPage = void 0;
 const { writeFile } = require("fs").promises;
@@ -36,6 +39,7 @@ const language_1 = require("../libs/language");
 const files_1 = require("./files");
 const helpers_1 = require("./helpers");
 const style_1 = require("./style");
+const kleur_1 = __importDefault(require("kleur"));
 const simplifyUrl = (url) => url.replace("/index.html", "");
 const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current);
 const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
@@ -99,7 +103,8 @@ const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function
     try {
         yield writeFile(page.html.file, page.html.data);
         yield writeFile(page.css.file, page.css.data);
-        log.BLOCK_LINE_SUCCESS(`${page.name} created → ${page.link.replace("/index.html", "")}`);
+        log.BLOCK_LINE_SUCCESS(`${page.name}`);
+        log.BLOCK_LINE(kleur_1.default.blue(`   ${page.link.replace("/index.html", "")}`));
     }
     catch (err) {
         throw Error(err);
