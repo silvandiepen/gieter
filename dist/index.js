@@ -30,7 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.media = exports.contentPages = exports.settings = exports.files = void 0;
-const { existsSync } = require("fs");
+const fs_1 = require("fs");
 const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
@@ -44,13 +44,14 @@ const style_1 = require("./libs/style");
 const menu_1 = require("./libs/menu");
 const archives_1 = require("./libs/archives");
 const favicon_1 = require("./libs/favicon");
+// eslint-disable-next-line
 const PackageJson = require("../package.json");
 /*
  * Files
  */
 const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let files = yield files_1.getFiles(process.cwd(), ".md");
-    let project = {};
+    const project = {};
     /*
      * Languages
      */
@@ -86,9 +87,11 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
      */
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
-        const parentName = file.parent && file.name !== file.parent ? file.parent : "";
-        const parent = files.find((file) => file.name === parentName);
-        files[index].title = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.meta.title : helpers_1.fileTitle(file);
+        // const parentName =
+        //   file.parent && file.name !== file.parent ? file.parent : "";
+        // const parent = files.find((file) => file.name === parentName);
+        const title = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.meta.title : helpers_1.fileTitle(file);
+        files[index].title = title.toString();
     }));
     /*
      * Filter ignored files
@@ -144,7 +147,7 @@ exports.contentPages = contentPages;
 const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let mediaFiles = [];
     yield helpers_1.asyncForEach(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
-        const exists = yield existsSync(path_1.join(process.cwd(), folder));
+        const exists = yield fs_1.existsSync(path_1.join(process.cwd(), folder));
         if (exists) {
             yield fs_extra_1.copy(path_1.join(process.cwd(), folder), path_1.join(payload.settings.output, folder))
                 .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`); }))

@@ -4,7 +4,7 @@ import { Style, Payload, Language } from "../types";
 import { buildPage } from "./page";
 import { download } from "./files";
 import { createDir } from "./helpers";
-
+// eslint-disable-next-line
 const { readFile, writeFile } = require("fs").promises;
 import { join } from "path";
 
@@ -91,7 +91,7 @@ export const createBaseCss = async (
  */
 export const generateStyles = async (payload: Payload): Promise<Payload> => {
   // Download the style
-  let style: Style = {};
+  const style: Style = {};
 
   await download(
     "https://stil.style/default.css",

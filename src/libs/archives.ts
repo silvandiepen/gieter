@@ -13,10 +13,11 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 
     // Map all Archive parents and get their children
     .map((file, index) => {
-      let archiveName = file.name;
-      let archiveType = file.meta.type;
+      const archiveName = file.name;
+      const archiveType = file.meta.type;
 
       let children = [];
+
       if (file.home && file.meta.isArchive) {
         children = payload.files
           .filter((item) => item.parent == file.parent && !item.home)
@@ -30,13 +31,13 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             link: makePath(item),
             parent: item.parent,
           }))
-          .sort((a, b) => b.created - a.created);
+          .sort((a, b) => parseInt(b.created) - parseInt(a.created));
       } else {
         /*
          * Inherit the parents type on each child
          */
         if (file.parent && !file.meta.type) {
-          let parent = payload.files.find((parentFile) => {
+          const parent = payload.files.find((parentFile) => {
             if (!parentFile.home) return false;
             return (
               parentFile.path.toLowerCase() ==
@@ -66,10 +67,8 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 };
 
 export const getArchives = async (payload: Payload): Promise<Payload> => {
-  payload.files = payload.files.map((file, index) => {
+  payload.files = payload.files.map((file) => {
     if (file.meta.showArchive) {
-      let children = [];
-
       return { ...file };
     } else {
       return file;

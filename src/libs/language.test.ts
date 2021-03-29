@@ -57,14 +57,14 @@ describe("Correct the language in path", () => {
   });
   it("Should return a NL language path back", () => {
     const input = `test/index:nl.md`;
-    const output = `nl/test/index.md`;
+    const output = `/nl/test/index.md`;
     const result = fixLangInPath(input);
 
     expect(result).toStrictEqual(output);
   });
   it("Should return a NL language path back", () => {
     const input = `test:nl/index.md`;
-    const output = `nl/test/index.md`;
+    const output = `/nl/test/index.md`;
     const result = fixLangInPath(input);
 
     expect(result).toStrictEqual(output);

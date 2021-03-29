@@ -15,9 +15,9 @@ export const generateTags = async (payload: Payload): Promise<Payload> => {
   await asyncForEach(payload.files, (file: File) => {
     if (file.meta && file.meta?.tags) {
       for (let i = 0; i < file.meta.tags.length; i++) {
-        let parent = payload.files.find((f) => f.name == file.parent);
+        const parent = payload.files.find((f) => f.name == file.parent);
 
-        let tag = {
+        const tag = {
           name: file.meta.tags[i],
           parent: file.parent,
           type: parent?.meta.type || "",
@@ -38,7 +38,7 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
   if (payload.tags.length) log.BLOCK_MID("Tag pages");
 
   await asyncForEach(payload.tags, async (tag: Tag) => {
-    let path = `/tag/${tag.parent}/${tag.name}/index.html`;
+    const path = `/tag/${tag.parent}/${tag.name}/index.html`;
 
     const file: File = {
       id: fileId(path),

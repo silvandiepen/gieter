@@ -1,4 +1,4 @@
-const MarkdownIt = require("markdown-it");
+import MarkdownIt from "markdown-it";
 import emoji from "markdown-it-emoji";
 import prism from "markdown-it-prism";
 import anchor from "markdown-it-anchor";
@@ -24,8 +24,8 @@ md.use(alert, { bem: true });
 md.use(svgImages);
 
 export const unp = (input: string): string => {
-  const regex = new RegExp("<p>(?:<img[^>]+>|<svg[^>]+>(.*?)</svg>)</p>", "g");
-  const images = input.match(regex);
+  // const regex = new RegExp("<p>(?:<img[^>]+>|<svg[^>]+>(.*?)</svg>)</p>", "g");
+  // const images = input.match(regex);
   // console.log(images);
   return input;
 };

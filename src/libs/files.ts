@@ -3,18 +3,17 @@ import fetch from "node-fetch";
 import https from "https";
 import { dirname } from "path";
 import { createWriteStream, statSync } from "fs";
-const { readdir, readFile, mkdir } = require("fs").promises;
+import { readdir, readFile, mkdir } from "fs/promises";
 import pug from "pug";
 import { format } from "date-fns";
 
-import { File, buildHtmlArgs, Project, Meta, FileType } from "../types";
-
+import { File, buildHtmlArgs, Project, Meta, FileType, DownloadResponse,Dirent } from "../types";
 import {
   fixLangInPath,
   getLangFromFilename,
-  getLangFromPath,
 } from "./language";
 import { asyncForEach, removeTitle } from "./helpers";
+
 
 /*
 	::getFileTree
@@ -34,7 +33,7 @@ export const getFileTree = async (
   const direntGroup = await readdir(dir, { withFileTypes: true });
 
   const files = await Promise.all(
-    direntGroup.map(async (dirent: any) => {
+    direntGroup.map(async (dirent: Dirent) => {
       const result = resolve(dir, dirent.name);
       const extension = extname(result);
       const fileName = basename(result).replace(extension, "");
@@ -43,7 +42,7 @@ export const getFileTree = async (
       const lang =
         fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
 
-      let name = (fileName == "index"
+      const name = (fileName == "index"
         ? relativePath.split("/")[relativePath.split("/").length - 2]
         : fileName
       ).toLowerCase();
@@ -138,7 +137,7 @@ const renamePath = (ogLink: string, rename: string) => {
 
 export const makePath = (file: File): string => {
   let link = makeLink(file.path);
-  if (file.meta.name) link = renamePath(link, file.meta.name);
+  if (file.meta.name) link = renamePath(link, file.meta.name.toString());
 
   return link;
 };
@@ -160,13 +159,12 @@ export const makeLink = (path: string): string => {
 
 export const createFolder = async (folder: string): Promise<void> => {
   try {
-    await mkdir(folder, { recursive: true }, () => {
-      return;
-    });
+    await mkdir(folder, { recursive: true });
   } catch (err) {
     throw Error(err);
   }
 };
+
 
 export const download = async (
   url: string,
@@ -175,8 +173,7 @@ export const download = async (
   const agent = new https.Agent({
     rejectUnauthorized: false,
   });
-  //@ts-ignore
-  const res: any = await fetch(url, { agent });
+  const res: DownloadResponse = await fetch(url, { agent });
   await createFolder(dirname(destination));
   await new Promise((resolve, reject) => {
     const fileStream = createWriteStream(destination);
@@ -185,21 +182,21 @@ export const download = async (
       reject(err);
     });
     fileStream.on("finish", () => {
-      //@ts-ignore
+      //@ts-ignore: Resolve has to be resolved some how
       resolve();
     });
   });
 };
 
-export const getProjectConfig = (meta: Meta) => {
-  let project: Project = {};
+export const getProjectConfig = (meta: Meta):Project => {
+  const project: Project = {};
   // Merge configs
   Object.keys(meta).forEach((item) => {
-    if (item.includes("project")) {
+    if (item.includes("project") && typeof item == "string") {
       const key = item.toLowerCase().replace("project", "");
       if (key == "ignore") {
         project[key] = [];
-        meta[item].split(",").forEach((value) => {
+        meta[item].toString().split(",").forEach((value) => {
           project.ignore.push(value.trim());
         });
       } else project[key] = meta[item];

@@ -1,4 +1,4 @@
-const { writeFile } = require("fs").promises;
+import { writeFile } from "fs/promises";
 import { join } from "path";
 import * as log from "cli-block";
 
