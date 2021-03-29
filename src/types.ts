@@ -94,7 +94,7 @@ export interface LanguageMenuItem {
 }
 
 export interface Meta {
-  [x: string]: string | string[] | any;
+  [x: string]: any;
 }
 export interface MarkdownData {
   meta?: Meta;
@@ -124,4 +124,14 @@ export interface Page {
   html: PageHtml;
   link: string;
   name: string;
+}
+
+
+export interface DownloadResponse { 
+  body: any
+  [index: string]:any
+}
+export interface Dirent {
+  name: string,
+  [index: string]:any
 }

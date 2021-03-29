@@ -32,7 +32,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPage = exports.buildPage = void 0;
-const { writeFile } = require("fs").promises;
+const promises_1 = require("fs/promises");
 const path_1 = require("path");
 const log = __importStar(require("cli-block"));
 const language_1 = require("../libs/language");
@@ -101,8 +101,8 @@ const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function
     const page = yield exports.buildPage(payload, file);
     yield helpers_1.createDir(page.dir);
     try {
-        yield writeFile(page.html.file, page.html.data);
-        yield writeFile(page.css.file, page.css.data);
+        yield promises_1.writeFile(page.html.file, page.html.data);
+        yield promises_1.writeFile(page.css.file, page.css.data);
         log.BLOCK_LINE_SUCCESS(`${page.name}`);
         log.BLOCK_LINE(kleur_1.default.blue(`   ${page.link.replace("/index.html", "")}`));
     }

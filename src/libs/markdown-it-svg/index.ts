@@ -1,20 +1,21 @@
-import MarkdownIt from "markdown-it";
-
 import { join } from "path";
-import { download } from "../files";
 import { readFileSync } from "fs";
+import MarkdownIt from "markdown-it";
+import Token from 'markdown-it/lib/token';
 
-function generateAttributes(md: MarkdownIt, token: any) {
-  var ignore = ["src", "alt"];
-  var escape = ["title"];
-  var attributes = "";
+import { download } from "../files";
 
-  token.attrs.forEach((entry) => {
-    var name = entry[0];
+function generateAttributes(md: MarkdownIt, token: Token) {
+  const ignore = ["src", "alt"];
+  const escape = ["title"];
+  let attributes = "";
+
+  token.attrs.forEach((entry:string[]) => {
+    const name = entry[0];
 
     if (ignore.includes(name)) return;
 
-    var value = "";
+    let value = "";
 
     if (escape.includes(name)) {
       value = md.utils.escapeHtml(entry[1]);
@@ -50,7 +51,7 @@ const getImage = (url: string): string => {
   let svg = "";
 
   if (isLocal(url)) {
-    let tempFile = join(process.cwd(), "temp/image.svg");
+    const tempFile = join(process.cwd(), "temp/image.svg");
     download(url, tempFile);
     svg = loadSvg(tempFile);
   } else {
@@ -60,8 +61,11 @@ const getImage = (url: string): string => {
   return svg;
 };
 
-const svgImages = (md: MarkdownIt, config) => {
-  md.renderer.rules.image = (tokens, idx, options, env, self) => {
+interface MITConfig {
+  imgClass: string
+}
+const svgImages = (md: MarkdownIt, config:MITConfig):void => {
+  md.renderer.rules.image = (tokens:Token[], idx:number) => {
     const localConfig = { ...config };
 
     const token = tokens[idx];
