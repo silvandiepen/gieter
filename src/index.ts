@@ -10,6 +10,7 @@ import * as log from "cli-block";
 import { toHtml } from "./libs/markdown";
 import { asyncForEach, hello, fileTitle } from "./libs/helpers";
 import { getFiles, getFileTree, getProjectConfig } from "./libs/files";
+import { processPartials } from "./libs/partials";
 import { getSVGLogo } from "./libs/svg";
 import { File, Payload, Settings, Project } from "./types";
 import { createPage } from "./libs/page";
@@ -18,6 +19,7 @@ import { generateStyles } from "./libs/style";
 import { generateMenu } from "./libs/menu";
 import { generateArchives } from "./libs/archives";
 import { generateFavicon } from "./libs/favicon";
+
 
 const PackageJson = require("../package.json");
 
@@ -90,22 +92,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
 
-  /**
-   *
-   *  Process Partial files
-   *
-   */
 
-  await asyncForEach(files, async (file: File, index: number) => {
-    if (file.name.charAt(0) == "-") {
-      const parentName =
-        file.parent && file.name !== file.parent ? file.parent : "";
-
-      // files.forEach((f) => console.log(f.name));
-      // const parent = files.find((f) => f.name === parentName);
-      // console.log(parentName);
-    }
-  });
 
   /*
    * If the logo is set in project settings, the logo will be downloaded and injected.
@@ -194,6 +181,7 @@ hello()
     return s;
   })
   .then(files)
+  .then(processPartials)
   .then(media)
   .then(generateTags)
   .then(generateArchives)

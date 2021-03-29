@@ -211,6 +211,8 @@ export const download = async (
     });
   } catch(err){
     await BLOCK_LINE_ERROR('You don\'t seem to have an internet connection');
+    await BLOCK_LINE();
+    await BLOCK_END()
     throw Error(err);
   }
 };
