@@ -37,7 +37,7 @@ export const getLangFromFilename = (fileName: string): Language => {
   fileName = fileName.indexOf(".") ? fileName.split(".")[0] : fileName;
 
   if (fileName.indexOf(":") > 0) {
-    let lang = fileName.split(":")[1];
+    const lang = fileName.split(":")[1];
     switch (lang) {
       case "en":
         return Language.EN;
@@ -72,11 +72,11 @@ export const getLanguageMenu = (
 ): LanguageMenuItem[] => {
   const menu = [];
   payload.languages.forEach((lang: Language) => {
-    let altPage = payload.files.find(
+    const altPage = payload.files.find(
       (f) => f.id == file.id.replace(`${file.language}-`, `${lang}-`)
     );
 
-    let link = altPage
+    const link = altPage
       ? `${makePath(altPage)}`
       : `/${lang == defaultLanguage ? "" : lang}`;
 

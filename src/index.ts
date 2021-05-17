@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-const { existsSync } = require("fs");
+import { existsSync } from "fs";
 
 import { copy } from "fs-extra";
 import { join } from "path";
@@ -19,6 +19,7 @@ import { generateMenu } from "./libs/menu";
 import { generateArchives } from "./libs/archives";
 import { generateFavicon } from "./libs/favicon";
 
+// eslint-disable-next-line
 const PackageJson = require("../package.json");
 
 /*
@@ -26,7 +27,7 @@ const PackageJson = require("../package.json");
  */
 export const files = async (payload: Payload): Promise<Payload> => {
   let files = await getFiles(process.cwd(), ".md");
-  let project: Project = {};
+  const project: Project = {};
 
   /*
    * Languages
@@ -73,10 +74,11 @@ export const files = async (payload: Payload): Promise<Payload> => {
    * Inherit Parent Metadata
    */
   await asyncForEach(files, async (file: File, index: number) => {
-    const parentName =
-      file.parent && file.name !== file.parent ? file.parent : "";
-    const parent = files.find((file) => file.name === parentName);
-    files[index].title = file.meta?.title ? file.meta.title : fileTitle(file);
+    // const parentName =
+    //   file.parent && file.name !== file.parent ? file.parent : "";
+    // const parent = files.find((file) => file.name === parentName);
+    const title =  file.meta?.title ? file.meta.title : fileTitle(file)
+    files[index].title = title.toString();
   });
 
   /*

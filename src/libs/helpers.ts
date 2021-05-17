@@ -1,13 +1,16 @@
 import { existsSync } from "fs";
 const { mkdir } = require("fs").promises;
-
 import { File } from "../types";
 
-export const asyncForEach = async (array: any, callback: any) => {
+export async function asyncForEach<T>(
+  array: Array<T>,
+  callback: (item: T, index: number, og: T[]) => void
+): Promise<void> {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
   }
-};
+}
+
 export const getIndexes = (source: string, find: string): number[] => {
   const result = [];
   let i = 0;
@@ -37,12 +40,12 @@ export const createDir = async (dir: string): Promise<void> => {
   }
 };
 
-export const hello = async (args: any = {}) => {
+export const hello = async (args: unknown = {}): Promise<unknown> => {
   return args;
 };
 
 export const removeTitle = (input: string): string =>
-  input.replace(/\<h1(.*)\>(.*)\<\/h1\>/gi, "");
+  input.replace(/<h1(.*)>(.*)<\/h1>/gi, "");
 
 export const getTitle = (input: string): string => {
   const matches = /<h1(.*?)>(.+?)<\/h1>/gi.exec(input);

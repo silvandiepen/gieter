@@ -29,7 +29,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
 
   log.BLOCK_MID("Navigation");
 
-  let menuItems = {};
+  const menuItems = {};
   if (menu.length > 1)
     menu.forEach((item) => {
       menuItems[item.name] = item.link;

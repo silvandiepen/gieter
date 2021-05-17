@@ -7,7 +7,7 @@ interface connectionConfig {
   domain?: string;
 }
 
-export const checkConnection = async (config: connectionConfig = {}) => {
+export const checkConnection = async (config: connectionConfig = {}): Promise<void> => {
   const { timeout = 5000, retries = 5, domain = "https://google.com" } = config;
   const urlInfo = url.parse(domain);
   if (urlInfo.port === null) {
@@ -30,16 +30,16 @@ export const checkConnection = async (config: connectionConfig = {}) => {
           client.destroy();
           resolve(1);
         });
-        client.on("data", (): void => {});
+        // client.on("data", (): void => {});
         client.on("error", (err) => {
           client.destroy();
           reject(err);
         });
-        client.on("close", () => {});
+        // client.on("close", () => {});
       }
     );
     try {
-      //@ts-ignore
+      // @ts-ignoreL Connection should be typed
       await connectPromise.timeout(timeout);
     } catch (ex) {
       if (i === retries - 1) {
