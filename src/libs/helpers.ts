@@ -1,9 +1,11 @@
 import { existsSync } from "fs";
-import { mkdir } from 'fs/promises';
+const { mkdir } = require("fs").promises;
 import { File } from "../types";
 
-
-export async function asyncForEach<T>(array: Array<T>, callback: (item: T, index: number, og: T[]) =>void):Promise<void>{
+export async function asyncForEach<T>(
+  array: Array<T>,
+  callback: (item: T, index: number, og: T[]) => void
+): Promise<void> {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
   }
@@ -38,8 +40,7 @@ export const createDir = async (dir: string): Promise<void> => {
   }
 };
 
-
-export const hello = async (args: unknown = {}):Promise<unknown> => {
+export const hello = async (args: unknown = {}): Promise<unknown> => {
   return args;
 };
 

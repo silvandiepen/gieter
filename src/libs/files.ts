@@ -3,17 +3,22 @@ import fetch from "node-fetch";
 import https from "https";
 import { dirname } from "path";
 import { createWriteStream, statSync } from "fs";
-import { readdir, readFile, mkdir } from "fs/promises";
+const { readdir, readFile, mkdir } = require("fs").promises;
 import pug from "pug";
 import { format } from "date-fns";
 
-import { File, buildHtmlArgs, Project, Meta, FileType, DownloadResponse,Dirent } from "../types";
 import {
-  fixLangInPath,
-  getLangFromFilename,
-} from "./language";
+  File,
+  buildHtmlArgs,
+  Project,
+  Meta,
+  FileType,
+  DownloadResponse,
+  Dirent,
+} from "../types";
+import { fixLangInPath, getLangFromFilename } from "./language";
 import { asyncForEach, removeTitle } from "./helpers";
-
+import { Console } from "node:console";
 
 /*
 	::getFileTree
@@ -42,9 +47,10 @@ export const getFileTree = async (
       const lang =
         fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
 
-      const name = (fileName == "index"
-        ? relativePath.split("/")[relativePath.split("/").length - 2]
-        : fileName
+      const name = (
+        fileName == "index"
+          ? relativePath.split("/")[relativePath.split("/").length - 2]
+          : fileName
       ).toLowerCase();
 
       if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0)
@@ -92,13 +98,38 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
         ...file,
         type: FileType.CONTENT,
         data,
-        parent: file.relativePath.split("/")[
-          file.relativePath.split("/").length - 2
-        ],
+        parent:
+          file.relativePath.split("/")[file.relativePath.split("/").length - 2],
       });
   });
 
   return files;
+};
+
+const filterBlog = (file: File) => {
+  if (file?.archives && file?.archives[0]?.children?.length) {
+    if (!file.relativePath) {
+      return file.archives;
+    }
+    const parentUrl = file.relativePath
+      .split("/")
+      .filter(Boolean)
+      .slice(0, -1)
+      .join("-");
+
+    file.archives[0].children = file.archives[0].children.filter((child) => {
+      const childUrl = child.link
+        .split("/")
+        .filter(Boolean)
+        .slice(0, -2)
+        .join("-");
+      return childUrl == parentUrl;
+    });
+
+    return file.archives;
+  } else {
+    return [];
+  }
 };
 
 export const buildHtml = async (
@@ -113,7 +144,7 @@ export const buildHtml = async (
     content: file.html,
     meta: file.meta,
     pretty: true,
-    archives: file.archives || [],
+    archives: filterBlog(file),
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,
@@ -165,7 +196,6 @@ export const createFolder = async (folder: string): Promise<void> => {
   }
 };
 
-
 export const download = async (
   url: string,
   destination: string
@@ -188,7 +218,7 @@ export const download = async (
   });
 };
 
-export const getProjectConfig = (meta: Meta):Project => {
+export const getProjectConfig = (meta: Meta): Project => {
   const project: Project = {};
   // Merge configs
   Object.keys(meta).forEach((item) => {
@@ -196,9 +226,12 @@ export const getProjectConfig = (meta: Meta):Project => {
       const key = item.toLowerCase().replace("project", "");
       if (key == "ignore") {
         project[key] = [];
-        meta[item].toString().split(",").forEach((value) => {
-          project.ignore.push(value.trim());
-        });
+        meta[item]
+          .toString()
+          .split(",")
+          .forEach((value) => {
+            project.ignore.push(value.trim());
+          });
       } else project[key] = meta[item];
     }
   });

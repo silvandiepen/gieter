@@ -1,4 +1,5 @@
-import { writeFile } from "fs/promises";
+const { writeFile } = require("fs").promises;
+
 import { join } from "path";
 import * as log from "cli-block";
 
@@ -7,8 +8,7 @@ import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml } from "./files";
 import { createDir } from "./helpers";
 import { createCss } from "./style";
-import kleur from 'kleur'
-
+import kleur from "kleur";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
 
@@ -107,12 +107,8 @@ export const createPage = async (
     await writeFile(page.html.file, page.html.data);
     await writeFile(page.css.file, page.css.data);
 
-    log.BLOCK_LINE_SUCCESS(
-      `${page.name}`
-    );
-    log.BLOCK_LINE(
-      kleur.blue(`   ${page.link.replace("/index.html", "")}`)
-    )
+    log.BLOCK_LINE_SUCCESS(`${page.name}`);
+    log.BLOCK_LINE(kleur.blue(`   ${page.link.replace("/index.html", "")}`));
   } catch (err) {
     throw Error(err);
   }
