@@ -1,24 +1,5 @@
 #!/usr/bin/env node
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -33,7 +14,7 @@ exports.media = exports.contentPages = exports.settings = exports.files = void 0
 const fs_1 = require("fs");
 const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
-const log = __importStar(require("cli-block"));
+const cli_block_1 = require("cli-block");
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
@@ -109,8 +90,8 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
      * Logging
      */
     if (Object.keys(project).length) {
-        log.BLOCK_MID("Project settings");
-        log.BLOCK_SETTINGS(project, {}, { exclude: ["logoData"] });
+        cli_block_1.blockMid("Project settings");
+        cli_block_1.blockSettings(project, {}, { exclude: ["logoData"] });
     }
     return Object.assign(Object.assign({}, payload), { files: files, project, languages });
 });
@@ -133,12 +114,12 @@ const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     if (payload.languages.length > 1) {
         // Create Content pages
         yield helpers_1.asyncForEach(payload.languages, (language) => __awaiter(void 0, void 0, void 0, function* () {
-            log.BLOCK_MID(`Pages ${language}`);
+            cli_block_1.blockMid(`Pages ${language}`);
             yield helpers_1.asyncForEach(payload.files.filter((file) => file.language == language), (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
         }));
     }
     else {
-        log.BLOCK_MID("Pages");
+        cli_block_1.blockMid("Pages");
         yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
     }
     return Object.assign({}, payload);
@@ -150,7 +131,7 @@ const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         const exists = yield fs_1.existsSync(path_1.join(process.cwd(), folder));
         if (exists) {
             yield fs_extra_1.copy(path_1.join(process.cwd(), folder), path_1.join(payload.settings.output, folder))
-                .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`); }))
+                .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield cli_block_1.blockLineSuccess(`Copied ${folder} folder`); }))
                 .catch((err) => console.error(err));
             mediaFiles = [
                 ...(yield files_1.getFileTree(path_1.join(process.cwd(), folder), ".svg")),
@@ -163,7 +144,7 @@ exports.media = media;
 helpers_1.hello()
     .then(exports.settings)
     .then((s) => {
-    log.BLOCK_START(`Open Letter ${PackageJson.version}`);
+    cli_block_1.blockHeader(`Open Letter ${PackageJson.version}`);
     return s;
 })
     .then(exports.files)
@@ -176,6 +157,6 @@ helpers_1.hello()
     .then(exports.contentPages)
     .then(tags_1.createTagPages)
     .then(() => {
-    log.BLOCK_END();
+    cli_block_1.blockFooter();
 });
 //# sourceMappingURL=index.js.map

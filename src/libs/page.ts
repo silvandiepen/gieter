@@ -1,7 +1,7 @@
 const { writeFile } = require("fs").promises;
 
 import { join } from "path";
-import * as log from "cli-block";
+import { blockLine, blockLineSuccess } from "cli-block";
 
 import { Payload, File, Page } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
@@ -107,8 +107,8 @@ export const createPage = async (
     await writeFile(page.html.file, page.html.data);
     await writeFile(page.css.file, page.css.data);
 
-    log.BLOCK_LINE_SUCCESS(`${page.name}`);
-    log.BLOCK_LINE(kleur.blue(`   ${page.link.replace("/index.html", "")}`));
+    blockLineSuccess(`${page.name}`);
+    blockLine(kleur.blue(`   ${page.link.replace("/index.html", "")}`));
   } catch (err) {
     throw Error(err);
   }

@@ -1,4 +1,4 @@
-import * as log from "cli-block";
+import { blockLine, blockSettings, blockMid } from "cli-block";
 
 import { makePath } from "./files";
 import { Payload } from "../types";
@@ -27,7 +27,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
     })
     .filter((item) => item.active);
 
-  log.BLOCK_MID("Navigation");
+  blockMid("Navigation");
 
   const menuItems = {};
   if (menu.length > 1)
@@ -36,9 +36,9 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
     });
 
   if (menu.length < 2) {
-    await log.BLOCK_LINE("No menu");
+    blockLine("No menu");
     menu = [];
-  } else await log.BLOCK_SETTINGS(menuItems);
+  } else await blockSettings(menuItems);
 
   return { ...payload, menu };
 };

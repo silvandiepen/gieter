@@ -45,7 +45,7 @@ export enum FileType {
   ARCHIVE = "archive",
 }
 
-interface Archive {
+export interface Archive {
   name: string;
   type: string;
   children: File[];

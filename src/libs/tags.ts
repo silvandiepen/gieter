@@ -3,7 +3,7 @@ import { Payload, File, FileType, Tag, Language } from "../types";
 import { createPage } from "./page";
 import { fileId } from "./files";
 
-import * as log from "cli-block";
+import { blockMid } from "cli-block";
 
 /*
  *  Tags
@@ -35,7 +35,7 @@ export const generateTags = async (payload: Payload): Promise<Payload> => {
 };
 
 export const createTagPages = async (payload: Payload): Promise<Payload> => {
-  if (payload.tags.length) log.BLOCK_MID("Tag pages");
+  if (payload.tags.length) blockMid("Tag pages");
 
   await asyncForEach(payload.tags, async (tag: Tag) => {
     const path = `/tag/${tag.parent}/${tag.name}/index.html`;

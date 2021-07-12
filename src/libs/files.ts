@@ -15,10 +15,10 @@ import {
   FileType,
   DownloadResponse,
   Dirent,
+  Archive,
 } from "../types";
 import { fixLangInPath, getLangFromFilename } from "./language";
 import { asyncForEach, removeTitle } from "./helpers";
-import { Console } from "node:console";
 
 /*
 	::getFileTree
@@ -106,7 +106,7 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
   return files;
 };
 
-const filterBlog = (file: File) => {
+const filterBlog = (file: File): Archive[] => {
   if (file?.archives && file?.archives[0]?.children?.length) {
     if (!file.relativePath) {
       return file.archives;

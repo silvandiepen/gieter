@@ -5,7 +5,13 @@ import { existsSync } from "fs";
 
 import { copy } from "fs-extra";
 import { join } from "path";
-import * as log from "cli-block";
+import {
+  blockMid,
+  blockHeader,
+  blockFooter,
+  blockSettings,
+  blockLineSuccess,
+} from "cli-block";
 
 import { toHtml } from "./libs/markdown";
 import { asyncForEach, hello, fileTitle } from "./libs/helpers";
@@ -77,7 +83,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
     // const parentName =
     //   file.parent && file.name !== file.parent ? file.parent : "";
     // const parent = files.find((file) => file.name === parentName);
-    const title =  file.meta?.title ? file.meta.title : fileTitle(file)
+    const title = file.meta?.title ? file.meta.title : fileTitle(file);
     files[index].title = title.toString();
   });
 
@@ -102,8 +108,8 @@ export const files = async (payload: Payload): Promise<Payload> => {
    * Logging
    */
   if (Object.keys(project).length) {
-    log.BLOCK_MID("Project settings");
-    log.BLOCK_SETTINGS(project, {}, { exclude: ["logoData"] });
+    blockMid("Project settings");
+    blockSettings(project, {}, { exclude: ["logoData"] });
   }
 
   return { ...payload, files: files, project, languages };
@@ -126,24 +132,23 @@ export const settings = async (payload: Payload): Promise<Payload> => {
  */
 
 export const contentPages = async (payload: Payload): Promise<Payload> => {
+  if (payload.languages.length > 1) {
+    // Create Content pages
+    await asyncForEach(payload.languages, async (language) => {
+      blockMid(`Pages ${language}`);
+      await asyncForEach(
+        payload.files.filter((file: File) => file.language == language),
+        async (file: File) => await createPage(payload, file)
+      );
+    });
+  } else {
+    blockMid("Pages");
 
-if(payload.languages.length > 1){
-  // Create Content pages
-   await asyncForEach(payload.languages,async(language)=>{
-    log.BLOCK_MID(`Pages ${language}`);
     await asyncForEach(
-      payload.files.filter((file:File)=>file.language==language),
+      payload.files,
       async (file: File) => await createPage(payload, file)
     );
-  })
-} else {
-  log.BLOCK_MID("Pages");
-
-  await asyncForEach(
-    payload.files,
-    async (file: File) => await createPage(payload, file)
-  );
-}
+  }
 
   return { ...payload };
 };
@@ -158,9 +163,7 @@ export const media = async (payload: Payload): Promise<Payload> => {
         join(process.cwd(), folder),
         join(payload.settings.output, folder)
       )
-        .then(
-          async () => await log.BLOCK_LINE_SUCCESS(`Copied ${folder} folder`)
-        )
+        .then(async () => await blockLineSuccess(`Copied ${folder} folder`))
         .catch((err) => console.error(err));
 
       mediaFiles = [
@@ -175,7 +178,7 @@ export const media = async (payload: Payload): Promise<Payload> => {
 hello()
   .then(settings)
   .then((s) => {
-    log.BLOCK_START(`Open Letter ${PackageJson.version}`);
+    blockHeader(`Open Letter ${PackageJson.version}`);
     return s;
   })
   .then(files)
@@ -188,5 +191,5 @@ hello()
   .then(contentPages)
   .then(createTagPages)
   .then(() => {
-    log.BLOCK_END();
+    blockFooter();
   });
