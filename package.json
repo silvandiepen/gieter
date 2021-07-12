@@ -1,6 +1,6 @@
 {
   "name": "open-letter",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Create an open letter html from Markdown",
   "main": "dist/index.js",
   "bin": {
