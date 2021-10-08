@@ -1,4 +1,4 @@
-### Meta
+## Meta
 
 | setting              | default         | description                                                                     |
 | -------------------- | --------------- | ------------------------------------------------------------------------------- |
@@ -9,5 +9,6 @@
 | projectDescription   | none            | set the description for the whole website                                       |
 | projectLogo          | none            | set a logo for in the header                                                    |
 | projectStyle         | none            | Set a custom style (loaded on top of the default)                               |
+| projectScript        | none            | Set a custom script (loaded in the footer)                                      |
 | projectStyleOverrule | none            | Set a style (instead of the default)                                            |
 | redirect             | none            | Set a link to redirect to                                                       |

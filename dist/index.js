@@ -131,7 +131,7 @@ const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         const exists = yield fs_1.existsSync(path_1.join(process.cwd(), folder));
         if (exists) {
             yield fs_extra_1.copy(path_1.join(process.cwd(), folder), path_1.join(payload.settings.output, folder))
-                .then(() => __awaiter(void 0, void 0, void 0, function* () { return yield cli_block_1.blockLineSuccess(`Copied ${folder} folder`); }))
+                .then(() => cli_block_1.blockLineSuccess(`Copied ${folder} folder`))
                 .catch((err) => console.error(err));
             mediaFiles = [
                 ...(yield files_1.getFileTree(path_1.join(process.cwd(), folder), ".svg")),

@@ -16,6 +16,13 @@ footer.footer
                     a.language__link(href=`${language.link}`)
                         span.language__text=language.name
 
+if project.script
+    if typeof project.script === "string"
+        script(lang="text/javascript", src=`${project.script}`)        
+    else 
+        each script in project.script
+            script(lang="text/javascript", src=`${script}`)
+
 script. 
     const isDarkMode = window.matchMedia('prefers-color-scheme: dark').matches;
     let localMode = isDarkMode ? 'dark' : 'light';
@@ -35,7 +42,7 @@ script.
     // Set body attribute
     document.body.setAttribute('color-mode',mode);
     }
-    
+
     function switchMode(){
     console.log(`switching to ${localMode ? 'darkMode' : 'lightMode'}`);
     if(localMode == 'dark') setCurrentMode('light');

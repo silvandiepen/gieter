@@ -3,6 +3,7 @@ title: Home
 hide: true
 projectTitle: Open Letter
 projectStyle: media/custom.css
+projectScript: assets/test.js
 ---
 
 # Open letter

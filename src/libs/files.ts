@@ -230,7 +230,11 @@ export const getProjectConfig = (meta: Meta): Project => {
           .toString()
           .split(",")
           .forEach((value) => {
-            project.ignore.push(value.trim());
+            value = value.trim();
+            if (value.indexOf(",")) {
+              value = value.split(",");
+            }
+            project.ignore.push(value);
           });
       } else project[key] = meta[item];
     }

@@ -2,7 +2,6 @@
 "use strict";
 
 import { existsSync } from "fs";
-
 import { copy } from "fs-extra";
 import { join } from "path";
 import {
@@ -163,7 +162,7 @@ export const media = async (payload: Payload): Promise<Payload> => {
         join(process.cwd(), folder),
         join(payload.settings.output, folder)
       )
-        .then(async () => await blockLineSuccess(`Copied ${folder} folder`))
+        .then(() => blockLineSuccess(`Copied ${folder} folder`))
         .catch((err) => console.error(err));
 
       mediaFiles = [
