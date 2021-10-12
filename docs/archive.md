@@ -1,4 +1,7 @@
-### Archives
+---
+image: /media/icon_archive.svg
+---
+# Archives
 
 You can create archives in specific types, archive pages won't be added to the menu and will be displayed in their parent as a list.
 

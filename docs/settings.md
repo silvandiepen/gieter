@@ -1,5 +1,7 @@
-
-### Settings
+---
+image: /media/icon_settings.svg
+---
+# Settings
 
 Open letter does not support any settings from the cli. Just to keep it as straightforward as possible.
 

@@ -1,5 +1,8 @@
+---
+image: /media/icon_style.svg
+---
 
-### Styling
+# Styling
 
 Open letter automatically downloads the basic stylesheet from [stil](https://stil.style), if you want to add other stylesheet or add extra styling, you can use the settings.
 

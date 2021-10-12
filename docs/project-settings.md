@@ -1,5 +1,4 @@
-
-## Project Settings
+# Project Settings
 
 There are also a few project settings you can alter defining them in **any** of the markdown files.
 
