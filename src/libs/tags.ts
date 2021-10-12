@@ -71,7 +71,7 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
       archives: [
         {
           name: tag.name,
-          type: "",
+          type: "articles",
           children: archive,
         },
       ],
