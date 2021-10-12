@@ -33,18 +33,20 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
     /*
      * Generate the html for this page
      */
+    const menu = payload.menu
+        ? payload.menu
+            .map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) })))
+            .filter((item) => item.language == currentLanguage)
+        : [];
+    const tags = payload.tags
+        ? payload.tags.filter((tag) => tag.parent == file.parent)
+        : [];
     const data = {
-        menu: payload.menu
-            ? payload.menu
-                .map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) })))
-                .filter((item) => item.language == currentLanguage)
-            : [],
+        menu,
+        tags,
         style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
         project: payload.project,
         media: payload.media,
-        tags: payload.tags
-            ? payload.tags.filter((tag) => tag.parent == file.parent)
-            : [],
         meta: file.meta,
         contentOnly: false,
         showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",

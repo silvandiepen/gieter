@@ -217,27 +217,3 @@ export const download = async (
     });
   });
 };
-
-export const getProjectConfig = (meta: Meta): Project => {
-  const project: Project = {};
-  // Merge configs
-  Object.keys(meta).forEach((item) => {
-    if (item.includes("project") && typeof item == "string") {
-      const key = item.toLowerCase().replace("project", "");
-      if (key == "ignore") {
-        project[key] = [];
-        meta[item]
-          .toString()
-          .split(",")
-          .forEach((value) => {
-            value = value.trim();
-            if (value.indexOf(",")) {
-              value = value.split(",");
-            }
-            project.ignore.push(value);
-          });
-      } else project[key] = meta[item];
-    }
-  });
-  return project;
-};

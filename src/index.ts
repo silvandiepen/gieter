@@ -14,7 +14,8 @@ import {
 
 import { toHtml } from "./libs/markdown";
 import { asyncForEach, hello, fileTitle } from "./libs/helpers";
-import { getFiles, getFileTree, getProjectConfig } from "./libs/files";
+import { getFiles, getFileTree } from "./libs/files";
+import { getProjectData } from "./libs/project";
 import { getSVGLogo } from "./libs/svg";
 import { File, Payload, Settings, Project } from "./types";
 import { createPage } from "./libs/page";
@@ -32,7 +33,7 @@ const PackageJson = require("../package.json");
  */
 export const files = async (payload: Payload): Promise<Payload> => {
   let files = await getFiles(process.cwd(), ".md");
-  const project: Project = {};
+  // const project: Project = {};
 
   /*
    * Languages
@@ -54,12 +55,9 @@ export const files = async (payload: Payload): Promise<Payload> => {
       html: rendered.document,
       meta: rendered.meta,
     };
-
-    const projectMeta = getProjectConfig(rendered.meta);
-    Object.keys(projectMeta).forEach((key) => {
-      if (!project[key]) project[key] = projectMeta[key];
-    });
   });
+
+  const project: Project = await getProjectData(files);
 
   /*
    * When the file is a "home" file, it gets certain privileges
@@ -111,7 +109,12 @@ export const files = async (payload: Payload): Promise<Payload> => {
     blockSettings(project, {}, { exclude: ["logoData"] });
   }
 
-  return { ...payload, files: files, project, languages };
+  return {
+    ...payload,
+    files: files,
+    project,
+    languages,
+  };
 };
 
 /*

@@ -13,6 +13,7 @@ export interface Project {
   styleOverrule?: string;
   language?: Language;
   script?: string | string[];
+  groupTags?: boolean;
 }
 
 export interface Style {
@@ -36,7 +37,8 @@ export interface Payload extends Settings {
 }
 export interface Tag {
   name: string;
-  parent: string;
+  link?: string;
+  parent?: string;
   type: string;
 }
 

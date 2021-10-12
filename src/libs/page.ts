@@ -30,22 +30,27 @@ export const buildPage = async (
   /*
    * Generate the html for this page
    */
+
+  const menu = payload.menu
+    ? payload.menu
+        .map((item) => ({
+          ...item,
+          current: isActiveMenu(item.link, currentLink),
+          isParent: isActiveMenuParent(item.link, currentLink),
+        }))
+        .filter((item) => item.language == currentLanguage)
+    : [];
+
+  const tags = payload.tags
+    ? payload.tags.filter((tag) => tag.parent == file.parent)
+    : [];
+
   const data = {
-    menu: payload.menu
-      ? payload.menu
-          .map((item) => ({
-            ...item,
-            current: isActiveMenu(item.link, currentLink),
-            isParent: isActiveMenuParent(item.link, currentLink),
-          }))
-          .filter((item) => item.language == currentLanguage)
-      : [],
+    menu,
+    tags,
     style: { ...payload.style, page: currentLink.replace(".html", ".css") },
     project: payload.project,
     media: payload.media,
-    tags: payload.tags
-      ? payload.tags.filter((tag) => tag.parent == file.parent)
-      : [],
     meta: file.meta,
     contentOnly: false,
     showContentImage: file.meta?.image && file.meta.type !== "photo",

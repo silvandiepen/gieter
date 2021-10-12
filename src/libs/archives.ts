@@ -30,6 +30,9 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             meta: { ...item.meta, hide: true },
             link: makePath(item),
             parent: item.parent,
+            tags: item?.meta.tags
+              ? payload.tags.filter((tag) => item?.meta.tags.includes(tag.name))
+              : [],
           }))
           .sort((a, b) => parseInt(b.created) - parseInt(a.created));
       } else {

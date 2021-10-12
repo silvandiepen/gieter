@@ -15,9 +15,9 @@ each archive in archives
                                         span.archive__month= formatDate(item.created, 'MM')
                                         span.archive__year= formatDate(item.created, 'yyyy')
                                 span.archive__text= item.title
-                        if item.meta.tags
+                        if item.tags
                             ul.archive__tags.tag__list  
-                                each tag in item.meta.tags
+                                each tag in item.tags
                                     li.tag__item
-                                        a.tag__link(href=`/tag/${item.parent}/${tag}`)
-                                            span.tag__text= tag
+                                        a.tag__link(href= tag.link)
+                                            span.tag__text= tag.name

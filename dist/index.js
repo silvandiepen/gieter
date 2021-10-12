@@ -18,6 +18,7 @@ const cli_block_1 = require("cli-block");
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const files_1 = require("./libs/files");
+const project_1 = require("./libs/project");
 const svg_1 = require("./libs/svg");
 const page_1 = require("./libs/page");
 const tags_1 = require("./libs/tags");
@@ -32,7 +33,7 @@ const PackageJson = require("../package.json");
  */
 const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let files = yield files_1.getFiles(process.cwd(), ".md");
-    const project = {};
+    // const project: Project = {};
     /*
      * Languages
      */
@@ -47,12 +48,8 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         const rendered = yield markdown_1.toHtml(file.data).then((r) => r);
         files[index] = Object.assign(Object.assign({}, file), { html: rendered.document, meta: rendered.meta });
-        const projectMeta = files_1.getProjectConfig(rendered.meta);
-        Object.keys(projectMeta).forEach((key) => {
-            if (!project[key])
-                project[key] = projectMeta[key];
-        });
     }));
+    const project = yield project_1.getProjectData(files);
     /*
      * When the file is a "home" file, it gets certain privileges
      */
@@ -93,7 +90,8 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         cli_block_1.blockMid("Project settings");
         cli_block_1.blockSettings(project, {}, { exclude: ["logoData"] });
     }
-    return Object.assign(Object.assign({}, payload), { files: files, project, languages });
+    return Object.assign(Object.assign({}, payload), { files: files, project,
+        languages });
 });
 exports.files = files;
 /*

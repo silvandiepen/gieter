@@ -4,6 +4,7 @@ hide: true
 projectTitle: Open Letter
 projectStyle: media/custom.css
 projectScript: assets/test.js
+projectGroupTags: true
 ---
 
 # Open letter
