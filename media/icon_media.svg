@@ -5,6 +5,9 @@
 <style type="text/css">
 	.st0{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
 </style>
-<polygon class="st0" points="133.91,18 153,37.09 153,62.55 90,126 45,81 108.45,18 "/>
-<circle class="st0" cx="133.91" cy="37.09" r="4.5"/>
+<polygon class="st0" points="72,126 72,36 117,36 135,54 135,126 "/>
+<polyline class="st0" points="117,36 117,54 135,54 "/>
+<polygon class="st0" points="93.38,72 93.38,99 113.62,85.5 "/>
+<polygon class="st0" points="117,36 90,36 90,18 135,18 153,36 153,108 135,108 135,54 "/>
+<polyline class="st0" points="135,18 135,36 153,36 "/>
 </svg>
