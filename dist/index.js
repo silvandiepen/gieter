@@ -32,7 +32,7 @@ const PackageJson = require("../package.json");
  * Files
  */
 const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    let files = yield files_1.getFiles(process.cwd(), ".md");
+    let files = yield (0, files_1.getFiles)(process.cwd(), ".md");
     // const project: Project = {};
     /*
      * Languages
@@ -45,15 +45,15 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     /*
      * Generate all files into html and extract metadata
      */
-    yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
-        const rendered = yield markdown_1.toHtml(file.data).then((r) => r);
+    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+        const rendered = yield (0, markdown_1.toHtml)(file.data).then((r) => r);
         files[index] = Object.assign(Object.assign({}, file), { html: rendered.document, meta: rendered.meta });
     }));
-    const project = yield project_1.getProjectData(files);
+    const project = yield (0, project_1.getProjectData)(files);
     /*
      * When the file is a "home" file, it gets certain privileges
      */
-    yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         const relativePath = file.path.replace(process.cwd(), "");
         const pathGroup = relativePath.split("/");
         const isHome = pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
@@ -63,12 +63,12 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     /*
      * Inherit Parent Metadata
      */
-    yield helpers_1.asyncForEach(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
         // const parentName =
         //   file.parent && file.name !== file.parent ? file.parent : "";
         // const parent = files.find((file) => file.name === parentName);
-        const title = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.meta.title : helpers_1.fileTitle(file);
+        const title = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.meta.title : (0, helpers_1.fileTitle)(file);
         files[index].title = title.toString();
     }));
     /*
@@ -82,13 +82,13 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     /*
      * If the logo is set in project settings, the logo will be downloaded and injected.
      */
-    project.logoData = yield svg_1.getSVGLogo(project);
+    project.logoData = yield (0, svg_1.getSVGLogo)(project);
     /*
      * Logging
      */
     if (Object.keys(project).length) {
-        cli_block_1.blockMid("Project settings");
-        cli_block_1.blockSettings(project, {}, { exclude: ["logoData"] });
+        (0, cli_block_1.blockMid)("Project settings");
+        (0, cli_block_1.blockSettings)(project, {}, { exclude: ["logoData"] });
     }
     return Object.assign(Object.assign({}, payload), { files: files, project,
         languages });
@@ -99,7 +99,7 @@ exports.files = files;
  */
 const settings = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const settings = {
-        output: path_1.join(process.cwd(), "public"),
+        output: (0, path_1.join)(process.cwd(), "public"),
         languages: [],
     };
     return Object.assign(Object.assign({}, payload), { settings });
@@ -111,38 +111,38 @@ exports.settings = settings;
 const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (payload.languages.length > 1) {
         // Create Content pages
-        yield helpers_1.asyncForEach(payload.languages, (language) => __awaiter(void 0, void 0, void 0, function* () {
-            cli_block_1.blockMid(`Pages ${language}`);
-            yield helpers_1.asyncForEach(payload.files.filter((file) => file.language == language), (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
+        yield (0, helpers_1.asyncForEach)(payload.languages, (language) => __awaiter(void 0, void 0, void 0, function* () {
+            (0, cli_block_1.blockMid)(`Pages ${language}`);
+            yield (0, helpers_1.asyncForEach)(payload.files.filter((file) => file.language == language), (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
         }));
     }
     else {
-        cli_block_1.blockMid("Pages");
-        yield helpers_1.asyncForEach(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield page_1.createPage(payload, file); }));
+        (0, cli_block_1.blockMid)("Pages");
+        yield (0, helpers_1.asyncForEach)(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
     }
     return Object.assign({}, payload);
 });
 exports.contentPages = contentPages;
 const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     let mediaFiles = [];
-    yield helpers_1.asyncForEach(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
-        const exists = yield fs_1.existsSync(path_1.join(process.cwd(), folder));
+    yield (0, helpers_1.asyncForEach)(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
+        const exists = yield (0, fs_1.existsSync)((0, path_1.join)(process.cwd(), folder));
         if (exists) {
-            yield fs_extra_1.copy(path_1.join(process.cwd(), folder), path_1.join(payload.settings.output, folder))
-                .then(() => cli_block_1.blockLineSuccess(`Copied ${folder} folder`))
+            yield (0, fs_extra_1.copy)((0, path_1.join)(process.cwd(), folder), (0, path_1.join)(payload.settings.output, folder))
+                .then(() => (0, cli_block_1.blockLineSuccess)(`Copied ${folder} folder`))
                 .catch((err) => console.error(err));
             mediaFiles = [
-                ...(yield files_1.getFileTree(path_1.join(process.cwd(), folder), ".svg")),
+                ...(yield (0, files_1.getFileTree)((0, path_1.join)(process.cwd(), folder), ".svg")),
             ];
         }
     }));
     return Object.assign(Object.assign({}, payload), { media: mediaFiles });
 });
 exports.media = media;
-helpers_1.hello()
+(0, helpers_1.hello)()
     .then(exports.settings)
     .then((s) => {
-    cli_block_1.blockHeader(`Open Letter ${PackageJson.version}`);
+    (0, cli_block_1.blockHeader)(`Open Letter ${PackageJson.version}`);
     return s;
 })
     .then(exports.files)
@@ -155,6 +155,6 @@ helpers_1.hello()
     .then(exports.contentPages)
     .then(tags_1.createTagPages)
     .then(() => {
-    cli_block_1.blockFooter();
+    (0, cli_block_1.blockFooter)();
 });
 //# sourceMappingURL=index.js.map

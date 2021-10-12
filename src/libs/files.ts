@@ -1,17 +1,15 @@
-import { extname, resolve, basename, join } from "path";
 import fetch from "node-fetch";
 import https from "https";
-import { dirname } from "path";
-import { createWriteStream, statSync } from "fs";
 const { readdir, readFile, mkdir } = require("fs").promises;
 import pug from "pug";
+import { extname, resolve, basename, join } from "path";
+import { dirname } from "path";
+import { createWriteStream, statSync } from "fs";
 import { format } from "date-fns";
 
 import {
   File,
   buildHtmlArgs,
-  Project,
-  Meta,
   FileType,
   DownloadResponse,
   Dirent,

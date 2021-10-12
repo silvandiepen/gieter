@@ -28,7 +28,7 @@ const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simp
     simplifyUrl(link) !== "";
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const currentLink = files_1.makePath(file);
+    const currentLink = (0, files_1.makePath)(file);
     const currentLanguage = file.language;
     /*
      * Generate the html for this page
@@ -52,28 +52,28 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
         favicon: payload.favicon,
         homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
-        langMenu: language_1.getLanguageMenu(payload, file),
+        langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
     };
-    const html = yield files_1.buildHtml(file, data);
+    const html = yield (0, files_1.buildHtml)(file, data);
     /*
      * Generate the custom CSS for this page
      */
-    const customCssFilePath = path_1.join(payload.settings.output, currentLink).replace(".html", ".css");
-    const customHtml = yield files_1.buildHtml(file, Object.assign(Object.assign({}, data), { contentOnly: true }), "template/content.pug");
-    const customCss = yield style_1.createCss(customHtml, payload.style.og);
+    const customCssFilePath = (0, path_1.join)(payload.settings.output, currentLink).replace(".html", ".css");
+    const customHtml = yield (0, files_1.buildHtml)(file, Object.assign(Object.assign({}, data), { contentOnly: true }), "template/content.pug");
+    const customCss = yield (0, style_1.createCss)(customHtml, payload.style.og);
     /*
      * Return the page
      */
     return {
-        dir: path_1.join(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")),
+        dir: (0, path_1.join)(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")),
         css: {
             data: customCss,
             file: customCssFilePath,
         },
         html: {
             data: html,
-            file: path_1.join(payload.settings.output, currentLink),
+            file: (0, path_1.join)(payload.settings.output, currentLink),
         },
         name: file.name,
         link: currentLink,
@@ -81,13 +81,13 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.buildPage = buildPage;
 const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    const page = yield exports.buildPage(payload, file);
-    yield helpers_1.createDir(page.dir);
+    const page = yield (0, exports.buildPage)(payload, file);
+    yield (0, helpers_1.createDir)(page.dir);
     try {
         yield writeFile(page.html.file, page.html.data);
         yield writeFile(page.css.file, page.css.data);
-        cli_block_1.blockLineSuccess(`${page.name}`);
-        cli_block_1.blockLine(kleur_1.default.blue(`   ${page.link.replace("/index.html", "")}`));
+        (0, cli_block_1.blockLineSuccess)(`${page.name}`);
+        (0, cli_block_1.blockLine)(kleur_1.default.blue(`   ${page.link.replace("/index.html", "")}`));
     }
     catch (err) {
         throw Error(err);
