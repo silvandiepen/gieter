@@ -1,5 +1,6 @@
 ---
 image: /media/icon_style.svg
+tags: documentation
 ---
 
 # Styling

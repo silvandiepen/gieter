@@ -1,5 +1,6 @@
 ---
 image: /media/icon_archive.svg
+tags: documentation
 ---
 # Archives
 

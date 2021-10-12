@@ -1,5 +1,6 @@
 ---
 image: /media/icon_media.svg
+tags: documentation
 ---
 # Media and Assets
 
