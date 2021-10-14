@@ -80,6 +80,7 @@ export interface File {
   meta?: Meta;
   link?: string;
   type?: FileType;
+  thumbnail?: string;
 }
 export interface MenuItem {
   name: string;

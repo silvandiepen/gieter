@@ -26,6 +26,7 @@ const style_1 = require("./libs/style");
 const menu_1 = require("./libs/menu");
 const archives_1 = require("./libs/archives");
 const favicon_1 = require("./libs/favicon");
+const image_1 = require("./libs/image");
 // eslint-disable-next-line
 const PackageJson = require("../package.json");
 /*
@@ -70,6 +71,12 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         // const parent = files.find((file) => file.name === parentName);
         const title = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.meta.title : (0, helpers_1.fileTitle)(file);
         files[index].title = title.toString();
+    }));
+    /*
+     * Set the thumbnail for each file
+     */
+    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+        files[index].thumbnail = (0, image_1.getThumbnail)(file);
     }));
     /*
      * Filter ignored files

@@ -1,6 +1,5 @@
 import { makePath } from "./files";
-import { Payload, File } from "../types";
-
+import { Payload } from "../types";
 /*
  *  Archives
  */
@@ -18,26 +17,17 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 
       let children = [];
 
-      const thumbnail = (file: File) =>
-        file.meta?.thumbnail
-          ? file.meta.thumbnail
-          : file.meta?.image
-          ? file.meta.image
-          : null;
-
       if (file.home && file.meta.isArchive) {
         children = payload.files
           .filter((item) => item.parent == file.parent && !item.home)
 
           //  Enrich each child with meta information and a link
           .map((item) => ({
-            title: item.title,
+            ...item,
             date: item?.meta?.date,
             created: item?.meta?.date || item.created,
             meta: { ...item.meta, hide: true },
             link: makePath(item),
-            parent: item.parent,
-            thumbnail: thumbnail(item),
             tags: item?.meta.tags
               ? payload.tags.filter((tag) => item?.meta.tags.includes(tag.name))
               : [],

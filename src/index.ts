@@ -24,6 +24,8 @@ import { generateStyles } from "./libs/style";
 import { generateMenu } from "./libs/menu";
 import { generateArchives } from "./libs/archives";
 import { generateFavicon } from "./libs/favicon";
+import { fil } from "date-fns/locale";
+import { getThumbnail } from "./libs/image";
 
 // eslint-disable-next-line
 const PackageJson = require("../package.json");
@@ -82,6 +84,13 @@ export const files = async (payload: Payload): Promise<Payload> => {
     // const parent = files.find((file) => file.name === parentName);
     const title = file.meta?.title ? file.meta.title : fileTitle(file);
     files[index].title = title.toString();
+  });
+
+  /*
+   * Set the thumbnail for each file
+   */
+  await asyncForEach(files, async (file: File, index: number) => {
+    files[index].thumbnail = getThumbnail(file);
   });
 
   /*

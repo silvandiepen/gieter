@@ -4,6 +4,7 @@ import { createPage } from "./page";
 import { fileId } from "./files";
 
 import { blockMid } from "cli-block";
+import { getThumbnail } from "./image";
 
 /*
  *  Tags
@@ -78,6 +79,7 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
       html: `<h1>#${tag.name}</h1>`,
       type: FileType.TAG,
     };
+
     await createPage(payload, file);
   });
   return payload;
