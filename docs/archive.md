@@ -1,5 +1,5 @@
 ---
-image: /media/icon_archive.svg
+thumbnail: /media/icon_archive.svg
 tags: documentation
 ---
 # Archives

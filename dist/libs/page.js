@@ -27,7 +27,7 @@ const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simp
     simplifyUrl(current) !== "" &&
     simplifyUrl(link) !== "";
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b, _c;
     const currentLink = (0, files_1.makePath)(file);
     const currentLanguage = file.language;
     /*
@@ -41,15 +41,21 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
     const tags = payload.tags
         ? payload.tags.filter((tag) => tag.parent == file.parent)
         : [];
+    const thumbnail = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.thumbnail)
+        ? file.meta.thumbnail
+        : ((_b = file.meta) === null || _b === void 0 ? void 0 : _b.image)
+            ? file.meta.image
+            : null;
     const data = {
         menu,
         tags,
+        thumbnail,
         style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
         project: payload.project,
         media: payload.media,
         meta: file.meta,
         contentOnly: false,
-        showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
+        showContentImage: ((_c = file.meta) === null || _c === void 0 ? void 0 : _c.image) && file.meta.type !== "photo",
         favicon: payload.favicon,
         homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
         langMenu: (0, language_1.getLanguageMenu)(payload, file),

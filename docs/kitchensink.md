@@ -4,7 +4,7 @@ title: KitchenSink
 projectTitle: Open Letter
 projectLogo: media/logo.svg
 projectStyle: media/custom.css
-image: /media/icon_kitchensink.svg
+thumbnail: /media/icon_kitchensink.svg
 tags: documentation,preview
 ---
 

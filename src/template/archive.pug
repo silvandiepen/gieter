@@ -5,9 +5,9 @@ each archive in archives
                 each item in archive.children             
                     li.archive__item
                         a.archive__link(href= item.link)
-                            figure.archive__image(class=`${item.meta.image ? '': 'archive__image--empty'}`)
-                                if item.meta.image
-                                    img(src=item.meta.image)
+                            figure.archive__image(class=`${item.thumbnail ? '': 'archive__image--empty'}`)
+                                if item.thumbnail
+                                    img(src=item.thumbnail)
                             span.archive__info
                                 if item.date
                                     span.archive__date

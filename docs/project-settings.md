@@ -1,5 +1,5 @@
 ---
-image: /media/icon_project.svg
+thumbnail: /media/icon_project.svg
 tags: documentation
 ---
 

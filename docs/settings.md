@@ -1,5 +1,5 @@
 ---
-image: /media/icon_settings.svg
+thumbnail: /media/icon_settings.svg
 tags: documentation
 ---
 # Settings

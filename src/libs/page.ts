@@ -3,7 +3,7 @@ const { writeFile } = require("fs").promises;
 import { join } from "path";
 import { blockLine, blockLineSuccess } from "cli-block";
 
-import { Payload, File, Page } from "../types";
+import { Payload, File, Page, buildHtmlArgs } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml } from "./files";
 import { createDir } from "./helpers";
@@ -45,9 +45,16 @@ export const buildPage = async (
     ? payload.tags.filter((tag) => tag.parent == file.parent)
     : [];
 
-  const data = {
+  const thumbnail = file.meta?.thumbnail
+    ? file.meta.thumbnail
+    : file.meta?.image
+    ? file.meta.image
+    : null;
+
+  const data: buildHtmlArgs = {
     menu,
     tags,
+    thumbnail,
     style: { ...payload.style, page: currentLink.replace(".html", ".css") },
     project: payload.project,
     media: payload.media,

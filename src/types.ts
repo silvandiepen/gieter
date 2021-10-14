@@ -111,6 +111,15 @@ export interface buildHtmlArgs {
   media: File[];
   archives?: File[];
   contentOnly: boolean;
+
+  tags?: Tag[];
+  thumbnail?: string | null;
+  meta?: Meta;
+  showContentImage?: boolean;
+  favicon: string;
+  homeLink: string;
+  langMenu: LanguageMenuItem[];
+  language: Language;
 }
 interface PageCss {
   data: string;
