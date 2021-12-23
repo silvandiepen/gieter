@@ -1,20 +1,14 @@
 #!/usr/bin/env node
 "use strict";
 
-import { existsSync } from "fs";
-import { copy } from "fs-extra";
 import { join } from "path";
-import {
-  blockMid,
-  blockHeader,
-  blockFooter,
-  blockSettings,
-  blockLineSuccess,
-} from "cli-block";
+import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
+import { hello, asyncForEach } from "@sil/tools";
 
 import { toHtml } from "./libs/markdown";
-import { asyncForEach, hello, fileTitle } from "./libs/helpers";
-import { getFiles, getFileTree } from "./libs/files";
+import { fileTitle } from "./libs/helpers";
+import { createThumbnails, getMedia } from "./libs/media";
+import { getFiles } from "./libs/files";
 import { getProjectData } from "./libs/project";
 import { getSVGLogo } from "./libs/svg";
 import { File, Payload, Settings, Project } from "./types";
@@ -24,8 +18,7 @@ import { generateStyles } from "./libs/style";
 import { generateMenu } from "./libs/menu";
 import { generateArchives } from "./libs/archives";
 import { generateFavicon } from "./libs/favicon";
-import { fil } from "date-fns/locale";
-import { getThumbnail } from "./libs/image";
+import { getThumbnail } from "./libs/media";
 
 // eslint-disable-next-line
 const PackageJson = require("../package.json");
@@ -165,25 +158,11 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
 };
 
 export const media = async (payload: Payload): Promise<Payload> => {
-  let mediaFiles: File[] = [];
-  await asyncForEach(["assets", "media"], async (folder: string) => {
-    const exists = await existsSync(join(process.cwd(), folder));
+  const media = await getMedia(payload);
 
-    if (exists) {
-      await copy(
-        join(process.cwd(), folder),
-        join(payload.settings.output, folder)
-      )
-        .then(() => blockLineSuccess(`Copied ${folder} folder`))
-        .catch((err) => console.error(err));
+  await createThumbnails(payload);
 
-      mediaFiles = [
-        ...(await getFileTree(join(process.cwd(), folder), ".svg")),
-      ];
-    }
-  });
-
-  return { ...payload, media: mediaFiles };
+  return { ...payload, media };
 };
 
 hello()

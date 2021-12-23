@@ -139,10 +139,6 @@ export interface Page {
   name: string;
 }
 
-export interface DownloadResponse {
-  body: any;
-  [index: string]: any;
-}
 export interface Dirent {
   name: string;
   [index: string]: any;

@@ -11,12 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.media = exports.contentPages = exports.settings = exports.files = void 0;
-const fs_1 = require("fs");
-const fs_extra_1 = require("fs-extra");
 const path_1 = require("path");
 const cli_block_1 = require("cli-block");
+const tools_1 = require("@sil/tools");
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
+const media_1 = require("./libs/media");
 const files_1 = require("./libs/files");
 const project_1 = require("./libs/project");
 const svg_1 = require("./libs/svg");
@@ -26,7 +26,7 @@ const style_1 = require("./libs/style");
 const menu_1 = require("./libs/menu");
 const archives_1 = require("./libs/archives");
 const favicon_1 = require("./libs/favicon");
-const image_1 = require("./libs/image");
+const media_2 = require("./libs/media");
 // eslint-disable-next-line
 const PackageJson = require("../package.json");
 /*
@@ -46,7 +46,7 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     /*
      * Generate all files into html and extract metadata
      */
-    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, tools_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         const rendered = yield (0, markdown_1.toHtml)(file.data).then((r) => r);
         files[index] = Object.assign(Object.assign({}, file), { html: rendered.document, meta: rendered.meta });
     }));
@@ -54,7 +54,7 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     /*
      * When the file is a "home" file, it gets certain privileges
      */
-    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, tools_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         const relativePath = file.path.replace(process.cwd(), "");
         const pathGroup = relativePath.split("/");
         const isHome = pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
@@ -64,7 +64,7 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     /*
      * Inherit Parent Metadata
      */
-    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, tools_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
         // const parentName =
         //   file.parent && file.name !== file.parent ? file.parent : "";
@@ -75,8 +75,8 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     /*
      * Set the thumbnail for each file
      */
-    yield (0, helpers_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
-        files[index].thumbnail = (0, image_1.getThumbnail)(file);
+    yield (0, tools_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
+        files[index].thumbnail = (0, media_2.getThumbnail)(file);
     }));
     /*
      * Filter ignored files
@@ -118,35 +118,25 @@ exports.settings = settings;
 const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (payload.languages.length > 1) {
         // Create Content pages
-        yield (0, helpers_1.asyncForEach)(payload.languages, (language) => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, tools_1.asyncForEach)(payload.languages, (language) => __awaiter(void 0, void 0, void 0, function* () {
             (0, cli_block_1.blockMid)(`Pages ${language}`);
-            yield (0, helpers_1.asyncForEach)(payload.files.filter((file) => file.language == language), (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
+            yield (0, tools_1.asyncForEach)(payload.files.filter((file) => file.language == language), (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
         }));
     }
     else {
         (0, cli_block_1.blockMid)("Pages");
-        yield (0, helpers_1.asyncForEach)(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
+        yield (0, tools_1.asyncForEach)(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
     }
     return Object.assign({}, payload);
 });
 exports.contentPages = contentPages;
 const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    let mediaFiles = [];
-    yield (0, helpers_1.asyncForEach)(["assets", "media"], (folder) => __awaiter(void 0, void 0, void 0, function* () {
-        const exists = yield (0, fs_1.existsSync)((0, path_1.join)(process.cwd(), folder));
-        if (exists) {
-            yield (0, fs_extra_1.copy)((0, path_1.join)(process.cwd(), folder), (0, path_1.join)(payload.settings.output, folder))
-                .then(() => (0, cli_block_1.blockLineSuccess)(`Copied ${folder} folder`))
-                .catch((err) => console.error(err));
-            mediaFiles = [
-                ...(yield (0, files_1.getFileTree)((0, path_1.join)(process.cwd(), folder), ".svg")),
-            ];
-        }
-    }));
-    return Object.assign(Object.assign({}, payload), { media: mediaFiles });
+    const media = yield (0, media_1.getMedia)(payload);
+    yield (0, media_1.createThumbnails)(payload);
+    return Object.assign(Object.assign({}, payload), { media });
 });
 exports.media = media;
-(0, helpers_1.hello)()
+(0, tools_1.hello)()
     .then(exports.settings)
     .then((s) => {
     (0, cli_block_1.blockHeader)(`Open Letter ${PackageJson.version}`);

@@ -1,22 +1,14 @@
-import fetch from "node-fetch";
-import https from "https";
-const { readdir, readFile, mkdir } = require("fs").promises;
+const { readdir, mkdir } = require("fs").promises;
 import pug from "pug";
 import { extname, resolve, basename, join } from "path";
-import { dirname } from "path";
-import { createWriteStream, statSync } from "fs";
+import { statSync } from "fs";
 import { format } from "date-fns";
+import { renamePath, getFileData } from "@sil/tools";
 
-import {
-  File,
-  buildHtmlArgs,
-  FileType,
-  DownloadResponse,
-  Dirent,
-  Archive,
-} from "../types";
+import { File, buildHtmlArgs, FileType, Dirent, Archive } from "../types";
 import { fixLangInPath, getLangFromFilename } from "./language";
-import { asyncForEach, removeTitle } from "./helpers";
+import { removeTitle } from "./helpers";
+import { asyncForEach } from "@sil/tools";
 
 /*
 	::getFileTree
@@ -76,21 +68,13 @@ export const getFileTree = async (
     .filter((file) => (filter ? file.ext == filter : true));
 };
 
-export const getFileData = async (file: File): Promise<string> => {
-  try {
-    return await readFile(file.path).then((res) => res.toString());
-  } catch (err) {
-    throw Error(err);
-  }
-};
-
 export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
   const fileTree = await getFileTree(dir, ext);
 
   const files = [];
 
   await asyncForEach(fileTree, async (file: File) => {
-    const data = await getFileData(file);
+    const data = await getFileData(file.path);
     if (file.fileName.indexOf("_") !== 0)
       files.push({
         ...file,
@@ -158,12 +142,6 @@ export const buildHtml = async (
   return html;
 };
 
-const renamePath = (ogLink: string, rename: string) => {
-  const pathGroup = ogLink.split("/");
-  pathGroup[pathGroup.length - 2] = rename;
-  return pathGroup.join("/").toLowerCase();
-};
-
 export const makePath = (file: File): string => {
   let link = makeLink(file.path);
   if (file.meta.name) link = renamePath(link, file.meta.name.toString());
@@ -184,34 +162,4 @@ export const makeLink = (path: string): string => {
     "index"
     ? uri.replace(".html", "/index.html")
     : uri;
-};
-
-export const createFolder = async (folder: string): Promise<void> => {
-  try {
-    await mkdir(folder, { recursive: true });
-  } catch (err) {
-    throw Error(err);
-  }
-};
-
-export const download = async (
-  url: string,
-  destination: string
-): Promise<void> => {
-  const agent = new https.Agent({
-    rejectUnauthorized: false,
-  });
-  const res: DownloadResponse = await fetch(url, { agent });
-  await createFolder(dirname(destination));
-  await new Promise((resolve, reject) => {
-    const fileStream = createWriteStream(destination);
-    res.body?.pipe(fileStream);
-    res.body?.on("error", (err) => {
-      reject(err);
-    });
-    fileStream.on("finish", () => {
-      //@ts-ignore: Resolve has to be resolved some how
-      resolve();
-    });
-  });
 };

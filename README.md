@@ -15,6 +15,9 @@ Yes, also this website is generated, just using `npx open-letter`. All the menu,
 
 You can find the source code in ```https://github.com/silvandiepen/open-letter``` all files used for this page, is the main README.md and the files in the `/docs` folder.
 
+### Styling
+
+[Stil](https://stil.il)
 ### In use:
 
 [Sil van Diepen](https://www.sil.mt)

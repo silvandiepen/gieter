@@ -6,7 +6,7 @@ import { blockLine, blockLineSuccess } from "cli-block";
 import { Payload, File, Page, buildHtmlArgs } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml } from "./files";
-import { createDir } from "./helpers";
+import { createDir } from "@sil/tools";
 import { createCss } from "./style";
 import kleur from "kleur";
 

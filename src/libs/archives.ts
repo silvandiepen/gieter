@@ -1,11 +1,9 @@
 import { makePath } from "./files";
 import { Payload } from "../types";
+import { parentPath } from "@sil/tools";
 /*
  *  Archives
  */
-
-const parentPath = (path: string): string =>
-  path.split("/").slice(0, -1).join("/");
 
 export const generateArchives = async (payload: Payload): Promise<Payload> => {
   payload.files = payload.files

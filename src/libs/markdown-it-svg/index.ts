@@ -1,16 +1,15 @@
 import { join } from "path";
 import { readFileSync } from "fs";
 import MarkdownIt from "markdown-it";
-import Token from 'markdown-it/lib/token';
-
-import { download } from "../files";
+import Token from "markdown-it/lib/token";
+import { download } from "../download";
 
 function generateAttributes(md: MarkdownIt, token: Token) {
   const ignore = ["src", "alt"];
   const escape = ["title"];
   let attributes = "";
 
-  token.attrs.forEach((entry:string[]) => {
+  token.attrs.forEach((entry: string[]) => {
     const name = entry[0];
 
     if (ignore.includes(name)) return;
@@ -62,10 +61,10 @@ const getImage = (url: string): string => {
 };
 
 interface MITConfig {
-  imgClass: string
+  imgClass: string;
 }
-const svgImages = (md: MarkdownIt, config:MITConfig):void => {
-  md.renderer.rules.image = (tokens:Token[], idx:number) => {
+const svgImages = (md: MarkdownIt, config: MITConfig): void => {
+  md.renderer.rules.image = (tokens: Token[], idx: number) => {
     const localConfig = { ...config };
 
     const token = tokens[idx];

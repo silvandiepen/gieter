@@ -1,5 +1,6 @@
+import { asyncForEach } from "@sil/tools";
+
 import { Project, Meta, File } from "../types";
-import { asyncForEach } from "../libs/helpers";
 
 const fixProjectTypes = (input: Project): Project => {
   const fixedProject: Project = {};

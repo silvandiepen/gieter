@@ -1,6 +1,7 @@
 ---
 type: articles
 isArchive: true
+image: /media/logo.png
 ---
 
 # Documentation

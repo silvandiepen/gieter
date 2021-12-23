@@ -1,10 +1,10 @@
-import { asyncForEach } from "./helpers";
+import { asyncForEach } from "@sil/tools";
+
 import { Payload, File, FileType, Tag, Language } from "../types";
 import { createPage } from "./page";
 import { fileId } from "./files";
 
 import { blockMid } from "cli-block";
-import { getThumbnail } from "./image";
 
 /*
  *  Tags

@@ -1,9 +1,10 @@
 import { PurgeCSS } from "purgecss";
+import { createDir } from "@sil/tools";
+
+import { download } from "./download";
 
 import { Style, Payload, Language } from "../types";
 import { buildPage } from "./page";
-import { download } from "./files";
-import { createDir } from "./helpers";
 // eslint-disable-next-line
 const { readFile, writeFile } = require("fs").promises;
 
@@ -92,32 +93,36 @@ export const createBaseCss = async (
  */
 export const generateStyles = async (payload: Payload): Promise<Payload> => {
   // Download the style
-  const style: Style = {};
+  const style: Style = {
+    og: "",
+    path: "",
+    sheet: "",
+  };
 
-  await download(
-    "https://stil.style/default.css",
-    join(__dirname, "../dist/style.css")
-  );
+  // await download(
+  //   "https://stil.style/default.css",
+  //   join(__dirname, "../dist/style.css")
+  // );
 
-  const styleData = await readFile(join(__dirname, "../dist/style.css")).then(
-    (res: any) => res.toString()
-  );
+  // const styleData = await readFile(join(__dirname, "../dist/style.css")).then(
+  //   (res: any) => res.toString()
+  // );
 
-  const customCss = await createBaseCss(payload, styleData);
+  // const customCss = await createBaseCss(payload, styleData);
 
-  if (payload.files.length > 1) {
-    await createDir(payload.settings.output);
-    const filePath = join(payload.settings.output, "style.css");
-    await writeFile(filePath, customCss);
-    style.path = "/style.css";
-  } else {
-    style.sheet = customCss;
-  }
+  // if (payload.files.length > 1) {
+  //   await createDir(payload.settings.output);
+  //   const filePath = join(payload.settings.output, "style.css");
+  //   await writeFile(filePath, customCss);
+  //   style.path = "/style.css";
+  // } else {
+  //   style.sheet = customCss;
+  // }
 
-  style.og = styleData;
+  // style.og = styleData;
 
-  if (payload.project.styleOverrule) style.path = payload.project.styleOverrule;
-  if (payload.project.style) style.add = payload.project.style;
+  // if (payload.project.styleOverrule) style.path = payload.project.styleOverrule;
+  // if (payload.project.style) style.add = payload.project.style;
 
   return { ...payload, style };
 };
