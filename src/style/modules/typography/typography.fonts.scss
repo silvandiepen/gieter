@@ -1,0 +1,140 @@
+@mixin typography-fonts() {
+  $fonts: (
+    (
+      name: "sans-serif",
+      family:
+        '-apple-system, BlinkMacSystemFont, "Avenir Next", avenir, helvetica, " helvetica neue ", ubuntu, roboto, noto, "segoe ui", arial, sans-serif',
+    ),
+    (
+      name: "serif",
+      family: "georgia, times, serif",
+    ),
+    (
+      name: "code",
+      family: "Consolas, monaco, monospace",
+    ),
+    (
+      name: "Helvetica",
+      family: '"Helvetica neue", helvetica, sans-serif',
+    ),
+    (
+      name: "Avenir",
+      family: '"Avenir Next", Avenir, sans-serif',
+    ),
+    (
+      name: "Poppins",
+      family: "Poppins, -apple-system, BlinkMacSystemFont, sans-serif",
+      google: true,
+      display: swap,
+      weights: (
+        "light": 200,
+        "regular": 400,
+        "medium": 500,
+        "bold": 600,
+      ),
+    ),
+    (
+      name: "Inter",
+      family: "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+      google: true,
+      display: swap,
+      weights: (
+        "light": 200,
+        "regular": 400,
+        "medium": 500,
+        "bold": 600,
+      ),
+    ),
+    (
+      name: "Work Sans",
+      key: "work-sans",
+      family: "Work Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+      google: true,
+      display: swap,
+      weights: (
+        "light": 200,
+        "regular": 400,
+        "medium": 500,
+        "bold": 600,
+      ),
+    ),
+    (
+      name: "Raleway",
+      family: "Raleway, -apple-system, BlinkMacSystemFont, sans-serif",
+      google: true,
+      display: swap,
+      weights: (
+        "light": 200,
+        "regular": 400,
+        "medium": 500,
+        "bold": 600,
+      ),
+    )
+  ) !default;
+
+  @each $font in $fonts {
+    $name: map-get($font, "name");
+    $weights: map-get($font, "weights");
+    $family: map-get($font, "family");
+    $google: map-get($font, "google");
+    $display: map-get($font, "display");
+    $key: if-else(
+      map-get($font, "key"),
+      "typography.fonts.#{to-lower-case(to-str($name))}"
+    );
+
+    $_name: str-replace($name, " ", "-");
+
+    @if export($key) {
+      .font--#{to-lower-case($_name)} {
+        --current-font: unquote(to-str($family));
+        font-family: unquote(to-str($family));
+      }
+
+      // Create Weight classes
+      @if $weights {
+        @if type-of($weights) == "list" {
+          @each $weight in $weights {
+            .font--#{to-lower-case($_name)}--#{$weight} {
+              font-family: unquote(to-str($family));
+              font-weight: #{$weight};
+            }
+          }
+        } @else if type-of($weights) == "map" {
+          @each $weight_name, $weight_value in $weights {
+            .font--#{to-lower-case($_name)}--#{$weight_name} {
+              font-family: unquote(to-str($family));
+              font-weight: #{$weight_value};
+            }
+          }
+        }
+      }
+
+      // Create Google Font imports
+      @if $google {
+        // Google Weights for import
+        $_g_weights: 400;
+        $_g_name: str-replace($name, " ", "+");
+        @if $weights {
+          @if type-of($weights) == "list" {
+            $_g_weights: list-to-string($weights, ";");
+          }
+          @if type-of($weights) == "map" {
+            $_g_weights_list: ();
+            @each $weight-name, $weight-value in $weights {
+              $_g_weights_list: append($_g_weights_list, $weight-value);
+            }
+            $_g_weights: list-to-str($_g_weights_list, ";");
+          }
+        }
+
+        // $_g_display: if-else($display "swap");
+        $_g_display: "swap";
+
+        $_g_url: "https://fonts.googleapis.com/css2?family=#{$_g_name}:wght@#{$_g_weights}&display=#{$_g_display}.css";
+        // @debug $_g_url;
+        // @import $_g_url;
+      }
+    }
+  }
+}

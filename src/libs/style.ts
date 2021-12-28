@@ -1,8 +1,8 @@
 import { PurgeCSS } from "purgecss";
 import { createDir } from "@sil/tools";
 
-import { download } from "./download";
-
+// import { download } from "./download";
+import { buildCss } from "../style/compile/compile";
 import { Style, Payload, Language } from "../types";
 import { buildPage } from "./page";
 // eslint-disable-next-line
@@ -82,16 +82,17 @@ export const createBaseCss = async (
   const customCss = await createCss(customHtml.html.data, css, {
     whitelistPatternsChildren: [/$__item/],
   });
-  return customCss;
+  return css;
+  // return customCss;
 };
 
 /*
- * generateStyles
+ * createStylesheets
  *
  * Styles are being downloaded and directly the base css is being generated.
- * generateStyles responds with loading the payload with the original styles and possible custom or additional styles.
+ * createStylesheets responds with loading the payload with the original styles and possible custom or additional styles.
  */
-export const generateStyles = async (payload: Payload): Promise<Payload> => {
+export const createStylesheets = async (payload: Payload): Promise<Payload> => {
   // Download the style
   const style: Style = {
     og: "",
@@ -99,12 +100,12 @@ export const generateStyles = async (payload: Payload): Promise<Payload> => {
     sheet: "",
   };
 
-  await download(
-    "https://stil-style.netlify.app/default.css",
-    join(__dirname, "../dist/style.css")
-  );
+  // await download(
+  //   "https://stil-style.netlify.app/default.css",
+  //   join(__dirname, "../dist/style.css")
+  // );
 
-  const styleData = await readFile(join(__dirname, "../dist/style.css")).then(
+  const styleData = await readFile(join(__dirname, "../style/app.css")).then(
     (res: any) => res.toString()
   );
 
@@ -125,4 +126,10 @@ export const generateStyles = async (payload: Payload): Promise<Payload> => {
   if (payload.project.style) style.add = payload.project.style;
 
   return { ...payload, style };
+};
+
+export const generateStyles = async (payload: Payload): Promise<Payload> => {
+  await buildCss();
+  payload = await createStylesheets(payload);
+  return payload;
 };

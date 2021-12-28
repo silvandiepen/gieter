@@ -1,9 +1,9 @@
 head
-    meta(name="viewport",content="width=device-width, initial-scale=1")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
     if meta.date
         meta(name="updated",content=formatDate(meta.date,'yy-MM-dd'))
 
-        
+
     if type
         meta(name="type",content=`${type}`)
 
@@ -20,17 +20,20 @@ head
         title=meta.title
     else 
         title=title
-    
+
     if favicon
         link(rel="icon", href=`/assets/favicon/favicon.ico`)
+
+
+    link(href="./app.scss" rel="stylesheet" type="text/css")
 
     if style.sheet
         style
             | !{style.sheet}
     else if style.path
-        link(href=style.path, rel="stylesheet", type="text/css")
+        link(href=style.path, rel="stylesheet" type="text/css")
 
     if style.page 
-        link(href=style.page, rel="stylesheet", type="text/css")
+        link(href=style.page, rel="stylesheet" type="text/css")
     if style.add 
-        link(href=style.add, rel="stylesheet", type="text/css")
+        link(href=style.add, rel="stylesheet" type="text/css")

@@ -1,0 +1,159 @@
+@use "sass:math";
+
+@mixin utility-classes() {
+  @if export("utility.border") {
+    [class*="border--"] {
+      border-style: solid;
+      border-color: currentColor;
+    }
+  }
+
+  @if export("utility.border.width") {
+    // Borders
+    @for $i from 1 through 10 {
+      .border--#{$i} {
+        $space: 1;
+        border-width: #{math.div($space, 20) * $i};
+        // border-width: ((space() / 20) * $i);
+        // border-width: ((space() / 20) * $i);
+      }
+    }
+  }
+
+  @if export("utility.border.styles") {
+    // Border style
+    .border--solid {
+      border-style: solid;
+    }
+    .border--dotted {
+      border-style: dotted;
+    }
+    .border--dashed {
+      border-style: dashed;
+    }
+  }
+
+  @if export("utility.border-radius") {
+    @for $i from 1 through 10 {
+      .border-radius--#{$i} {
+        $space: 1;
+        border-radius: #{math.div($space, 5) * $i};
+      }
+    }
+  }
+  // Opacity
+  @if export("utility.opacity") {
+    @for $i from 1 through 10 {
+      .opacity--#{$i*10} {
+        opacity: #{math.div($i, 10)};
+      }
+    }
+  }
+  // Spacing
+
+  @if export("utility.space") {
+    @for $i from 1 through 10 {
+      .space--#{$i} {
+        $space: 1;
+        padding: #{math.div($space, 5) * $i};
+      }
+    }
+  }
+  @if export("utility.space-top") {
+    // spacing top
+    @for $i from 1 through 10 {
+      .space-top--#{$i} {
+        $space: 1;
+        margin-top: #{math.div($space, 5) * $i};
+      }
+    }
+  }
+  // Width
+
+  @if export("utility.width") {
+    @for $i from 1 through 10 {
+      .width--#{$i} {
+        $space: 1;
+        width: #{math.div($space, 5) * $i};
+      }
+    }
+  }
+  @if export("utility.height") {
+    @for $i from 1 through 10 {
+      .height--#{$i} {
+        $space: 1;
+        height: #{math.div($space, 5) * $i};
+      }
+    }
+  }
+
+  @if export("utility.gap") {
+    // Gap
+    @for $i from 1 through 10 {
+      .gap--#{$i} {
+        --gap: (#{space(0.5)} * $i);
+        gap: variable(gap);
+      }
+    }
+  }
+
+  @if export("utility.font-size") {
+    // Font-size
+    @for $i from 1 through 10 {
+      .font-size--#{$i} {
+        $space: 0.2;
+        font-size: ($space * $i);
+      }
+    }
+  }
+
+  @if export("utility.font-styles") {
+    // Font style
+    .font--light {
+      font-weight: 200;
+      strong {
+        font-weight: 600;
+      }
+    }
+    .font--normal {
+      font-weight: 400;
+      strong {
+        font-weight: 600;
+      }
+    }
+    .font--bold {
+      font-weight: 600;
+    }
+    .font--italic {
+      font-style: italic;
+    }
+    .font--underline {
+      text-decoration: underline;
+    }
+  }
+
+  @if export("utility.fixed") {
+    .fixed {
+      position: fixed;
+      top: variable(fixed-top, 0);
+      left: variable(fixed-left, 0);
+    }
+  }
+  @if export("utility.clipped") {
+    .clipped {
+      clip-path: inset(variable(clip-path, 0 0 0 0));
+    }
+  }
+  @if export("utility.centered") {
+    .centered {
+      position: variable(centered-position, absolute);
+      left: variable(centered-left, 50%);
+      top: variable(centered-top, 50%);
+      transform: translate(
+        variable(centered-translate-x, -50%),
+        variable(centered-translate-y, -50%)
+      );
+    }
+  }
+}
+@include utility-classes();

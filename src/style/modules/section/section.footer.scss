@@ -1,0 +1,23 @@
+@mixin section-footer() {
+  $footer: get-setting("define.footer.class");
+  $navigation: get-setting("define.navigation.class");
+
+  #{$footer} {
+    position: relative;
+    filter: blur(0);
+    transform: translate(0);
+    transition: transform variable(transition), filter variable(transition);
+    @media #{breakpoint(small,only)} {
+      #{$navigation} {
+        &__list {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        &__item {
+          padding: 0;
+        }
+      }
+    }
+  }
+}

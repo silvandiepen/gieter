@@ -46,7 +46,7 @@ export const resizeImage = async (image: string): Promise<void> => {
     .resize({ width: 640 })
     .toBuffer()
     .then((data) => {
-      console.log(path.replace(basename(path), ""));
+      // console.log(path.replace(basename(path), ""));
       createDir(path.replace(basename(path), ""));
       writeFile(path, data);
       blockLineSuccess(`created ${image} thumbnail`);

@@ -1,0 +1,89 @@
+$prefix: null;
+
+@if has-setting("prefix") {
+  $prefix: "#{get-setting("prefix")}-";
+}
+
+$black: black;
+@if color-exists("black") {
+  $black: color("black");
+}
+
+$white: white;
+@if color-exists("white") {
+  $white: color("white");
+}
+
+@mixin color-background($color-name, $color-value) {
+  $negative-color: adjust-hue($color-value, 180deg);
+  $negative-lightness: 100 - lightness($negative-color);
+
+  --#{$prefix}current: #{$color-value};
+  --#{$prefix}current-saturation: #{saturation($color-value)};
+  --#{$prefix}current-10: #{to-lightness($color-value, 10)};
+  --#{$prefix}current-90: #{to-lightness($color-value, 90)};
+  --#{$prefix}accent: #{darken($color-value, 10%)};
+  --#{$prefix}light-accent: #{to-lightness($color-value, 80)};
+  --#{$prefix}dark-accent: #{to-lightness($color-value, 20)};
+  --#{$prefix}negative-lightness: #{$negative-lightness};
+  --#{$prefix}negative: #{hsl(
+      hue($negative-color),
+      saturation($negative-color),
+      $negative-lightness
+    )};
+  --#{$prefix}contra: #{hsl(
+      hue($color-value),
+      saturation($color-value),
+      $negative-lightness
+    )};
+
+  --#{$prefix}text: #{contra($color-value)};
+  --#{$prefix}text-negative: #{contra($color-value)};
+
+  background-color: variable(#{$color-name}, #{$color-value});
+
+  @if get-setting("content.color.current10") {
+    $threshold: get-setting("color.contra.threshold");
+    @if lightness($color-value) > $threshold {
+      color: variable(
+        #{$color-name}-text,
+        variable(current-10, contra($color-value, $black, $white))
+      );
+    } @else {
+      color: variable(
+        #{$color-name}-text,
+        contra($color-value, $black, $white)
+      );
+    }
+  } @else {
+    color: variable(#{$color-name}-text, contra($color-value, $black, $white));
+  }
+}
+
+@mixin color-classes() {
+  @if export("color.classes.background+text") {
+    // Define black and white. If they exist in the color palette, return those
+
+    // Build all background classes
+    @each $color-name, $color-value in $color-palette {
+      .background--#{$color-name} {
+        @include color-background($color-name, $color-value);
+      }
+    }
+  } @else if export("color.classes.background") {
+    // Build all background classes
+    @each $color-name, $color-value in $color-palette {
+      .background--#{$color-name} {
+        background-color: variable(#{$color-name}, #{$color-value});
+      }
+    }
+  }
+  @if export("color.classes.color") {
+    // Build all text color classes
+    @each $color-name, $color-value in $color-palette {
+      .color--#{$color-name} {
+        color: variable(#{$color-name}, #{$color-value});
+      }
+    }
+  }
+}

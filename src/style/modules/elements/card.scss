@@ -1,0 +1,27 @@
+@mixin card() {
+  $card: get-setting("define.card.class");
+  #{$card} {
+    figure {
+      display: block;
+      width: calc(100% + (#{space(2)}));
+      height: 0;
+      padding-bottom: 100%;
+      margin: calc(#{space(0.5)} * -1);
+      margin-bottom: space();
+    }
+    overflow: hidden;
+    display: inline-block;
+    padding: space(0.5);
+    background-color: variable(accent);
+    border-radius: variable(borderRadius);
+    color: variable(current);
+  }
+}
+
+@mixin card-group() {
+  $card: get-setting("define.card.class");
+  #{$card}-group {
+    @include row();
+    @include column(#{$card});
+  }
+}

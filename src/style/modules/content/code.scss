@@ -1,0 +1,161 @@
+@function code-hsl($hue) {
+  @return hsl(
+    #{$hue},
+    calc(#{variable(code-saturation)} * 1%),
+    calc(#{variable(code-lightness)} * 1%)
+  );
+}
+
+@mixin styled-code() {
+  pre:not([class]) code,
+  pre[class^="language-"],
+  p code {
+    @include property(
+      (
+        background-color: primary10,
+        color: primary10Text,
+        font-family: codeFontFamily,
+        font-weight: 500,
+        display: inline-block,
+        border-radius: borderRadius,
+      )
+    );
+  }
+  p code {
+    padding: calc(#{variable(space)} / 4);
+  }
+  pre:not([class]) code,
+  pre[class^="language-"] {
+    display: block;
+    font-size: 0.875em;
+    padding: variable(space);
+    line-height: 1.5;
+    position: relative;
+    overflow: scroll;
+  }
+
+  // $code-tokens: (
+  //   "comment",
+  //   "prolog",
+  //   doctype,
+  //   cdata,
+  //   punctuation,
+  //   property,
+  //   tag,
+  //   constant,
+  //   symbol,
+  //   deleted,
+  //   boolean,
+  //   number,
+  //   selector,
+  //   attr-name,
+  //   string,
+  //   char,
+  //   builtin,
+  //   inserted,
+  //   operator,
+  //   entity,
+  //   url,
+  //   variable,
+  //   atrule,
+  //   attr-value,
+  //   function,
+  //   class-name,
+  //   keyword,
+  //   regex,
+  //   important
+  // );
+
+  // @each $el in $code-tokens {
+  //   .token.#{$el} {
+  //     color: variable(code-#{$el});
+  //   }
+  // }
+
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: variable(codeCommentColor, var(--code-group-comment, code-hsl(100)));
+  }
+
+  .token.punctuation {
+    color: variable(
+      code-punctuation,
+      var(--code-group-punctuation, code-hsl(100))
+    );
+  }
+
+  .namespace {
+    opacity: 0.7;
+  }
+
+  .token.property,
+  .token.tag,
+  .token.constant,
+  .token.symbol,
+  .token.deleted {
+    color: variable(
+      codePropertyColor,
+      var(--code-group-property, code-hsl(10))
+    );
+  }
+
+  .token.boolean,
+  .token.number {
+    color: variable(codeBooleanColor, var(--code-group-boolean, code-hsl(180)));
+  }
+
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin,
+  .token.inserted {
+    color: variable(
+      codeSelectorColor,
+      var(--code-group-selector, code-hsl(220))
+    );
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string,
+  .token.variable {
+    color: variable(
+      codeVariableColor,
+      var(--code-group-operator, code-hsl(200))
+    );
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.class-name {
+    color: variable(codeFunctionColor, var(--code-group-atrule, code-hsl(140)));
+  }
+
+  .token.keyword {
+    color: variable(codeKeywordColor, var(--code-group-keyword, code-hsl(40)));
+  }
+
+  .token.regex,
+  .token.important {
+    color: variable(codeRegexColor, var(--code-group-regex, code-hsl(40)));
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+}

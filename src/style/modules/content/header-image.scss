@@ -1,0 +1,26 @@
+@mixin styled-header-image() {
+  $parent: get-setting("define.content.class");
+  #{$parent} {
+    h1 + figure {
+      margin-top: calc(#{variable(space)} * 2);
+      width: 100%;
+    }
+
+    @media #{breakpoint(medium)} {
+      h1 + figure {
+        width: calc(100% + (#{variable(space)} * 2));
+        margin-left: calc(#{variable(space)} * -1);
+      }
+    }
+    h1 + figure img {
+      width: 100vw;
+      max-width: auto;
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+    }
+    h1 + figure + * {
+      margin-top: variable(space);
+    }
+  }
+}

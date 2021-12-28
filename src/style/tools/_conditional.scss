@@ -1,0 +1,87 @@
+// if-else
+// --------------------------
+/// A shortcut to do a If/Else statement.
+/// @access public
+/// @group Conditional utilities
+/// @type any
+/// @output any
+/// @parameter any
+
+@function if-else($args...) {
+  $value: null;
+  @if length($args) == 3 {
+    @if nth($args, 1) {
+      $value: nth($args, 2);
+    } @else {
+      $value: nth($args, 3);
+    }
+  } @else if length($args == 2) {
+    @if nth($args, 1) {
+      $value: nth($args, 1);
+    } @else {
+      $value: nth($args, 2);
+    }
+  }
+  @return $value;
+}
+
+// isTruthy
+// --------------------------
+/// Returns if a value is truthy.
+/// @access public
+/// @group Conditional utilities
+/// @type Any
+/// @output Boolean
+/// @parameter any
+
+@function isTruthy($value) {
+  $_out: false;
+
+  @if is-number($value) and $value > 0 {
+    $_out: true;
+  }
+  @if $value == true {
+    $_out: true;
+  }
+  @if $value == "true" {
+    $_out: true;
+  }
+  @return $_out;
+}
+
+// isFalsy
+// --------------------------
+/// Returns if a value is falsy.
+/// @access public
+/// @group Conditional utilities
+/// @type Any
+/// @output Boolean
+/// @parameter any
+
+@function isFalsy($value) {
+  $_out: false;
+  @if is-number($value) and $value < 1 {
+    $_out: true;
+  }
+  @if $value == true {
+    $_out: true;
+  }
+  @if $value == "true" {
+    $_out: true;
+  }
+  @return $_out;
+}
+
+@mixin for-each($values, $and: "", $position: "prepend") {
+  @each $val in $values {
+    @if $position == "prepend" {
+      #{$and} #{$val} {
+        @content;
+      }
+    } @else if $position == "append" {
+      #{$val} #{$and} {
+        @content;
+      }
+    }
+  }
+}

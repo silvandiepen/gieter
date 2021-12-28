@@ -1,0 +1,19 @@
+@function strip-unit($number) {
+	@if type-of($number) == "number" and not unitless($number) {
+		@return $number / ($number * 0 + 1);
+	} @else {
+		@return $number;
+	}
+}
+
+@function to-rem($v) {
+	$value: null;
+	@if unit($v) == "rem" {
+		$value: $v;
+	} @else if unit($v) == "px" {
+		$value: rem($v);
+	} @else {
+		$value: $v;
+	}
+	@return $value;
+}

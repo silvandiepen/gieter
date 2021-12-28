@@ -1,0 +1,10 @@
+@mixin section-main() {
+  $main: get-setting("define.main.class");
+
+  #{$main} {
+    filter: blur(0);
+    transform: translate(0);
+    position: relative;
+    transition: transform variable(transition), filter variable(transition);
+  }
+}

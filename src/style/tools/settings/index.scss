@@ -1,0 +1,20 @@
+@function has-setting($key) {
+  @if map-get($settings, $key) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+@function get-setting($key) {
+  @if has-setting($key) {
+    $value: map-get($settings, $key);
+    @if type-of($value) == "string" {
+      $value: unquote($value);
+    }
+    @return $value;
+  } @else {
+    @warn "#{$key} does not exist in settings";
+    @return null;
+  }
+}

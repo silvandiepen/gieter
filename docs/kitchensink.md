@@ -164,6 +164,14 @@ This paragraph has some `code` in it.
 
 
 
+### Tables
+
+| Test | Table | With | Data |
+| ---- | ----- | ---- | ---- |
+| Some | Data  | to   | fill |
+| this | table | up   | to   |
+| the  | top   | 0    | 1    |
+
 ### Checklist
 
 - [ ] This is 

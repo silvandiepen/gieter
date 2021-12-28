@@ -1,0 +1,39 @@
+@mixin notification() {
+  $notification: get-setting("define.notification.class");
+  #{$notification} {
+    @include property(
+      (
+        display: inline-block,
+        padding: space(0.5),
+        background-color: accentColor,
+        border-radius: borderRadius,
+        color: currentColor,
+      )
+    );
+    $notifications: (
+      "error",
+      "warning",
+      "info",
+      "success",
+      "primary",
+      "secondary"
+    );
+
+    @each $name, $color in $notifications {
+      &--#{$name} {
+        @include property(
+          (
+            border: 1px solid,
+            border-color: $name,
+            background-color: #{$name}25,
+            color: #{$name}25text,
+          )
+        );
+      }
+      p,
+      p:first-of-type {
+        font-size: 1em;
+      }
+    }
+  }
+}

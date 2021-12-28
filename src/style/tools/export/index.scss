@@ -1,0 +1,16 @@
+@use "sass:map";
+
+$theme-output: () !default;
+$output: ();
+
+$output: map.merge($output, $theme-output);
+
+@function export($key) {
+  $_out: false;
+  @if list-contains($output, "*") {
+    $_out: true;
+  } @else if list-contains($output, $key) {
+    $_out: true;
+  }
+  @return $_out;
+}

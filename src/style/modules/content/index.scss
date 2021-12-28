@@ -1,0 +1,43 @@
+@import "content";
+@import "code";
+@import "header-image";
+
+@if export("content.default") or export("content.table") {
+  @include content-table();
+}
+@if export("content.default") or export("content.lists") {
+  @include content-lists();
+}
+@if export("content.default") or export("content.adaptive-svg") {
+  @include content-adaptive-svg();
+}
+@if export("content.default") or export("content.links") {
+  @include content-links();
+}
+@if export("content.default") or export("content.blockquote") {
+  @include content-blockquote();
+}
+@if export("content.default") or export("content.paragraph") {
+  @include content-paragraph();
+}
+@if export("content.default") or export("content.image") {
+  @include content-image();
+}
+
+@mixin styled-content() {
+  @include content-table();
+  @include content-lists();
+  @include content-adaptive-svg();
+  @include content-links();
+  @include content-blockquote();
+  @include content-paragraph();
+  @include content-image();
+}
+
+@if export("content.code.prism") {
+  @include styled-code();
+}
+
+@if export("content.header-image") {
+  @include styled-header-image();
+}

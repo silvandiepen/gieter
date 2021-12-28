@@ -1,0 +1,52 @@
+@mixin section-header() {
+  $header: get-setting("define.header.class");
+  $logo: get-setting("define.logo.class");
+
+  #{$header} {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+    &--sticky {
+      position: sticky;
+      top: 0;
+    }
+  }
+
+  #{$header} #{$logo} {
+    @include property(
+      (
+        padding: variable(space),
+        font-weight: bold,
+        color: currentColor,
+        text-decoration: none,
+        display: flex,
+      )
+    );
+    &--image-only ~ span {
+      display: none;
+    }
+    img {
+      max-width: 5em;
+      max-height: 5em;
+    }
+    svg {
+      display: block;
+      height: 100%;
+      min-height: 5em;
+      max-height: 5em;
+      width: auto;
+      @media #{breakpoint(small,only)} {
+        min-height: 3em;
+        max-height: 3em;
+      }
+      rect,
+      polygon,
+      path {
+        &:not([fill]) {
+          fill: currentColor;
+        }
+      }
+    }
+  }
+}

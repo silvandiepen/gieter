@@ -1,0 +1,10 @@
+@mixin toolbar() {
+  $toolbar: get-setting("define.toolbar.class");
+  #{$toolbar} {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 2em;
+    z-index: 11;
+  }
+}

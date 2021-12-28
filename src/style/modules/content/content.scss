@@ -1,0 +1,190 @@
+@use "sass:math";
+
+@mixin content-paragraph() {
+  $parent: get-setting("define.content.class");
+
+  #{$parent} {
+    p {
+      font-size: variable(font-size, 1em);
+      line-height: variable(line-height, 1.5);
+      max-width: variable("content.paragraph.max-width");
+      @if export("content.paragraphs.first") {
+        &:first-of-type {
+          font-size: variable(font-size-first, 1.25em);
+        }
+      }
+    }
+  }
+}
+
+@mixin content-image() {
+  $parent: get-setting("define.content.class");
+  #{$parent} {
+    img {
+      max-width: 100%;
+      width: 100vw;
+      max-height: 80vh;
+      margin: auto;
+    }
+  }
+}
+
+@mixin content-blockquote() {
+  $parent: get-setting("define.content.class");
+
+  #{$parent} {
+    blockquote {
+      font-family: inherit;
+      font-size: variable(font-size, 1em);
+      line-height: variable(line-height, 1.5);
+      padding: variable(space);
+      line-height: variable(line-height, 1.5);
+    }
+  }
+}
+@mixin content-links() {
+  $parent: get-setting("define.content.class");
+
+  #{$parent} {
+    a:not([class]) {
+      $link-colors: list-reverse(get-setting("content.link.colors"));
+
+      $link-color: "";
+      @for $i from 1 through length($link-colors) {
+        @if $i == 1 {
+          $link-color: variable(#{nth($link-colors, $i)}, currentColor);
+        } @else {
+          $link-color: variable(#{nth($link-colors, $i)}, $link-color);
+        }
+      }
+      color: $link-color;
+    }
+  }
+}
+
+@mixin content-adaptive-svg() {
+  $parent: get-setting("define.content.class");
+  #{$parent} svg {
+    path,
+    rect,
+    polygon,
+    line,
+    polyline,
+    ellipse,
+    circle {
+      &:not([class]):not([style]):not([fill]) {
+        fill: currentColor;
+      }
+    }
+  }
+}
+
+@mixin content-lists() {
+  $parent: get-setting("define.content.class");
+  #{$parent} {
+    ul:not([class]),
+    ol:not([class]) {
+      & + ol,
+      & + ul {
+        margin-top: 1em;
+      }
+      ul:not([class]),
+      ol:not([class]) {
+        padding-left: 1em;
+      }
+      li {
+        line-height: variable(line-height);
+        font-size: variable(font-size);
+        &::before {
+          padding-right: math.div(space(), 2);
+        }
+        & + li {
+          margin-top: 0.5em;
+        }
+      }
+    }
+    ul:not([class]) {
+      > li {
+        &::before {
+          content: "\2014";
+        }
+      }
+    }
+    ol:not([class]) {
+      counter-reset: list;
+      ol {
+        counter-reset: sublist;
+        > li {
+          counter-increment: sublist;
+          &::before {
+            content: counter(list) "." counter(sublist) ".";
+          }
+          > ol {
+            counter-reset: subsublist;
+            > li {
+              counter-increment: subsublist;
+              &::before {
+                content: counter(list) "." counter(sublist) "."
+                  counter(subsublist) ".";
+              }
+            }
+          }
+        }
+      }
+      > li {
+        counter-increment: list;
+        &::before {
+          font-variant-numeric: tabular-nums;
+          content: counter(list) ".";
+        }
+      }
+    }
+  }
+}
+
+@mixin content-table() {
+  $parent: get-setting("define.content.class");
+  #{$parent} {
+    table {
+      width: calc(100% + (#{variable(space)} * 1));
+      margin-left: calc((#{variable(space)} / 2) * -1);
+      color: currentColor;
+
+      &.middle {
+        th,
+        td {
+          vertical-align: middle;
+        }
+      }
+      th,
+      td {
+        vertical-align: top;
+        text-align: left;
+        padding: calc(#{variable(space)} / 2);
+      }
+      th {
+        font-weight: variable(text-bold, bold);
+      }
+      thead tr,
+      tbody tr:last-child {
+        border-bottom: 1px solid variable(background90);
+      }
+      tr + tr {
+        border-top: 1px solid variable(background90);
+      }
+      @media #{breakpoint(small,only)} {
+        &.wrap {
+          tr {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            th,
+            td {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+}

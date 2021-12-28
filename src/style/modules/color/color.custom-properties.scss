@@ -1,0 +1,15 @@
+@mixin color-custom-properties() {
+  @if export("color.custom-properties") and export("custom-properties") {
+    $prefix: null;
+    @if has-setting("prefix") {
+      $prefix: "#{get-setting("prefix")}-";
+    }
+    @at-root {
+      :root {
+        @each $color-name, $color-value in $color-palette {
+          --#{$prefix}#{$color-name}: #{$color-value};
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.content {
+  content: "hoi";
+}
+@import "theme";
+@import "../../node_modules/@sil/themer/src/index.scss";
+
+@import "tools";
+@import "modules";
+
+body[color-mode="light"] {
+  @include customProperties($lightmode-colors);
+}
+body[color-mode="dark"] {
+  @include customProperties($darkmode-colors);
+}

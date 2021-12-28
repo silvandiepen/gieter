@@ -1,0 +1,34 @@
+// @function value($key, $fallback: null) {
+//   $value: null;
+//   $prefix: null;
+
+//   @if type-of($key) == "color" {
+//     $key: to-lower-case(#{$key});
+//   }
+
+//   @if has-setting( "prefix") {
+//     $prefix: "#{get-setting("prefix")}-";
+//   }
+
+//   @if has-setting( "#{$key}") {
+//     $value: get-setting( "#{$key}");
+//     @if type-of($value) == "list" {
+//       $value: list-to-str($value);
+//     }
+//   } @else if not has-setting( $key) and $fallback != null {
+//     $value: $fallback;
+//     $key: camelCaseToKebabCase($key);
+//   }
+
+//   $key: str-replace($key, ".", "-");
+
+//   @if $value {
+//     @return var(--#{$prefix}#{$key}, #{$value});
+//   } @else {
+//     @return var(--#{$prefix}#{$key});
+//   }
+// }
+
+@function space($v: 1) {
+  @return get-base("space") * $v;
+}

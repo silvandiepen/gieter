@@ -1,0 +1,49 @@
+@use "sass:math";
+
+@mixin typography-headers() {
+  $header-elements: (h1, h2, h3, h4, h5, h6);
+  @if export("typography.headers") {
+    $base: 4;
+    @for $i from 1 through 6 {
+      h#{$i} {
+        $base: space();
+        font-size: variable(
+          "h#{$i}.font-size",
+          calc(#{(math.div($base, $i) * 1)} + 0.5vw)
+        );
+        line-height: variable("h#{$i}.line-height", 1);
+        font-weight: variable("h#{$i}.font-weight", bold);
+        text-transform: variable("h#{$i}.text-transform", none);
+        letter-spacing: variable("h#{$i}.letter-spacing", none);
+        color: variable("h#{$i}.color", currentColor);
+      }
+    }
+  }
+
+  @if export("typography.headers.anchors") {
+    $elements: ();
+    @each $element in $header-elements {
+      $elements: append($elements, "#{$element} .header-anchor");
+    }
+    #{list-to-str($elements,', ')} {
+      color: inherit;
+      font-size: 0.5em;
+      text-decoration: none;
+      position: absolute;
+      opacity: 0;
+      transform: translateX(-100%);
+      word-break: break-word;
+    }
+    $elements-hover: ();
+
+    @each $element in $header-elements {
+      $elements-hover: append(
+        $elements-hover,
+        "#{$element}:hover .header-anchor"
+      );
+    }
+    #{list-to-str( $elements-hover,', ')} {
+      opacity: 1;
+    }
+  }
+}

@@ -1,0 +1,57 @@
+$prefix: null;
+
+@if has-setting("prefix") {
+  $prefix: "#{get-setting("prefix")}-";
+}
+@mixin color-gradients() {
+  @if export("color.gradients") {
+    .background--gradient {
+      position: relative;
+      background-image: url(https://stil.style/assets/noise.jpg),
+        linear-gradient(
+          variable(gradient-direction, to right bottom),
+          variable(gradient-from, variable(primary)),
+          variable(gradient-to, variable(secondary))
+        );
+      background-blend-mode: overlay, normal;
+      animation: movieEffect 2s infinite steps(5);
+      background-size: 200%, auto;
+
+      @at-root {
+        @keyframes movieEffect {
+          0% {
+            background-position: 50% 50%, 50% 50%;
+          }
+          20% {
+            background-position: 40% 10%, 50% 50%;
+          }
+          40% {
+            background-position: 70% 70%, 50% 50%;
+          }
+          60% {
+            background-position: 30% 20%, 50% 50%;
+          }
+          80% {
+            background-position: 60% 40%, 50% 50%;
+          }
+          100% {
+            background-position: 10% 90%, 50% 50%;
+          }
+        }
+      }
+
+      // // &.grained{
+      // &::before {
+      //   content: "";
+      //   width: 100%;
+      //   height: 100%;
+      //   background-color: red;
+      //   display: block;
+      //   position: absolute;
+      //   left: 0;
+      //   top: 0;
+      // }
+      // // }
+    }
+  }
+}

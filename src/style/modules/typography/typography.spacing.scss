@@ -1,0 +1,38 @@
+$elements: (
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  div,
+  ul,
+  ol,
+  code,
+  pre,
+  style,
+  blockquote,
+  img,
+  figure,
+  hr,
+  table,
+  img
+) !default;
+
+@mixin typography-spacing($space: 1em) {
+  #{list-to-str($elements,', ')} {
+    @include for-each($elements, "& +") {
+      margin-top: $space;
+    }
+  }
+  div + div {
+    margin: 0;
+  }
+}
+
+@mixin typography-margin() {
+  #{list-to-str($elements,', ')} {
+    margin: 0;
+  }
+}
