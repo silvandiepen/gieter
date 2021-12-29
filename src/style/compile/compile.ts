@@ -1,30 +1,50 @@
 import { asyncForEach } from "@sil/tools";
-import { blockLineSuccess } from "cli-block";
+import { blockLine, blockLineSuccess, blockMid } from "cli-block";
 import { compileAsync } from "sass";
+import { filesExist } from "../../libs/files";
+import { join } from "path";
 
-const { writeFile } = require("fs").promises;
+const { writeFile, access, R_OK, W_OK, F_OK } = require("fs").promises;
 
 interface StyleFile {
   name: string;
-  file: string;
+  path: string;
+  dest: string;
 }
 
 const compileFile = async (file: StyleFile): Promise<void> => {
-  const result = await compileAsync(file.file);
-  await writeFile(`./dist/style/${file.name}.css`, result.css.toString());
+  const resolvedDest = join(__dirname, "../../../", file.dest);
+  const resolvedPath = join(__dirname, "../../../", file.path);
+  const result = await compileAsync(resolvedPath);
+
+  await writeFile(resolvedDest, result.css.toString());
 };
 
-export const buildCss = async () => {
+// async
+
+export const buildCss = async (cached = true) => {
   const files = [
     {
-      file: "./src/style/app.scss",
+      path: "./src/style/app.scss",
       name: "app",
+      dest: ".cache/app.css",
     },
     //   {
     //     file: "./src/style/styles.scss",
     //     name: "styles",
     //   },
   ];
+
+  blockMid("styles");
+  if (cached) {
+    const destPaths = [];
+    files.forEach((file) => destPaths.push(file.dest));
+
+    if (await filesExist(destPaths)) {
+      blockLineSuccess("Styles already generated");
+      return;
+    }
+  }
 
   await asyncForEach(files, async (file) => {
     await compileFile(file);

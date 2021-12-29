@@ -82,8 +82,7 @@ export const createBaseCss = async (
   const customCss = await createCss(customHtml.html.data, css, {
     whitelistPatternsChildren: [/$__item/],
   });
-  return css;
-  // return customCss;
+  return customCss;
 };
 
 /*
@@ -105,8 +104,9 @@ export const createStylesheets = async (payload: Payload): Promise<Payload> => {
   //   join(__dirname, "../dist/style.css")
   // );
 
-  const styleData = await readFile(join(__dirname, "../style/app.css")).then(
-    (res: any) => res.toString()
+  const styleFile = join(__dirname, "../../.cache/app.css");
+  const styleData = await readFile(styleFile).then((res: any) =>
+    res.toString()
   );
 
   const customCss = await createBaseCss(payload, styleData);

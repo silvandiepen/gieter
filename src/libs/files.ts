@@ -1,14 +1,13 @@
-const { readdir, mkdir } = require("fs").promises;
+const { readdir, mkdir, access, R_OK, W_OK, F_OK } = require("fs").promises;
 import pug from "pug";
 import { extname, resolve, basename, join } from "path";
 import { statSync } from "fs";
 import { format } from "date-fns";
-import { renamePath, getFileData } from "@sil/tools";
+import { renamePath, getFileData, asyncForEach } from "@sil/tools";
 
 import { File, buildHtmlArgs, FileType, Dirent, Archive } from "../types";
 import { fixLangInPath, getLangFromFilename } from "./language";
-import { removeTitle } from "./helpers";
-import { asyncForEach } from "@sil/tools";
+import { removeTitle, asyncEvery, asyncSome } from "./helpers";
 
 /*
 	::getFileTree
@@ -162,4 +161,26 @@ export const makeLink = (path: string): string => {
     "index"
     ? uri.replace(".html", "/index.html")
     : uri;
+};
+
+export const fileExists = async (path: string): Promise<boolean> => {
+  try {
+    await access(join(__dirname, path), R_OK | W_OK | F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const filesExist = async (
+  paths: string[],
+  some = false
+): Promise<boolean> => {
+  const action = some ? asyncSome : asyncEvery;
+  try {
+    await action(paths, async (file: string) => await fileExists(file));
+    return true;
+  } catch (err) {
+    return false;
+  }
 };
