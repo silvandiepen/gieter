@@ -1,10 +1,7 @@
-import { asyncForEach } from "@sil/tools";
+import { asyncForEach, createFile, filesExist } from "@sil/tools";
 import { blockLine, blockLineSuccess, blockMid } from "cli-block";
 import { compileAsync } from "sass";
-import { filesExist } from "../../libs/files";
 import { join } from "path";
-
-const { writeFile, access, R_OK, W_OK, F_OK } = require("fs").promises;
 
 interface StyleFile {
   name: string;
@@ -17,7 +14,7 @@ const compileFile = async (file: StyleFile): Promise<void> => {
   const resolvedPath = join(__dirname, "../../../", file.path);
   const result = await compileAsync(resolvedPath);
 
-  await writeFile(resolvedDest, result.css.toString());
+  await createFile(resolvedDest, result.css.toString());
 };
 
 // async
@@ -40,7 +37,9 @@ export const buildCss = async (cached = true) => {
     const destPaths = [];
     files.forEach((file) => destPaths.push(file.dest));
 
-    if (await filesExist(destPaths)) {
+    const stylingExists = await filesExist(destPaths);
+
+    if (stylingExists) {
       blockLineSuccess("Styles already generated");
       return;
     }
