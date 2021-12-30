@@ -1,5 +1,5 @@
-import { asyncForEach, createFile, filesExist } from "@sil/tools";
-import { blockLine, blockLineSuccess, blockMid } from "cli-block";
+import { createFile, fileExists } from "@sil/tools";
+import { blockLineSuccess, blockMid } from "cli-block";
 import { compileAsync } from "sass";
 import { join } from "path";
 
@@ -10,7 +10,7 @@ interface StyleFile {
 }
 
 const compileFile = async (file: StyleFile): Promise<void> => {
-  const resolvedDest = join(__dirname, "../../../", file.dest);
+  const resolvedDest = file.dest;
   const resolvedPath = join(__dirname, "../../../", file.path);
   const result = await compileAsync(resolvedPath);
 
@@ -20,33 +20,22 @@ const compileFile = async (file: StyleFile): Promise<void> => {
 // async
 
 export const buildCss = async (cached = true) => {
-  const files = [
-    {
-      path: "./src/style/app.scss",
-      name: "app",
-      dest: ".cache/app.css",
-    },
-    //   {
-    //     file: "./src/style/styles.scss",
-    //     name: "styles",
-    //   },
-  ];
+  const file = {
+    path: "./src/style/app.scss",
+    name: "app",
+    dest: join(process.cwd(), ".cache/app.css"),
+  };
 
   blockMid("styles");
-  if (cached) {
-    const destPaths = [];
-    files.forEach((file) => destPaths.push(file.dest));
 
-    const stylingExists = await filesExist(destPaths);
+  if (cached) {
+    const stylingExists = await fileExists(file.dest);
 
     if (stylingExists) {
       blockLineSuccess("Styles already generated");
       return;
     }
   }
-
-  await asyncForEach(files, async (file) => {
-    await compileFile(file);
-    blockLineSuccess(`${file.name} generated`);
-  });
+  await compileFile(file);
+  blockLineSuccess(`${file.name} generated`);
 };

@@ -33,9 +33,10 @@
     svg {
       display: block;
       height: 100%;
-      min-height: 5em;
+      min-height: 3em;
       max-height: 5em;
       width: auto;
+      max-width: 8em;
       @media #{breakpoint(small,only)} {
         min-height: 3em;
         max-height: 3em;

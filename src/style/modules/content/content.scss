@@ -5,12 +5,21 @@
 
   #{$parent} {
     p {
-      font-size: variable(font-size, 1em);
-      line-height: variable(line-height, 1.5);
-      max-width: variable("content.paragraph.max-width");
+      @include property(
+        (
+          font-size: baseSize,
+          line-height: 1.5,
+          max-width: variable("content.paragraph.max-width"),
+        )
+      );
+
       @if export("content.paragraphs.first") {
         &:first-of-type {
-          font-size: variable(font-size-first, 1.25em);
+          @include property(
+            (
+              font-size: 1.25em,
+            )
+          );
         }
       }
     }
@@ -21,10 +30,14 @@
   $parent: get-setting("define.content.class");
   #{$parent} {
     img {
-      max-width: 100%;
-      width: 100vw;
-      max-height: 80vh;
-      margin: auto;
+      @include property(
+        (
+          max-width: 100%,
+          width: 100vw,
+          max-height: 80vh,
+          margin: auto,
+        )
+      );
     }
   }
 }
@@ -34,11 +47,14 @@
 
   #{$parent} {
     blockquote {
-      font-family: inherit;
-      font-size: variable(font-size, 1em);
-      line-height: variable(line-height, 1.5);
-      padding: variable(space);
-      line-height: variable(line-height, 1.5);
+      @include property(
+        (
+          font-family: inherit,
+          font-size: baseSize,
+          line-height: 1.5,
+          padding: space,
+        )
+      );
     }
   }
 }
@@ -47,17 +63,33 @@
 
   #{$parent} {
     a:not([class]) {
-      $link-colors: list-reverse(get-setting("content.link.colors"));
-
-      $link-color: "";
-      @for $i from 1 through length($link-colors) {
-        @if $i == 1 {
-          $link-color: variable(#{nth($link-colors, $i)}, currentColor);
-        } @else {
-          $link-color: variable(#{nth($link-colors, $i)}, $link-color);
-        }
+      position: relative;
+      color: variable(secondary);
+      display: inline-block;
+      &:focus {
+        outline: none;
       }
-      color: $link-color;
+      &::before {
+        content: "";
+        @include property(
+          (
+            content: "",
+            width: calc(100% + 1em),
+            height: calc(100% + 1em),
+            left: -0.5em,
+            top: -0.5em,
+            position: absolute,
+            border-radius: borderRadius,
+          )
+        );
+      }
+      &:focus::before {
+        @include property(
+          (
+            outline: 2px solid currentColor,
+          )
+        );
+      }
     }
   }
 }

@@ -12,8 +12,9 @@
   p code {
     @include property(
       (
-        background-color: primary10,
-        color: primary10Text,
+        max-width: 100%,
+        background-color: foreground,
+        color: background,
         font-family: codeFontFamily,
         font-weight: 500,
         display: inline-block,
@@ -33,44 +34,6 @@
     position: relative;
     overflow: scroll;
   }
-
-  // $code-tokens: (
-  //   "comment",
-  //   "prolog",
-  //   doctype,
-  //   cdata,
-  //   punctuation,
-  //   property,
-  //   tag,
-  //   constant,
-  //   symbol,
-  //   deleted,
-  //   boolean,
-  //   number,
-  //   selector,
-  //   attr-name,
-  //   string,
-  //   char,
-  //   builtin,
-  //   inserted,
-  //   operator,
-  //   entity,
-  //   url,
-  //   variable,
-  //   atrule,
-  //   attr-value,
-  //   function,
-  //   class-name,
-  //   keyword,
-  //   regex,
-  //   important
-  // );
-
-  // @each $el in $code-tokens {
-  //   .token.#{$el} {
-  //     color: variable(code-#{$el});
-  //   }
-  // }
 
   .token.comment,
   .token.prolog,

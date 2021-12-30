@@ -1,5 +1,9 @@
 $theme-settings: (
   "prefix": "ol",
+  colors: (
+    shades: true,
+    opacity: true,
+  ),
   "content.block": ".content",
   "content.paragraph.max-width": max(75ch, 960px),
   "content.max-width": max(75ch, 720px),

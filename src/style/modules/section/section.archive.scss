@@ -3,7 +3,7 @@
 
   #{$archive} {
     position: relative;
-    border-top: 1px solid variable(background75);
+    border-top: 1px solid variable(foreground10);
     &__item {
       background: variable(background);
     }

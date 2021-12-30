@@ -72,41 +72,53 @@
     }
 
     &__link {
-      padding: calc(#{variable(space)} / 2);
-      text-decoration: none;
-      display: block;
-      position: relative;
-      color: currentColor;
-
+      @include property(
+        (
+          padding: calc(#{variable(space)} / 2),
+          text-decoration: none,
+          display: block,
+          position: relative,
+          color: currentColor,
+        )
+      );
       &::before {
-        content: "";
-        width: 100%;
-        height: 100%;
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%) scale(0.5);
-        border-radius: variable(borderRadius);
-        background-color: variable(
-          navigation-link-background,
-          variable(primary)
+        @include property(
+          (
+            content: "",
+            width: 100%,
+            height: 100%,
+            display: block,
+            position: absolute,
+            left: 50%,
+            top: 50%,
+            transform: translate(-50%, -50%) scale(0.5),
+            border-radius: borderRadius,
+            background-color: background,
+            z-index: 1,
+            opacity: 0,
+            transition: transform variable(transition),
+          )
         );
-        z-index: 1;
-        opacity: 0;
-        transition: transform variable(transition);
       }
       &:hover::before {
-        opacity: variable(navigation-link-hover-opacity, 0.25);
-        transform: translate(-50%, -50%) scale(1);
+        @include property(
+          (
+            opacity: 0.25,
+            transform: translate(-50%, -50%) scale(1),
+          )
+        );
       }
       &:focus {
         outline: none;
       }
       &:not(:hover):focus::before {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.5;
-        background-color: variable(primary);
+        @include property(
+          (
+            transform: translate(-50%, -50%) scale(1),
+            opacity: 0.5,
+            background-color: primary,
+          )
+        );
       }
       &:hover {
         text-decoration: none;
@@ -123,22 +135,23 @@
       * Inactive Mobile Header Navigation Toggle
       */
     &__toggle {
-      position: fixed;
-      top: calc(#{variable(space)} / 2);
-      right: calc(#{variable(space)} / 2);
-      z-index: 11;
-      border-radius: variable(borderRadius);
-
-      width: space(1.5);
-      height: space(1.5);
-      align-items: center;
-      justify-content: center;
-
-      display: flex;
-      transition: background variable(transition),
-        border-radius variable(transition);
-      color: variable(foreground);
-
+      @include property(
+        (
+          position: fixed,
+          top: calc(#{variable(space)} / 2),
+          right: calc(#{variable(space)} / 2),
+          z-index: 11,
+          border-radius: borderRadius,
+          width: #{space(1.5)},
+          height: #{space(1.5)},
+          align-items: center,
+          justify-content: center,
+          display: flex,
+          transition:
+            "background #{variable(transition)}, border-radius #{variable(transition)}",
+          color: foreground,
+        )
+      );
       &::before {
         content: "";
         width: 100%;
@@ -148,7 +161,7 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%) scale(0.5);
-        background-color: variable(foreground);
+        background-color: variable(primary);
         opacity: 0;
         transition: transform variable(transition);
       }
@@ -156,9 +169,10 @@
       &:hover::before {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
+        outline: 2px solid variable(foreground);
       }
       &:hover {
-        color: variable(background);
+        color: variable(foreground);
       }
       @media #{breakpoint(medium)} {
         display: none;
@@ -221,7 +235,7 @@
       & ~ #{$navigation},
       & ~ #{$header} #{$navigation} {
         @media #{breakpoint(small,only)} {
-          background-color: variable(background10);
+          background-color: variable(background90);
           color: variable(foreground);
           height: auto;
           width: auto;
@@ -244,7 +258,7 @@
             &::before {
               opacity: 1;
               transform: translate(-50%, -50%) scale(1);
-              background-color: variable(background10);
+              background-color: variable(background90);
             }
           }
         }
@@ -280,9 +294,13 @@
             color: variable(foreground);
 
             &::before {
-              transform: translate(-50%, -50%) scale(1);
-              opacity: 1;
-              background-color: variable(background);
+              @include property(
+                (
+                  transform: translate(-50%, -50%) scale(1),
+                  opacity: 1,
+                  background-color: background20,
+                )
+              );
             }
 
             span {
