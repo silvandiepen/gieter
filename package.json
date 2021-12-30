@@ -15,7 +15,8 @@
     "build:style": "node dist/style/compile/index.js",
     "dev": "tsc -w",
     "test": "jest",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "prepare": "husky install"
   },
   "husky": {
     "hooks": {

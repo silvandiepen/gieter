@@ -23,7 +23,7 @@ export const buildCss = async (cached = true) => {
   const file = {
     path: "./src/style/app.scss",
     name: "app",
-    dest: join(process.cwd(), "dist/app.css"),
+    dest: "./src/style/app.css",
   };
 
   blockMid("styles");

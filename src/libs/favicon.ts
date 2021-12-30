@@ -10,14 +10,14 @@ export const generateFavicon = async (payload: Payload): Promise<Payload> => {
   if (existsSync(join(iconPath, "favicon.png"))) favicon = "assets/favicon.png";
   else if (existsSync(join(iconPath, "logo.png"))) favicon = "assets/logo.png";
 
-  if (favicon)
-    await Iconator({
-      input: favicon,
-      output: "public/assets/favicon",
-      logging: ["inline", "minimal"],
-      sets: ["favicons"],
-      //   meta: ["none"],
-    });
+  // if (favicon)
+  // await Iconator({
+  //   input: favicon,
+  //   output: "public/assets/favicon",
+  //   logging: ["inline", "minimal"],
+  //   sets: ["favicons"],
+  //   //   meta: ["none"],
+  // });
 
   return { ...payload, favicon };
 };
