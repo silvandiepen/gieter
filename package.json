@@ -17,6 +17,11 @@
     "test": "jest",
     "lint": "eslint . --ext .ts"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build:full && npm run test"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/silvandiepen/open-letter.git"
@@ -44,6 +49,7 @@
     "@typescript-eslint/parser": "^5.8.0",
     "concurrently": "^6.5.1",
     "eslint": "^8.5.0",
+    "husky": "^7.0.4",
     "nodemon": "^2.0.15",
     "ts-jest": "^27.1.2",
     "typescript": "^4.5.4",

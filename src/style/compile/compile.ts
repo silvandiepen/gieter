@@ -23,7 +23,7 @@ export const buildCss = async (cached = true) => {
   const file = {
     path: "./src/style/app.scss",
     name: "app",
-    dest: join(process.cwd(), ".cache/app.css"),
+    dest: join(process.cwd(), "dist/app.css"),
   };
 
   blockMid("styles");
@@ -32,10 +32,10 @@ export const buildCss = async (cached = true) => {
     const stylingExists = await fileExists(file.dest);
 
     if (stylingExists) {
-      blockLineSuccess("Styles already generated");
+      blockLineSuccess("Styles loaded");
       return;
     }
   }
   await compileFile(file);
-  blockLineSuccess(`${file.name} generated`);
+  blockLineSuccess(`Styles generated`);
 };
