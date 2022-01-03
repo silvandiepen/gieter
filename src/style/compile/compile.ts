@@ -1,7 +1,7 @@
 import { createFile, fileExists } from "@sil/tools";
 import { blockLineSuccess, blockMid } from "cli-block";
-import { compileAsync } from "sass";
-import { join } from "path";
+import { renderSync } from "sass";
+import { join,resolve } from "path";
 
 interface StyleFile {
   name: string;
@@ -12,7 +12,7 @@ interface StyleFile {
 const compileFile = async (file: StyleFile): Promise<void> => {
   const resolvedDest = file.dest;
   const resolvedPath = join(__dirname, "../../../", file.path);
-  const result = await compileAsync(resolvedPath);
+  const result = await renderSync({ file: resolvedPath, includePaths: [resolve('node_modules/@sil')] });
 
   await createFile(resolvedDest, result.css.toString());
 };
