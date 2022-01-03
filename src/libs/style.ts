@@ -112,7 +112,7 @@ export const createStylesheets = async (payload: Payload): Promise<Payload> => {
   // );
 
   // const styleFile = join(__dirname, "../../media/app.css");
-  const styleFile = "./dist/app.css";
+  const styleFile = `${process.cwd()}/.cache/app.css`;
   console.log(styleFile);
   const styleData = await readFile(styleFile).then((res: any) =>
     res.toString()
