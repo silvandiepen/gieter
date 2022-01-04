@@ -7,6 +7,7 @@
 @import "tags";
 @import "task-list";
 @import "alert";
+@import "language";
 
 @if export("elements.alert") {
   @include alert();
@@ -37,4 +38,7 @@
 }
 @if export("elements.tooltip") {
   @include tooltip();
+}
+@if export("elements.language") {
+  @include language();
 }
