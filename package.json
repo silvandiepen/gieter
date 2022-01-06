@@ -11,7 +11,7 @@
     "test:run": "rimraf public && node dist/index.js",
     "serve": "npx serve public",
     "build": "tsc",
-    "build:full": "rimraf dist && npm run build && npm run style && npm run test:run",
+    "build:full": "rimraf dist && npm run build && npm run build:style && npm run test:run",
     "build:style": "node dist/style/compile/index.js",
     "dev": "tsc -w",
     "test": "jest",
