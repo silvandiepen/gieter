@@ -45,7 +45,7 @@ export const buildCss = async (cached = true) => {
       blockLineSuccess("Styles loaded");
       return;
     } else if (stylingExists) {
-      createDir(dirname(cacheStylePath));
+      await createDir(dirname(cacheStylePath));
       copyFile(
         stylingPath,
         cacheStylePath,
