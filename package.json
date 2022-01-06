@@ -1,6 +1,6 @@
 {
   "name": "open-letter",
-  "version": "0.8.11",
+  "version": "0.8.12",
   "description": "Create an open letter html from Markdown",
   "main": "dist/index.js",
   "bin": {
@@ -13,7 +13,7 @@
     "build": "tsc",
     "build:full": "rimraf dist && rimraf .cache && npm run build && npm run style && npm run test:run",
     "build:style": "node dist/style/compile/index.js",
-    "style":"sass --load-path=node_modules/ src/style/app.scss dist/style/app.css",
+    "style": "sass --load-path=node_modules/ src/style/app.scss dist/style/app.css",
     "dev": "tsc -w",
     "test": "jest",
     "lint": "eslint . --ext .ts",
