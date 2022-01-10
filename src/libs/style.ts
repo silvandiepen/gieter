@@ -85,9 +85,8 @@ export const createBaseCss = async (
     '<body color-mode="dark" color-mode="light"'
   );
 
-  const customCss = await createCss(mockHtml, css, {
-    whitelistPatternsChildren: [/$__item/, /^prefers-color-scheme/],
-  });
+  const customCss = await createCss(mockHtml, css);
+  console.log(customCss);
 
   return customCss;
 };

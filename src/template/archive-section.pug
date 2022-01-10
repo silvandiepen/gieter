@@ -1,0 +1,5 @@
+each item in archive.children
+    section.section.archive-item(class=`archive--${archive.type} background--${item.meta.background}`)
+        div.container
+            | !{item.html}
+            

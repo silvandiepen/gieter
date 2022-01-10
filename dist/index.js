@@ -65,10 +65,10 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
      * Inherit Parent Metadata
      */
     yield (0, tools_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
         // const parentName =
         //   file.parent && file.name !== file.parent ? file.parent : "";
         // const parent = files.find((file) => file.name === parentName);
+        var _a;
         const title = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.title) ? file.meta.title : (0, helpers_1.fileTitle)(file);
         files[index].title = title.toString();
     }));
@@ -120,12 +120,16 @@ const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* ()
         // Create Content pages
         yield (0, tools_1.asyncForEach)(payload.languages, (language) => __awaiter(void 0, void 0, void 0, function* () {
             (0, cli_block_1.blockMid)(`Pages ${language}`);
-            yield (0, tools_1.asyncForEach)(payload.files.filter((file) => file.language == language), (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
+            yield (0, tools_1.asyncForEach)(payload.files
+                .filter((file) => file.language == language)
+                .filter((file) => !file.name.startsWith("-")), // Don't pages that start with a -
+            (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
         }));
     }
     else {
         (0, cli_block_1.blockMid)("Pages");
-        yield (0, tools_1.asyncForEach)(payload.files, (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
+        yield (0, tools_1.asyncForEach)(payload.files.filter((file) => !file.name.startsWith("-")), // Don't pages that start with a -
+        (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
     }
     return Object.assign({}, payload);
 });

@@ -88,7 +88,7 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
   return files;
 };
 
-const filterBlog = (file: File): Archive[] => {
+const filterArchive = (file: File): Archive[] => {
   if (file?.archives && file?.archives[0]?.children?.length) {
     if (!file.relativePath) {
       return file.archives;
@@ -119,6 +119,21 @@ export const buildHtml = async (
   args: buildHtmlArgs,
   template = ""
 ): Promise<string> => {
+  const archives = filterArchive(file);
+
+  archives.map((archive) => {
+    if (archive.type === "blog") {
+      archive.children;
+      return {
+        ...archive,
+        children: archive.children.sort((a, b) =>
+          b.created > a.created ? 1 : a.created > b.created ? -1 : 0
+        ),
+      };
+    }
+    return archive;
+  });
+
   const options = {
     ...args,
     name: file.name,
@@ -126,7 +141,7 @@ export const buildHtml = async (
     content: file.html,
     meta: file.meta,
     pretty: true,
-    archives: filterBlog(file),
+    archives: filterArchive(file),
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,

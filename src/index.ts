@@ -75,6 +75,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
     // const parentName =
     //   file.parent && file.name !== file.parent ? file.parent : "";
     // const parent = files.find((file) => file.name === parentName);
+
     const title = file.meta?.title ? file.meta.title : fileTitle(file);
     files[index].title = title.toString();
   });
@@ -140,8 +141,11 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
     // Create Content pages
     await asyncForEach(payload.languages, async (language) => {
       blockMid(`Pages ${language}`);
+
       await asyncForEach(
-        payload.files.filter((file: File) => file.language == language),
+        payload.files
+          .filter((file: File) => file.language == language)
+          .filter((file: File) => !file.name.startsWith("-")), // Don't pages that start with a -
         async (file: File) => await createPage(payload, file)
       );
     });
@@ -149,7 +153,7 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
     blockMid("Pages");
 
     await asyncForEach(
-      payload.files,
+      payload.files.filter((file: File) => !file.name.startsWith("-")), // Don't pages that start with a -
       async (file: File) => await createPage(payload, file)
     );
   }
