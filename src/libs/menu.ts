@@ -6,7 +6,7 @@ import { Payload } from "../types";
 export const generateMenu = async (payload: Payload): Promise<Payload> => {
   let menu = payload.files
     .map((file) => {
-      let active = file.meta.hide !== "true" || file.meta.hide;
+      let active = file.meta.hide !== "true" || !file.meta.hide;
 
       const relativePath = file.path.replace(process.cwd(), "");
       const pathGroup = relativePath.split("/");
