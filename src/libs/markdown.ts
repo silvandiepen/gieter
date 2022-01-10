@@ -5,6 +5,7 @@ import anchor from "markdown-it-anchor";
 import tasks from "markdown-it-tasks";
 import alert from "markdown-it-alert";
 import svgImages from "./markdown-it-svg";
+import defList from "markdown-it-deflist";
 
 import { extractMeta, removeMeta } from "./markdown-meta";
 import { MarkdownData } from "../types";
@@ -21,6 +22,7 @@ md.use(emoji);
 md.use(anchor);
 md.use(tasks, { enabled: true, label: true, labelAfter: true });
 md.use(alert, { bem: true });
+md.use(defList);
 md.use(svgImages);
 
 export const unp = (input: string): string => {
