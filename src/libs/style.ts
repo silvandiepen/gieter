@@ -20,6 +20,7 @@ export const createCss = async (
   css: string,
   options = {}
 ): Promise<string> => {
+  return css;
   const purgeCSSResult = await new PurgeCSS().purge({
     content: [
       {
@@ -86,8 +87,6 @@ export const createBaseCss = async (
   );
 
   const customCss = await createCss(mockHtml, css);
-  console.log(customCss);
-
   return customCss;
 };
 

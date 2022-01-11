@@ -1,6 +1,7 @@
 import { makePath } from "./files";
 import { Payload } from "../types";
 import { parentPath } from "@sil/tools";
+import { getExcerpt } from "./helpers";
 /*
  *  Archives
  */
@@ -19,13 +20,14 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
         children = payload.files
           .filter((item) => item.parent == file.parent && !item.home)
 
-          //  Enrich each child with meta information and a link
+          //  Enrich each child with meta information, a link and the excerpt
           .map((item) => ({
             ...item,
             date: item?.meta?.date,
             created: item?.meta?.date || item.created,
             meta: { ...item.meta, hide: true },
             link: makePath(item),
+            excerpt: getExcerpt(item),
             tags: item?.meta.tags
               ? payload.tags.filter((tag) => item?.meta.tags.includes(tag.name))
               : [],
@@ -53,6 +55,9 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             else payload.files[index].meta = { type: parent.meta.type };
         }
       }
+
+      if (children.length > 0) console.log(file.path);
+      // console.log(file);
 
       return {
         ...file,

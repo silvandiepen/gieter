@@ -3,10 +3,14 @@
 
   #{$archive} {
     position: relative;
-    border-top: 1px solid variable(foreground10);
-    &__item {
-      background: variable(background);
-    }
+    background-color: variable(primary10);
+    color: variable(primary10Text);
+    background-image: linear-gradient(
+      to bottom,
+      #{variable(primary10)},
+      #{variable(background)}
+    );
+
     &__link {
       display: block;
       border-radius: variable(borderRadius);
@@ -18,6 +22,7 @@
       font-variant-numeric: tabular-nums;
       opacity: 0.5;
       display: block;
+      font-size: 0.875em;
       span + span {
         margin-left: 0.5ch;
       }
@@ -44,6 +49,13 @@
           display: block;
           font-weight: bold;
           transition: variable(transition);
+        }
+        &__excerpt {
+          opacity: 0.5;
+          &,
+          &:first-of-type {
+            font-size: 0.875em;
+          }
         }
         &__date {
           display: block;
@@ -132,6 +144,7 @@
           height: 10em;
           overflow: hidden;
           flex-shrink: 0;
+          background-color: variable(foreground);
           border-radius: variable(borderRadius);
           img {
             object-fit: cover;
@@ -186,52 +199,70 @@
           display: flex;
           flex-direction: column;
         }
-        &__text {
-          transition: transform variable(transition);
+        // &__title {
+        //   transition: transform variable(transition);
+        // }
+        &__excerpt {
+          opacity: 0.5;
+          &,
+          &:first-of-type {
+            font-size: 0.875em;
+          }
         }
-        &__item {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          & + #{$archive}__item {
-            border-top: 1px solid variable(accent);
-            margin-top: calc(#{variable(space)} / 4);
-          }
-          @media #{breakpoint(small,only)} {
-            padding: calc(#{variable(space)} / 2);
-            width: calc(100% + #{variable(space)});
-            margin-left: calc((#{variable(space)} / 2) * -1);
-          }
-          &:hover {
-            #{$archive}__text {
-              transform: translateX(0.5em);
-            }
-          }
+        &__title {
+          position: relative;
         }
         &__link {
+          position: relative;
+          z-index: 1;
           line-height: 1.75;
           display: flex;
           transition: transform variable(transition);
+          &:focus {
+            outline: none;
+          }
+          &:hover #{$archive}__excerpt {
+            opacity: 0.75;
+          }
+        }
+        &__item {
+          position: relative;
+          & + #{$archive}__item {
+            margin-top: #{variable(space)};
+          }
+          &::before {
+            content: "";
+            pointer-events: none;
+            display: block;
+            width: calc(100% + #{variable(space)});
+            height: calc(100% + #{variable(space)});
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            z-index: 0;
+            background-color: variable(background);
+            border-radius: variable(borderRadius);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+          }
+
+          &:not(:hover):focus-within {
+            background-color: variable(background);
+            &::before {
+              opacity: 1;
+              transform: translate(-50%, -50%) scale(1);
+            }
+          }
         }
         &__info {
-          @media #{breakpoint(medium)} {
-            display: flex;
-            align-items: center;
-            padding: calc(#{variable(space)} / 2);
-          }
+          display: flex;
+          flex-direction: column;
         }
         &__tags {
           opacity: 0.25;
-          @media #{breakpoint(medium)} {
-            justify-content: flex-end;
-          }
           &:hover {
             opacity: 1;
-          }
-        }
-        @media #{breakpoint(medium)} {
-          &__date + #{$archive}__text {
-            margin-left: 1em;
           }
         }
         &__image {

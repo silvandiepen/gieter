@@ -1,9 +1,17 @@
 @function code-hsl($hue) {
   @return hsl(
     #{$hue},
-    calc(#{variable(code-saturation)} * 1%),
-    calc(#{variable(code-lightness)} * 1%)
+    calc(#{var(--code-saturation, 50)} * 1%),
+    calc(#{var(--code-lightness, 50)} * 1%)
   );
+}
+
+@function codeColor($group, $hue) {
+  @return code-hsl($hue);
+  // @return variable(
+  //   code#{$group}Color,
+  //   var(--code-#{to-lower-case($group)}-comment, #{code-hsl($hue)})
+  // );
 }
 
 @mixin styled-code() {
@@ -13,17 +21,20 @@
     @include property(
       (
         max-width: 100%,
-        background-color: foreground,
-        color: background,
+        background-color: background90,
+        color: background90Text,
         font-family: codeFontFamily,
         font-weight: 500,
         display: inline-block,
         border-radius: borderRadius,
       )
     );
+    & + code {
+      margin: 0;
+    }
   }
   p code {
-    padding: calc(#{variable(space)} / 4);
+    padding: 0 calc(#{variable(space)} / 4);
   }
   pre:not([class]) code,
   pre[class^="language-"] {
@@ -39,14 +50,13 @@
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: variable(codeCommentColor, var(--code-group-comment, code-hsl(100)));
+    --code-saturation: 0;
+    color: codeColor(Comment, 0);
   }
 
   .token.punctuation {
-    color: variable(
-      code-punctuation,
-      var(--code-group-punctuation, code-hsl(100))
-    );
+    color: inherit;
+    // color: codeColor(Punctuation, 100);
   }
 
   .namespace {
@@ -58,15 +68,12 @@
   .token.constant,
   .token.symbol,
   .token.deleted {
-    color: variable(
-      codePropertyColor,
-      var(--code-group-property, code-hsl(10))
-    );
+    color: codeColor(Property, 40);
   }
 
   .token.boolean,
   .token.number {
-    color: variable(codeBooleanColor, var(--code-group-boolean, code-hsl(180)));
+    color: codeColor(Boolean, 180);
   }
 
   .token.selector,
@@ -75,10 +82,7 @@
   .token.char,
   .token.builtin,
   .token.inserted {
-    color: variable(
-      codeSelectorColor,
-      var(--code-group-selector, code-hsl(220))
-    );
+    color: codeColor(Selector, 220);
   }
 
   .token.operator,
@@ -87,26 +91,23 @@
   .language-css .token.string,
   .style .token.string,
   .token.variable {
-    color: variable(
-      codeVariableColor,
-      var(--code-group-operator, code-hsl(200))
-    );
+    color: codeColor(Variable, 200);
   }
 
   .token.atrule,
   .token.attr-value,
   .token.function,
   .token.class-name {
-    color: variable(codeFunctionColor, var(--code-group-atrule, code-hsl(140)));
+    color: codeColor(Function, 140);
   }
 
   .token.keyword {
-    color: variable(codeKeywordColor, var(--code-group-keyword, code-hsl(40)));
+    color: codeColor(Keyword, 40);
   }
 
   .token.regex,
   .token.important {
-    color: variable(codeRegexColor, var(--code-group-regex, code-hsl(40)));
+    color: codeColor(Regex, 40);
   }
 
   .token.important,

@@ -9,7 +9,7 @@
         $base: space();
         font-size: variable(
           "h#{$i}.font-size",
-          calc(#{(math.div($base, $i) * 1)} + 0.5vw)
+          calc(#{(math.div($base, math.div($i, 2)) * 1)} + 0.5vw)
         );
         line-height: variable("h#{$i}.line-height", 1);
         font-weight: variable("h#{$i}.font-weight", bold);

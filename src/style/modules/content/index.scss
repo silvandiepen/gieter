@@ -23,10 +23,14 @@
 @if export("content.default") or export("content.image") {
   @include content-image();
 }
+@if export("content.default") or export("content.definition-list") {
+  @include content-definition-list();
+}
 
 @mixin styled-content() {
   @include content-table();
   @include content-lists();
+  @include content-definition-list();
   @include content-adaptive-svg();
   @include content-links();
   @include content-blockquote();

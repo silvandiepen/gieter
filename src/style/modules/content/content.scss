@@ -110,6 +110,32 @@
     }
   }
 }
+@mixin content-definition-list() {
+  $parent: get-setting("define.content.class");
+  #{$parent} {
+    dl {
+      display: flex;
+      flex-direction: column;
+    }
+    dl dd + dt {
+      margin-top: 1em;
+    }
+    dl dt,
+    dl dd {
+      line-height: 1.5;
+    }
+
+    dl dd {
+      opacity: 0.5;
+    }
+    dl dt {
+      font-weight: bold;
+    }
+    dl dt + dd {
+      margin-top: 0.5em;
+    }
+  }
+}
 
 @mixin content-lists() {
   $parent: get-setting("define.content.class");
@@ -125,8 +151,8 @@
         padding-left: 1em;
       }
       li {
-        line-height: variable(line-height);
-        font-size: variable(font-size);
+        line-height: 1.5em;
+        font-size: 1em;
         &::before {
           padding-right: math.div(space(), 2);
         }

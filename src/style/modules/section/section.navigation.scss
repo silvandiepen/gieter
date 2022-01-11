@@ -5,6 +5,16 @@
   #{$navigation} {
     position: relative;
     display: flex;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+    &--hide {
+      transform: translateY(-50%);
+      opacity: 0;
+    }
+    &--show {
+      transform: translateY(0%);
+      opacity: 1;
+    }
 
     &.center {
       justify-content: center;
@@ -82,6 +92,8 @@
         )
       );
       &::before {
+        content: "";
+        display: block;
         @include property(
           (
             content: "",
@@ -114,9 +126,11 @@
       &:not(:hover):focus::before {
         @include property(
           (
+            content: "",
+            opacity: 1,
+            display: block,
             transform: translate(-50%, -50%) scale(1),
-            opacity: 0.5,
-            background-color: primary,
+            background-color: primary10,
           )
         );
       }
@@ -316,5 +330,16 @@
         }
       }
     }
+  }
+}
+.footer .navigation {
+  @media #{breakpoint(small,only)} {
+    padding: 1em;
+  }
+  &__link {
+    padding: 0.5em;
+  }
+  .button {
+    display: none;
   }
 }

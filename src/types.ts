@@ -77,6 +77,7 @@ export interface File {
   date?: Date;
   data?: string;
   html?: string;
+  excerpt?: string;
   meta?: Meta;
   link?: string;
   type?: FileType;

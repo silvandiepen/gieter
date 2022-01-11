@@ -17,10 +17,13 @@ each archive in archives
                                             span.archive__day= formatDate(item.created, 'dd')
                                             span.archive__month= formatDate(item.created, 'MM')
                                             span.archive__year= formatDate(item.created, 'yyyy')
-                                    span.archive__text= item.title
+                                    h4.archive__title= item.title
+                                    if item.excerpt    
+                                        p.archive__excerpt
+                                            | !{item.excerpt}  
                             if item.tags
                                 ul.archive__tags.tag__list  
                                     each tag in item.tags
                                         li.tag__item
-                                            a.tag__link(href= tag.link)
+                                            a.tag__link(href= tag.link, tabindex=-1)
                                                 span.tag__text= tag.name

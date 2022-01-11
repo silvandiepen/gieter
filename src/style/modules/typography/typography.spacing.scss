@@ -17,7 +17,8 @@ $elements: (
   figure,
   hr,
   table,
-  img
+  img,
+  dl
 ) !default;
 
 @mixin typography-spacing($space: 1em) {
