@@ -1,8 +1,9 @@
 import { createFile, createDir, fileExists } from "@sil/tools";
 import { blockLineSuccess, blockMid } from "cli-block";
 import { renderSync } from "sass";
-import { join, resolve, dirname} from "path";
+import { join, resolve, dirname } from "path";
 import { copyFile } from "fs";
+const { readFile } = require("fs").promises;
 
 interface StyleFile {
   name: string;
@@ -24,8 +25,12 @@ const compileFile = async (file: StyleFile): Promise<void> => {
 
 // async
 
-export const buildCss = async (cached = true) => {
+export const loadStyling = async (path: string): Promise<string> => {
+  const data = await readFile(path).then((res: any) => res.toString());
+  return data;
+};
 
+export const buildCss = async (cached = true) => {
   const cacheStylePath = `${process.cwd()}/.cache/app.css`;
 
   const file = {
@@ -36,27 +41,34 @@ export const buildCss = async (cached = true) => {
 
   blockMid("styles");
 
-  if (cached) {
-    const newStylingExists = await fileExists(file.dest);
-    const stylingPath = join(__dirname, "../../../dist/style/app.css");
-    const stylingExists = await fileExists(stylingPath);
+  const newStylingExists = await fileExists(file.dest);
+  const stylingPath = join(__dirname, "../../../dist/style/app.css");
+  const stylingExists = await fileExists(stylingPath);
+  let styleData = "";
 
+  if (cached) {
     if (newStylingExists) {
-      blockLineSuccess("Styles loaded");
-      return;
+      styleData = await loadStyling(file.dest);
     } else if (stylingExists) {
-      await createDir(dirname(cacheStylePath));
-      copyFile(
-        stylingPath,
-        cacheStylePath,
-        (err) => {
-          if (err) throw err;
-        }
-      );
-      blockLineSuccess("Styles copied and loaded");
-      return;
+      styleData = await loadStyling(stylingPath);
     }
   }
-  await compileFile(file);
-  blockLineSuccess(`Styles generated`);
+
+  if (!styleData) {
+    await compileFile(file);
+    styleData = await loadStyling(file.dest);
+    blockLineSuccess(`Styles generated`);
+  } else {
+    if (newStylingExists) {
+      blockLineSuccess("Styles loaded");
+    } else if (stylingExists) {
+      await createDir(dirname(cacheStylePath));
+      copyFile(stylingPath, cacheStylePath, (err) => {
+        if (err) throw err;
+      });
+      blockLineSuccess("Styles copied and loaded");
+    }
+  }
+
+  return styleData;
 };

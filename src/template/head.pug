@@ -25,7 +25,7 @@ head
         link(rel="icon", href=`/assets/favicon/favicon.ico`)
 
 
-    link(href="./app.scss" rel="stylesheet" type="text/css")
+    //- link(href="./app.scss" rel="stylesheet" type="text/css")
 
     if style.sheet
         style
@@ -35,5 +35,6 @@ head
 
     if style.page 
         link(href=style.page, rel="stylesheet" type="text/css")
+        
     if style.add 
         link(href=style.add, rel="stylesheet" type="text/css")

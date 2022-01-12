@@ -5,7 +5,6 @@ import { createDir } from "@sil/tools";
 import { buildCss } from "../style/compile/compile";
 import { Style, Payload, Language } from "../types";
 import { buildPage } from "./page";
-// eslint-disable-next-line
 const { readFile, writeFile } = require("fs").promises;
 
 import { join } from "path";
@@ -96,7 +95,10 @@ export const createBaseCss = async (
  * Styles are being downloaded and directly the base css is being generated.
  * createStylesheets responds with loading the payload with the original styles and possible custom or additional styles.
  */
-export const createStylesheets = async (payload: Payload): Promise<Payload> => {
+export const createStylesheets = async (
+  styleData: string,
+  payload: Payload
+): Promise<Payload> => {
   // Download the style
   const style: Style = {
     og: "",
@@ -104,15 +106,10 @@ export const createStylesheets = async (payload: Payload): Promise<Payload> => {
     sheet: "",
   };
 
-  // await download(
-  //   "https://stil-style.netlify.app/default.css",
-  //   join(__dirname, "../dist/style.css")
-  // );
-
-  const styleFile = `${process.cwd()}/.cache/app.css`;
-  const styleData = await readFile(styleFile).then((res: any) =>
-    res.toString()
-  );
+  if (styleData == "") {
+    console.log(`styleData is empty`);
+    process.exit();
+  }
 
   const customCss = await createBaseCss(payload, styleData);
 
@@ -134,7 +131,7 @@ export const createStylesheets = async (payload: Payload): Promise<Payload> => {
 };
 
 export const generateStyles = async (payload: Payload): Promise<Payload> => {
-  await buildCss();
-  payload = await createStylesheets(payload);
+  const styleFile = await buildCss();
+  payload = await createStylesheets(styleFile, payload);
   return payload;
 };
