@@ -1,6 +1,6 @@
-import { createFile, createDir, fileExists } from "@sil/tools";
+import { createFile, createDir, fileExists } from "../../libs/tools";
 import { blockLineSuccess, blockMid } from "cli-block";
-import { renderSync } from "sass";
+import { compileAsync } from "sass";
 import { join, resolve, dirname } from "path";
 import { copyFile } from "fs";
 const { readFile } = require("fs").promises;
@@ -15,9 +15,8 @@ const compileFile = async (file: StyleFile): Promise<void> => {
   const resolvedDest = file.dest;
   const resolvedPath = resolve(join(__dirname, `../../../`, file.path));
   const nodeModulesPath = join(__dirname, `../../../node_modules/`);
-  const result = await renderSync({
-    file: resolvedPath,
-    includePaths: [nodeModulesPath],
+  const result = await compileAsync(resolvedPath, {
+    loadPaths: [nodeModulesPath],
   });
 
   await createFile(resolvedDest, result.css.toString());

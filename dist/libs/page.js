@@ -18,7 +18,7 @@ const path_1 = require("path");
 const cli_block_1 = require("cli-block");
 const language_1 = require("../libs/language");
 const files_1 = require("./files");
-const tools_1 = require("@sil/tools");
+const tools_1 = require("./tools");
 const style_1 = require("./style");
 const kleur_1 = __importDefault(require("kleur"));
 const simplifyUrl = (url) => url.replace("/index.html", "");

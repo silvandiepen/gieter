@@ -1,6 +1,7 @@
+import { parentPath } from "./tools";
+
 import { makePath } from "./files";
 import { Payload } from "../types";
-import { parentPath } from "@sil/tools";
 import { getExcerpt } from "./helpers";
 /*
  *  Archives

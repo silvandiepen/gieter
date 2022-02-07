@@ -1,4 +1,4 @@
-import { asyncForEach } from "@sil/tools";
+import { asyncForEach } from "./tools";
 
 import { Project, Meta, File } from "../types";
 

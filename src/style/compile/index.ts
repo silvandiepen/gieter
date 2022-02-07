@@ -1,4 +1,4 @@
-import { hello } from "@sil/tools";
+import { hello } from "../../libs/tools";
 import { blockFooter, blockHeader, blockLine } from "cli-block";
 import { buildCss } from "./compile";
 

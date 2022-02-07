@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.media = exports.contentPages = exports.settings = exports.files = void 0;
 const path_1 = require("path");
 const cli_block_1 = require("cli-block");
-const tools_1 = require("@sil/tools");
+const tools_1 = require("./libs/tools");
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const media_1 = require("./libs/media");

@@ -1,4 +1,4 @@
-import { asyncForEach } from "@sil/tools";
+import { asyncForEach } from "./tools";
 
 import { Payload, File, FileType, Tag, Language } from "../types";
 import { createPage } from "./page";

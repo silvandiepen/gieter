@@ -4,7 +4,7 @@ import pug from "pug";
 import { extname, resolve, basename, join } from "path";
 import { statSync } from "fs";
 import { format } from "date-fns";
-import { renamePath, getFileData, asyncForEach } from "@sil/tools";
+import { asyncForEach, getFileData, renamePath } from "./tools";
 
 import { File, buildHtmlArgs, FileType, Dirent, Archive } from "../types";
 import { fixLangInPath, getLangFromFilename } from "./language";

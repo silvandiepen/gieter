@@ -1,7 +1,6 @@
 import { PurgeCSS } from "purgecss";
-import { createDir } from "@sil/tools";
 
-// import { download } from "./download";
+import { createDir } from "./tools";
 import { buildCss } from "../style/compile/compile";
 import { Style, Payload, Language } from "../types";
 import { buildPage } from "./page";
