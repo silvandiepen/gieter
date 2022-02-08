@@ -30,5 +30,6 @@
 // }
 
 @function space($v: 1) {
-  @return get-base("space") * $v;
+  $space: get-setting("space");
+  @return $space * $v;
 }

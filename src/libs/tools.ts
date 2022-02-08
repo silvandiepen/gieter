@@ -1,6 +1,7 @@
 import { existsSync } from "fs";
-const { mkdir, readFile, dirname, writeFile, access, R_OK, W_OK, F_OK } =
+const { mkdir, readFile, writeFile, access, R_OK, W_OK, F_OK } =
   require("fs").promises;
+import { dirname } from "path";
 
 // Node
 export const getFileData = async (filePath: string): Promise<string> => {

@@ -9,8 +9,6 @@ body[color-mode="light"] {
       color: variable(#{$color-name}Text);
     }
   }
-  // --code-lightness: 25;
-  // --code-saturation: 80;
 }
 
 body[color-mode="dark"] {
@@ -21,8 +19,6 @@ body[color-mode="dark"] {
       color: variable(#{$color-name}Text);
     }
   }
-  // --code-lightness: 75;
-  // --code-saturation: 80;
 }
 
 @import "tools";
@@ -35,14 +31,4 @@ body[color-mode="dark"] {
   }
 }
 
-// :root {
-//   --code-group-comment: #{variable(foreground20)};
-//   --code-group-punctuation: #{variable(primary)};
-//   --code-group-property: #{variable(secondary)};
-//   --code-group-boolean: #{variable(success)};
-//   --code-group-selector: #{variable(warning)};
-//   --code-group-operator: #{variable(info)};
-//   --code-group-operator: #{variable(secondary50)};
-//   --code-group-atrule: #{variable(primary50)};
-//   --code-group-regex: #{variable(error)};
-// }
+@import "modules";

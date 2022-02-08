@@ -11,7 +11,7 @@
 /// @return {list}
 ///
 @function list-merge($list1, $list2) {
-  @each $item in list {
+  @each $item in $list2 {
     @if not list-contains($list1, $item) {
       $list1: append($list1, $item);
     }

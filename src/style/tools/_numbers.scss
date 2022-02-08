@@ -55,8 +55,6 @@
       $result: $result + ($powed * $value);
     }
   }
-  @debug $result;
-  @debug type-of($result);
 
   @return if($is-negative, -$result, $result);
 }
