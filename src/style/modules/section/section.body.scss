@@ -1,5 +1,7 @@
 @mixin section-body() {
-  #{get-setting("define.body.class")} {
+  $class: get-setting("define.body.class");
+  @debug $class;
+  #{$class} {
     @include property(
       (
         margin: 0,

@@ -1,9 +1,8 @@
-@use "sass:map";
+// @use "sass:list";
 
 $theme-output: () !default;
 $output: ();
-
-$output: map.merge($output, $theme-output);
+$output: list-merge($output, $theme-output);
 
 @function export($key) {
   $_out: false;

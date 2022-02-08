@@ -1,4 +1,5 @@
-@use "sass:maps";
+@use "sass:map";
+@use "sass:math";
 
 @function charsFromBase($base: 10) {
   $chars: (
@@ -45,7 +46,7 @@
   @for $i from 1 through str-length($str) {
     $char: str-slice($str, -$i, -$i);
     $value: str-index($chars, $char) - 1;
-    $powed: pow($radix, ($i - 1));
+    $powed: math.pow($radix, ($i - 1));
     @if type-of($value) == "string" {
       @if $value == "-1" {
         $result: $result + ($powed * -1);
@@ -54,6 +55,8 @@
       $result: $result + ($powed * $value);
     }
   }
+  @debug $result;
+  @debug type-of($result);
 
   @return if($is-negative, -$result, $result);
 }

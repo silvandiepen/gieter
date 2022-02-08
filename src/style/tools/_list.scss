@@ -1,3 +1,24 @@
+/// List merge function
+// --------------------------
+/// Adds all items from list 2 to list 1 without creating doubles.
+///
+/// @access public
+/// @group list utilities
+///
+/// @param {list} $list1
+/// @param {list} $list2
+///
+/// @return {list}
+///
+@function list-merge($list1, $list2) {
+  @each $item in list {
+    @if not list-contains($list1, $item) {
+      $list1: append($list1, $item);
+    }
+  }
+  @return $list1;
+}
+
 /// String to List function
 // --------------------------
 /// Converts a string into a list breaking it apart by the `separator`

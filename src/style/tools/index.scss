@@ -1,11 +1,10 @@
-// @import "list";
 // @import "units";
 // @import "is";
-// @import "list";
+@import "list";
 // @import "map";
 // @import "size";
 // @import "case";
-// @import "numbers";
+@import "numbers";
 // @import "characters";
 // @import "string";
 @import "conditional";
@@ -13,7 +12,7 @@
 // @import "mixins/index";
 // @import "math/index";
 // @import "color";
-// @import "export";
-// @import "settings";
+@import "export";
+@import "settings";
 @import "breakpoints";
 @import "space";
