@@ -7,7 +7,7 @@ import { Payload, File, Page, buildHtmlArgs } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml } from "./files";
 
-import { createDir } from "./tools";
+import { createDir } from "@sil/tools/dist/lib/system";
 import { createCss } from "./style";
 import kleur from "kleur";
 

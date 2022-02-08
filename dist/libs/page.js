@@ -18,7 +18,7 @@ const path_1 = require("path");
 const cli_block_1 = require("cli-block");
 const language_1 = require("../libs/language");
 const files_1 = require("./files");
-const tools_1 = require("./tools");
+const system_1 = require("@sil/tools/dist/lib/system");
 const style_1 = require("./style");
 const kleur_1 = __importDefault(require("kleur"));
 const simplifyUrl = (url) => url.replace("/index.html", "");
@@ -88,7 +88,7 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
 exports.buildPage = buildPage;
 const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     const page = yield (0, exports.buildPage)(payload, file);
-    yield (0, tools_1.createDir)(page.dir);
+    yield (0, system_1.createDir)(page.dir);
     try {
         yield writeFile(page.html.file, page.html.data);
         yield writeFile(page.css.file, page.css.data);

@@ -1,4 +1,4 @@
-import { createFile, createDir, fileExists } from "../../libs/tools";
+import { createFile, createDir, fileExists } from "@sil/tools/dist/lib/system";
 import { blockLineSuccess, blockMid } from "cli-block";
 import { compileAsync } from "sass";
 import { join, resolve, dirname } from "path";

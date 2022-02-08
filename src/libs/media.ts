@@ -6,7 +6,8 @@ import sharp from "sharp";
 
 import { getFileTree } from "../libs/files";
 import { File, Payload } from "../types";
-import { asyncForEach, createDir } from "./tools";
+import { asyncForEach } from "@sil/tools";
+import { createDir } from "@sil/tools/dist/lib/system";
 
 export const getThumbnail = (file: File) => {
   return file.meta?.thumbnail

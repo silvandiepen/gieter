@@ -1,5 +1,5 @@
 import { Project } from "../types";
-import { getFileData } from "../libs/tools";
+import { getFileData } from "@sil/tools/dist/lib/system";
 import { join } from "path";
 
 export const getSVGLogo = async (project: Project): Promise<string> => {

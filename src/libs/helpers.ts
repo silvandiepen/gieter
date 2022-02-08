@@ -1,5 +1,5 @@
 import { File } from "../types";
-import { getStringFromTag, removeTag } from "./tools";
+import { getStringFromTag, removeTag } from "@sil/tools";
 
 export const removeTitle = (input: string): string => removeTag(input, "h1");
 

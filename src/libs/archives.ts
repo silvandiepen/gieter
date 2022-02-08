@@ -1,4 +1,4 @@
-import { parentPath } from "./tools";
+import { parentPath } from "@sil/tools/dist/lib/system";
 
 import { makePath } from "./files";
 import { Payload } from "../types";

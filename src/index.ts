@@ -3,7 +3,7 @@
 
 import { join } from "path";
 import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
-import { hello, asyncForEach } from "./libs/tools";
+import { hello, asyncForEach } from "@sil/tools";
 
 import { toHtml } from "./libs/markdown";
 import { fileTitle } from "./libs/helpers";

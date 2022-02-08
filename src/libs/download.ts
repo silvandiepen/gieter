@@ -2,8 +2,7 @@ import { dirname } from "path";
 import { createWriteStream } from "fs";
 import https from "https";
 import fetch from "node-fetch";
-
-import { createDir } from "./tools";
+import { createDir } from "@sil/tools/dist/lib/system";
 
 export interface DownloadResponse {
   body: any;
