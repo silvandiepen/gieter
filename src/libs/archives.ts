@@ -57,9 +57,6 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
         }
       }
 
-      if (children.length > 0) console.log(file.path);
-      // console.log(file);
-
       return {
         ...file,
         archives: children.length
