@@ -1,34 +1,34 @@
 @import "theme";
 @import "@sil/themer/src/index.scss";
 
-body[color-mode="light"] {
-  @include customProperties($lightmode-colors);
-  @each $color-name, $color-value in $lightmode-colors {
-    .background--#{$color-name} {
-      background-color: variable($color-name);
-      color: variable(#{$color-name}Text);
-    }
-  }
-}
+// body[color-mode="light"] {
+//   @include customProperties($lightmode-colors);
+//   @each $color-name, $color-value in $lightmode-colors {
+//     .background--#{$color-name} {
+//       background-color: variable($color-name);
+//       color: variable(#{$color-name}Text);
+//     }
+//   }
+// }
 
-body[color-mode="dark"] {
-  @include customProperties($darkmode-colors);
-  @each $color-name, $color-value in $darkmode-colors {
-    .background--#{$color-name} {
-      background-color: variable($color-name);
-      color: variable(#{$color-name}Text);
-    }
-  }
-}
+// body[color-mode="dark"] {
+//   @include customProperties($darkmode-colors);
+//   @each $color-name, $color-value in $darkmode-colors {
+//     .background--#{$color-name} {
+//       background-color: variable($color-name);
+//       color: variable(#{$color-name}Text);
+//     }
+//   }
+// }
 
 @import "tools";
 @import "modules";
 
-@each $color-name, $color-value in $colors {
-  .background--#{$color-name} {
-    background-color: variable($color-name);
-    color: variable(#{$color-name}Text);
-  }
-}
+// @each $color-name, $color-value in $colors {
+//   .background--#{$color-name} {
+//     background-color: variable($color-name);
+//     color: variable(#{$color-name}Text);
+//   }
+// }
 
 @import "modules";

@@ -1,0 +1,51 @@
+// Invert number
+@function number-invert($number) {
+  @return $number * -1;
+}
+@function invert($number) {
+  @return number-invert($number);
+}
+
+// Round (shortcut)
+@function decimal-round($number, $digits: 0, $mode: round) {
+  $n: 1;
+  // $number must be a number
+  @if type-of($number) != number {
+    @warn '#{$number} is not a number.';
+    @return $number;
+  }
+  // $digits must be a unitless number
+  @if type-of($digits) != number {
+    @warn '#{ $digits} is not a number.';
+    @return $number;
+  } @else if not unitless($digits) {
+    @warn '#{$digits} has a unit.';
+    @return $number;
+  }
+  @for $i from 1 through $digits {
+    $n: $n * 10;
+  }
+  @if $mode == round {
+    @return round($number * $n) / $n;
+  } @else if $mode == ceil {
+    @return ceil($number * $n) / $n;
+  } @else if $mode == floor {
+    @return floor($number * $n) / $n;
+  } @else {
+    @warn '#{$mode} is undefined keyword.';
+    @return $number;
+  }
+}
+// @function round($number, $digits: 0, $mode: round){
+// 	@return decimal-round($number, $digits: 0, $mode: round);
+// }
+
+// Ceil (shortcut)
+@function decimal-ceil($number, $digits: 0) {
+  @return decimal-round($number, $digits, ceil);
+}
+
+// Floor (shortcut)
+@function decimal-floor($number, $digits: 0) {
+  @return decimal-round($number, $digits, floor);
+}

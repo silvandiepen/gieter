@@ -154,7 +154,7 @@
         line-height: 1.5em;
         font-size: 1em;
         &::before {
-          padding-right: math.div(space(), 2);
+          padding-right: v(space-s);
         }
         & + li {
           margin-top: 0.5em;

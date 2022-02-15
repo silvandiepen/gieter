@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @function code-hsl($hue) {
   @return hsl(
     #{$hue},
@@ -7,43 +9,99 @@
 }
 
 @function codeColor($group, $hue) {
-  @return code-hsl($hue);
-  // @return variable(
-  //   code#{$group}Color,
-  //   var(--code-#{to-lower-case($group)}-comment, #{code-hsl($hue)})
-  // );
+  @return var(--code-#{to-lower-case($group)}, #{code-hsl($hue)});
 }
 
 @mixin styled-code() {
+  $primary-color: map-get($colors, primary);
+  $secondary-color: map-get($colors, secondary);
+
+  $primary-saturation: math.round(saturation($primary-color));
+  $secondary-saturation: math.round(saturation($secondary-color));
+
+  $primary-hue: math.round(hue($primary-color));
+  $secondary-hue: math.round(hue($secondary-color));
+
+  [color-mode="dark"] {
+    --code-lightness: 80;
+    --code-saturation: 80;
+  }
+  [color-mode="light"] {
+    --code-lightness: 33;
+    --code-saturation: 80;
+  }
+  code {
+    background-color: v(primary75);
+    color: v(primary75Text);
+    font-size: 0.875em;
+    border-radius: v(borderRadius);
+  }
+
   pre:not([class]) code,
-  pre[class^="language-"],
-  p code {
-    @include property(
-      (
-        max-width: 100%,
-        background-color: background90,
-        color: background90Text,
-        font-family: codeFontFamily,
-        font-weight: 500,
-        display: inline-block,
-        border-radius: borderRadius,
-      )
-    );
+  pre[class^="language-"] {
+    background-color: transparent;
+    color: v(foreground);
+    border: 1px solid v(foreground10);
+    color: v(foreground);
+    padding: v(space);
+    font-family: v(codeFontFamily);
+    border-radius: v(borderRadius);
+    overflow: scroll;
+    max-width: 100%;
+    display: block;
     & + code {
       margin: 0;
     }
+    code {
+      color: v(foreground);
+    }
   }
-  p code {
-    padding: 0 calc(#{variable(space)} / 4);
+  pre[class^="language-"] code,
+  pre code {
+    background-color: transparent;
   }
-  pre:not([class]) code,
+
   pre[class^="language-"] {
-    display: block;
-    font-size: 0.875em;
-    padding: variable(space);
-    line-height: 1.5;
     position: relative;
-    overflow: scroll;
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      right: v(space);
+      top: 0;
+      font-size: 0.75em;
+      font-weight: bold;
+      background-color: v(secondary);
+      color: v(secondaryText);
+      transform: translateY(-50%);
+      padding: 0.5em;
+      border-radius: v(borderRadius);
+    }
+    &.language-js::before {
+      content: "js";
+    }
+    &.language-html::before {
+      content: "html";
+    }
+    &.language-bash::before {
+      content: "bash";
+    }
+    &.language-css::before {
+      content: "css";
+    }
+    padding: 0;
+    overflow: visible;
+    code {
+      overflow: scroll;
+      padding: v(space);
+      display: block;
+    }
+  }
+  td code,
+  p code {
+    display: inline-block;
+    padding: 0.5em;
+    line-height: 1;
   }
 
   .token.comment,
@@ -64,16 +122,20 @@
   }
 
   .token.property,
-  .token.tag,
-  .token.constant,
   .token.symbol,
   .token.deleted {
     color: codeColor(Property, 40);
   }
+  .token.tag {
+    color: codeColor(Property, $secondary-hue);
+  }
+  .token.constant {
+    color: codeColor(Property, 360 - $secondary-hue);
+  }
 
   .token.boolean,
   .token.number {
-    color: codeColor(Boolean, 180);
+    color: codeColor(Boolean, $primary-hue);
   }
 
   .token.selector,
@@ -98,7 +160,7 @@
   .token.attr-value,
   .token.function,
   .token.class-name {
-    color: codeColor(Function, 140);
+    color: codeColor(Function, $primary-hue);
   }
 
   .token.keyword {

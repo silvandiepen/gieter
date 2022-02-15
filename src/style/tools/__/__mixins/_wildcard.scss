@@ -1,0 +1,8 @@
+@mixin wildcard($value, $type: 'class', $parent: &) {
+	@at-root {
+		#{$parent}[#{$type}^="#{$value}"],
+		#{$parent}[#{$type}*=" #{$value}"] {
+			@content;
+		}
+	}
+}

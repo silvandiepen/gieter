@@ -6,8 +6,8 @@
       width: calc(100% + (#{space(2)}));
       height: 0;
       padding-bottom: 100%;
-      margin: calc(#{space(0.5)} * -1);
-      margin-bottom: space();
+      margin: calc(#{v(space-s)} * -1);
+      margin-bottom: v(space);
     }
     overflow: hidden;
     display: inline-block;

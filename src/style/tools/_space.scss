@@ -29,7 +29,7 @@
 //   }
 // }
 
-@function space($v: 1) {
-  $space: get-setting("space");
-  @return $space * $v;
-}
+// @function space($v: 1) {
+//   $space: get-setting("space");
+//   @return $space * $v;
+// }
