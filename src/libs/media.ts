@@ -21,6 +21,7 @@ export const createThumbnails = async (payload: Payload): Promise<Payload> => {
   await asyncForEach(payload.files, async (file) => {
     await createThumbnail(file);
   });
+
   return payload;
 };
 
@@ -40,18 +41,22 @@ export const resizeImage = async (image: string): Promise<void> => {
     image.replace(ext, `.thumb${ext}`)
   );
 
-  // const thumbExists = await existsSync(path);
-  // if (thumbExists) return;
+  const thumbExists = await existsSync(path);
+  if (thumbExists) return;
 
-  await sharp(imageUrl)
-    .resize({ width: 640 })
-    .toBuffer()
-    .then((data) => {
-      // console.log(path.replace(basename(path), ""));
-      createDir(path.replace(basename(path), ""));
-      writeFile(path, data);
-      blockLineSuccess(`created ${image} thumbnail`);
-    });
+  const imageExists = await existsSync(imageUrl);
+  if (imageExists) {
+    await sharp(imageUrl)
+      .resize({ width: 640 })
+      .toBuffer()
+      .then(async (data) => {
+        await createDir(path.replace(basename(path), ""));
+        await writeFile(path, data);
+        blockLineSuccess(`created ${image} thumbnail`);
+      });
+  } else {
+    blockLineError(`${imageUrl} does not exist`);
+  }
 };
 
 export const createThumbnail = async (file: File): Promise<any> => {
