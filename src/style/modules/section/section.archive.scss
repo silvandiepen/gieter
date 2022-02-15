@@ -3,8 +3,8 @@
 
   #{$archive} {
     position: relative;
-    background-color: variable(primary10);
-    color: variable(primary10Text);
+    background-color: variable(background);
+    color: variable(foreground);
     background-image: linear-gradient(
       to bottom,
       #{variable(primary10)},
