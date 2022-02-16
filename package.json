@@ -14,6 +14,7 @@
     "build:full": "rimraf dist && rimraf .cache && npm run build && npm run style && npm run test:run",
     "build:style": "node dist/style/compile/index.js",
     "style": "sass --load-path=node_modules/ src/style/app.scss dist/style/app.css",
+    "style:clean": "rm -rf .cache && rm -rf dist/style/app.css",
     "dev": "tsc -w",
     "test": "jest",
     "lint": "eslint . --ext .ts",

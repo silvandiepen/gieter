@@ -8,13 +8,22 @@ import { getFileTree } from "../libs/files";
 import { File, Payload } from "../types";
 import { asyncForEach } from "@sil/tools";
 import { createDir } from "@sil/tools/dist/lib/system";
+import { getSVGData } from "./svg";
 
-export const getThumbnail = (file: File) => {
+export const getThumbnail = (file: File): string | null => {
   return file.meta?.thumbnail
     ? file.meta.thumbnail
     : file.meta?.image
     ? file.meta.image
     : null;
+};
+
+export const getSvgThumbnail = async (thumb: string): Promise<string> => {
+  let svgData = "";
+  if (thumb && thumb.endsWith(".svg")) {
+    svgData = await getSVGData(thumb);
+  }
+  return svgData;
 };
 
 export const createThumbnails = async (payload: Payload): Promise<Payload> => {

@@ -82,6 +82,7 @@ export interface File {
   link?: string;
   type?: FileType;
   thumbnail?: string;
+  thumbnailSvg?: string;
 }
 export interface MenuItem {
   name: string;
@@ -113,7 +114,6 @@ export interface buildHtmlArgs {
   media: File[];
   archives?: File[];
   contentOnly: boolean;
-
   tags?: Tag[];
   thumbnail?: string | null;
   meta?: Meta;

@@ -10,3 +10,7 @@ export const getSVGLogo = async (project: Project): Promise<string> => {
   }
   return logo;
 };
+export const getSVGData = async (svg: string): Promise<string> => {
+  const svgData = await getFileData(join(process.cwd(), svg));
+  return svgData;
+};

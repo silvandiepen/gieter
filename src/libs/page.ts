@@ -10,6 +10,7 @@ import { makePath, buildHtml } from "./files";
 import { createDir } from "@sil/tools/dist/lib/system";
 import { createCss } from "./style";
 import kleur from "kleur";
+import { getSVGData } from "./svg";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
 
@@ -51,6 +52,11 @@ export const buildPage = async (
     : file.meta?.image
     ? file.meta.image
     : null;
+
+  // const thumbnailSvg =
+  //   thumbnail && thumbnail.endsWith(".svg")
+  //     ? await getSVGData(thumbnail)
+  //     : null;
 
   const data: buildHtmlArgs = {
     menu,

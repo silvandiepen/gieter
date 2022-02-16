@@ -46,6 +46,10 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         : ((_b = file.meta) === null || _b === void 0 ? void 0 : _b.image)
             ? file.meta.image
             : null;
+    // const thumbnailSvg =
+    //   thumbnail && thumbnail.endsWith(".svg")
+    //     ? await getSVGData(thumbnail)
+    //     : null;
     const data = {
         menu,
         tags,

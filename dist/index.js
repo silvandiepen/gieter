@@ -76,7 +76,10 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
      * Set the thumbnail for each file
      */
     yield (0, tools_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
-        files[index].thumbnail = (0, media_2.getThumbnail)(file);
+        const thumbnail = (0, media_2.getThumbnail)(file);
+        const thumbnailSvg = yield (0, media_1.getSvgThumbnail)(thumbnail);
+        files[index].thumbnail = thumbnail;
+        files[index].thumbnailSvg = thumbnailSvg;
     }));
     /*
      * Filter ignored files

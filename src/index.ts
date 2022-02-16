@@ -7,7 +7,7 @@ import { hello, asyncForEach } from "@sil/tools";
 
 import { toHtml } from "./libs/markdown";
 import { fileTitle } from "./libs/helpers";
-import { createThumbnails, getMedia } from "./libs/media";
+import { createThumbnails, getMedia, getSvgThumbnail } from "./libs/media";
 import { getFiles } from "./libs/files";
 import { getProjectData } from "./libs/project";
 import { getSVGLogo } from "./libs/svg";
@@ -84,7 +84,11 @@ export const files = async (payload: Payload): Promise<Payload> => {
    * Set the thumbnail for each file
    */
   await asyncForEach(files, async (file: File, index: number) => {
-    files[index].thumbnail = getThumbnail(file);
+    const thumbnail = getThumbnail(file);
+    const thumbnailSvg = await getSvgThumbnail(thumbnail);
+
+    files[index].thumbnail = thumbnail;
+    files[index].thumbnailSvg = thumbnailSvg;
   });
 
   /*

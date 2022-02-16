@@ -5,7 +5,9 @@ section.section.archive.archive--blog
                 li.archive__item
                     a.archive__link(href= item.link)
                         figure.archive__image(class=`${item.thumbnail ? '': 'archive__image--empty'}`)
-                            if item.thumbnail
+                            if item.thumbnailSvg
+                                div.archive__image--svg !{item.thumbnailSvg}
+                            else if item.thumbnail
                                 img(src=item.thumbnail)
                         span.archive__info
                             if item.date

@@ -30,15 +30,17 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
   blockMid("Navigation");
 
   const menuItems = {};
-  if (menu.length > 1)
-    menu.forEach((item) => {
-      menuItems[item.name] = item.link;
-    });
 
-  if (menu.length < 2) {
-    blockLine("No menu");
-    menu = [];
-  } else await blockSettings(menuItems);
+  if (menu.length > 0) {
+    if (menu.length == 1 && menu[0].link == "/index.html") {
+      blockLine("no menu to display");
+    } else {
+      menu.forEach((item) => {
+        menuItems[item.name] = item.link;
+      });
+      await blockSettings(menuItems);
+    }
+  }
 
   return { ...payload, menu };
 };
