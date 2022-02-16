@@ -9,6 +9,9 @@ import defList from "markdown-it-deflist";
 
 import { extractMeta, removeMeta } from "./markdown-meta";
 import { MarkdownData } from "../types";
+import { match } from "assert";
+import { getGist } from "./download";
+import { asyncForEach } from "@sil/tools";
 
 const md = new MarkdownIt({
   html: true,
@@ -32,10 +35,24 @@ export const unp = (input: string): string => {
   return input;
 };
 
+export const replaceData = async (input: string): Promise<string> => {
+  const gist = /\[gist=(.*?)\]/g;
+  const matches = input.match(gist);
+  if (matches) {
+    await asyncForEach(matches, async (match) => {
+      const gistId = match.split("[gist=").pop().split("]")[0];
+      const gistData = await getGist(gistId);
+      input = input.replace(match, gistData);
+    });
+  }
+  return input;
+};
+
 export const toHtml = async (input: string): Promise<MarkdownData> => {
   const metaData = await extractMeta(input);
   const strippedData = await removeMeta(input);
-  const renderedDocument = await md.render(strippedData);
+  const replacedData = await replaceData(strippedData);
+  const renderedDocument = md.render(replacedData);
 
   return {
     document: unp(renderedDocument),

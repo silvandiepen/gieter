@@ -89,6 +89,15 @@
     &.language-css::before {
       content: "css";
     }
+    &.language-scss::before {
+      content: "scss";
+    }
+    &.language-sass::before {
+      content: "sass";
+    }
+    &.language-ts::before {
+      content: "ts";
+    }
     padding: 0;
     overflow: visible;
     code {

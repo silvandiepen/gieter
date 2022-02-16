@@ -30,3 +30,15 @@ export const download = async (
     });
   });
 };
+
+export const getGist = async (id: string): Promise<string> => {
+  const url = `https://api.github.com/gists/${id}`;
+
+  const res: DownloadResponse = await fetch(url)
+    .then((response) => response.json())
+    .then((data) => data);
+
+  const file = (Object.values(res.files)[0] as any).content;
+
+  return file;
+};
