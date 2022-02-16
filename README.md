@@ -15,12 +15,6 @@ Yes, also this website is generated, just using the single command. All the menu
 
 You can find the source code in [Github](https://github.com/silvandiepen/open-letter) all files used for this page, is the main README.md and the files in the [/docs](https://github.com/silvandiepen/open-letter/tree/master/docs) folder.
 
-### Styling
 
-[Stil](https://stil.sil.mt)
-### In use:
 
-[Sil van Diepen](https://www.sil.mt)
-[themer](https://themer.sil.mt)
-[Recipes](https://recipes.sil.mt)
-[Yeva](https://yevi.mt)
+[gist=2d9aff65094156a9f52f67594e8000d0]
