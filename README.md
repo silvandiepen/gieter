@@ -1,6 +1,5 @@
 ---
-title: Home
-hide: true
+title: About
 projectTitle: Open Letter
 projectStyle: media/custom.css
 projectScript: assets/test.js

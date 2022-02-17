@@ -39,3 +39,13 @@ For instance a home file, you might not want to have in the menu's. In that case
 hide: true
 ---
 ```
+
+###### Menu Children
+
+By default the children of any parent page won't be shown in the menu. But when you add menuChildren to an acrhive, the articles will be displayed as children in the menu
+
+```
+---
+menuChildren: true
+---
+```

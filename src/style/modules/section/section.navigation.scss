@@ -1,20 +1,11 @@
 @mixin section-navigation() {
   $navigation: get-setting("define.navigation.class");
   $header: get-setting("define.header.class");
+  $footer: get-setting("define.footer.class");
 
   #{$navigation} {
     position: relative;
     display: flex;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-
-    &--hide {
-      transform: translateY(-50%);
-      opacity: 0;
-    }
-    &--show {
-      transform: translateY(0%);
-      opacity: 1;
-    }
 
     &.center {
       justify-content: center;
@@ -41,59 +32,129 @@
     &__list {
       display: flex;
       background-color: inherit;
-      @media #{breakpoint('medium',up)} {
-        padding: variable(space);
-      }
+
       @media #{breakpoint('small',only)} {
         flex-direction: column;
+      }
+
+      #{$header} & {
+        @media #{breakpoint('medium',up)} {
+          &--sub {
+            border-radius: v(borderRadius);
+            outline: 2px solid v(foreground10);
+            background-color: v(foreground10);
+            position: absolute;
+            left: 50%;
+            top: calc(50% + 2.5em);
+            flex-direction: column;
+            padding: 0.75em;
+            opacity: 0;
+            pointer-events: none;
+
+            transform-origin: 0 50%;
+            transform: scale(0.85) translateX(-50%);
+            transition: all 0.3s ease-in-out;
+            z-index: 2;
+
+            &::before {
+              content: "";
+              width: 1em;
+              height: 1em;
+              position: absolute;
+              top: 0;
+              left: 50%;
+              border-top-right-radius: v(borderRadius);
+              display: block;
+              background-color: v(foreground10);
+              transform: translateX(-50%) translateY(calc(-50% - 2px))
+                rotate(-45deg);
+              clip-path: polygon(0 0, 100% 0, 100% 100%);
+            }
+          }
+        }
+      }
+      #{$footer} & {
+        &--sub {
+          display: none;
+        }
       }
     }
 
     &__item {
       position: relative;
-      &--parent #{$navigation}__text::before {
-        background-color: variable(navigation-dot-parent, variable(primary));
+      &--parent > #{$navigation}__link::after {
+        background-color: v(navigation-dot-parent, v(primary));
       }
-      &--current #{$navigation}__text::before {
-        background-color: variable(navigation-dot-current, variable(secondary));
+      &--current > #{$navigation}__link::after {
+        background-color: v(navigation-dot-current, v(secondary));
       }
+      &:hover,
+      &:focus-within {
+        #{$header} & {
+          @media #{breakpoint('medium',up)} {
+            #{$navigation}__list {
+              opacity: 1;
+              pointer-events: all;
+              transform: scale(1) translateX(-50%);
+            }
+          }
+        }
+      }
+    }
+    &__icon {
+      width: 1.5em;
+      height: 1.5em;
+      margin-right: 0.5em;
+      z-index: 2;
+      position: relative;
     }
     &__text {
       position: relative;
       z-index: 2;
-      &::before {
+      display: block;
+      transition: transform v(transition);
+      line-height: 1.5;
+    }
+
+    &__link {
+      @include property(
+        (
+          padding: v(space-s),
+          text-decoration: none,
+          position: relative,
+          color: currentColor,
+          display: flex,
+          transition: transform v(transition),
+        )
+      );
+      @media #{bp(medium,up)} {
+        &--sub {
+          padding: 0.5em;
+        }
+      }
+      &::after {
         content: "";
         display: block;
         width: 0.25em;
         height: 0.25em;
         border-radius: 50%;
         position: absolute;
+        z-index: 2;
         @media #{breakpoint(medium)} {
           left: 50%;
-          top: 100%;
+          top: calc(50% + 0.5em);
           transform: translate(-50%, 50%);
         }
         @media #{breakpoint(small,only)} {
-          left: 0;
+          left: 1em;
           top: 50%;
           transform: translate(-200%, -50%);
         }
       }
-    }
-
-    &__link {
-      @include property(
-        (
-          padding: calc(#{variable(space)} / 2),
-          text-decoration: none,
-          display: block,
-          position: relative,
-          color: currentColor,
-        )
-      );
       &::before {
         content: "";
         display: block;
+        background-color: v(primary10);
         @include property(
           (
             content: "",
@@ -105,35 +166,36 @@
             top: 50%,
             transform: translate(-50%, -50%) scale(0.5),
             border-radius: borderRadius,
-            background-color: background,
             z-index: 1,
             opacity: 0,
             transition: transform variable(transition),
           )
         );
       }
-      &:hover::before {
-        @include property(
-          (
-            opacity: 0.25,
-            transform: translate(-50%, -50%) scale(1),
-          )
-        );
+      &:hover {
+        transform: scale(1.1);
       }
-      &:focus {
-        outline: none;
-      }
-      &:not(:hover):focus::before {
-        @include property(
-          (
-            content: "",
-            opacity: 1,
-            display: block,
-            transform: translate(-50%, -50%) scale(1),
-            background-color: primary10,
-          )
-        );
-      }
+      // &:hover::before {
+      //   @include property(
+      //     (
+      //       opacity: 1,
+      //       transform: translate(-50%, -50%) scale(1),
+      //     )
+      //   );
+      // }
+      // &:focus {
+      //   outline: none;
+      // }
+      // &:not(:hover):focus::before {
+      //   @include property(
+      //     (
+      //       content: "",
+      //       opacity: 1,
+      //       display: block,
+      //       transform: translate(-50%, -50%) scale(1),
+      //     )
+      //   );
+      // }
       &:hover {
         text-decoration: none;
       }
@@ -152,18 +214,19 @@
       @include property(
         (
           position: fixed,
-          top: calc(#{variable(space)} / 2),
-          right: calc(#{variable(space)} / 2),
+          top: 0,
+          right: 0,
           z-index: 11,
           border-radius: borderRadius,
-          width: #{space(1.5)},
-          height: #{space(1.5)},
+          width: v(space-l),
+          height: v(space-l),
           align-items: center,
           justify-content: center,
           display: flex,
           transition:
-            "background #{variable(transition)}, border-radius #{variable(transition)}",
+            "background #{v(transition)}, border-radius #{v(transition)}",
           color: foreground,
+          opacity: 0.5,
         )
       );
       &::before {
@@ -175,25 +238,23 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%) scale(0.5);
-        background-color: variable(primary);
         opacity: 0;
-        transition: transform variable(transition);
+        transition: transform v(transition);
       }
       &:focus::before,
       &:hover::before {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
-        outline: 2px solid variable(foreground);
       }
       &:hover {
-        color: variable(foreground);
+        opacity: 1;
       }
       @media #{breakpoint(medium)} {
         display: none;
       }
       span {
         display: block;
-        width: space(0.75);
+        width: calc(#{v(space)} * 0.75);
         height: 2px;
         background-color: currentColor;
         position: relative;
@@ -252,27 +313,28 @@
           background-color: variable(background90);
           color: variable(foreground);
           height: auto;
-          width: auto;
+          min-width: 50vw;
           height: 100vh;
           right: 0;
           top: 0;
-          padding: variable(space);
-          padding-top: calc(#{variable(space)} * 2);
-          transition: clip-path variable(transition);
+          padding: v(space-s);
+          padding-top: calc(#{v(space)} * 2);
+          transition: clip-path v(transition);
           opacity: 1;
           clip-path: inset(0 0 0 100%);
           align-items: flex-start;
-          justify-content: center;
-          transform-origin: 100% 0;
+          justify-content: start;
+          transform-origin: 50% 0;
           position: absolute;
           pointer-events: none;
+          border-left: 1px solid v(foreground25);
 
           #{$navigation}__link {
             width: auto;
             &::before {
               opacity: 1;
               transform: translate(-50%, -50%) scale(1);
-              background-color: variable(background90);
+              background-color: v(background90);
             }
           }
         }

@@ -1,11 +1,6 @@
 footer.footer 
     if menu 
-        nav.navigation.center
-            ul.navigation__list
-                each item in menu
-                    li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current? 'navigation__item--parent' : ''}`)
-                        a.navigation__link(href= item.link)
-                            span.navigation__text= item.name
+        include navigation.pug 
 
 
 
@@ -26,7 +21,10 @@ if project.script
 script
 
     include script/colorMode.js
-    include script/stickyNav.js
+    if has.header
+        include script/stickyNav.js
+    if has.table
+        include script/wrapTables.js
 
 
 

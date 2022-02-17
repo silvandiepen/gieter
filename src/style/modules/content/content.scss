@@ -204,9 +204,10 @@
   $parent: get-setting("define.content.class");
   #{$parent} {
     table {
-      width: calc(100% + (#{variable(space)} * 1));
-      margin-left: calc((#{variable(space)} / 2) * -1);
+      width: calc(100% + 1em);
+      margin-left: -0.5em;
       color: currentColor;
+      border-collapse: collapse;
 
       &.middle {
         th,
@@ -218,27 +219,37 @@
       td {
         vertical-align: top;
         text-align: left;
-        padding: calc(#{variable(space)} / 2);
+        padding: 1em 0.5em;
       }
       th {
         font-weight: variable(text-bold, bold);
       }
       thead tr,
       tbody tr:last-child {
-        border-bottom: 1px solid variable(background90);
+        border-bottom: 1px solid variable(foreground10);
       }
       tr + tr {
-        border-top: 1px solid variable(background90);
+        border-top: 1px solid variable(foreground10);
       }
       @media #{breakpoint(small,only)} {
         &.wrap {
+          thead {
+            display: none;
+          }
           tr {
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
-            th,
             td {
               display: block;
+            }
+            td::before {
+              width: 33.33%;
+              display: block;
+              color: v(foreground50);
+              font-size: 0.875em;
+              line-height: 1.5;
+              content: attr(data-label);
             }
           }
         }

@@ -8,21 +8,17 @@ if menu.length > 0
     div.navigation__background
 
 header.header.header--sticky
-    if project
-    if project.logoData
-        a.logo(href=`${homeLink}`, class= `${project.logoData ? 'logo--image-only' : ''}`, aria-label=`${project.title}`,tabindex=0)
-            | !{project.logoData}
-    else if project.logo
-        a.logo(href=`${homeLink}`,tabindex=0)=project.title
-            img(src=project.logo)
-    else if project.title
-        a.logo(href=`${homeLink}`,tabindex=0)=project.title
+    div.header__container
+        if project
+        if project.logoData
+            a.logo(href=`${homeLink}`, class= `${project.logoData ? 'logo--image-only' : ''}`, aria-label=`${project.title}`,tabindex=0)
+                | !{project.logoData}
+        else if project.logo
+            a.logo(href=`${homeLink}`,tabindex=0)=project.title
+                img(src=project.logo)
+        else if project.title
+            a.logo(href=`${homeLink}`,tabindex=0)
+                span.logo__text=project.title
 
-    if menu.length > 0
-    nav.navigation.center
-        - var ti = 1;
-        ul.navigation__list          
-            each item in menu
-                li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current ? 'navigation__item--parent' : ''}`)
-                    a.navigation__link(href= item.link, tabindex= ti++)
-                        span.navigation__text= item.name
+        if menu.length > 0
+            include navigation.pug 

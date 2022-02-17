@@ -85,12 +85,15 @@ export interface File {
   thumbnailSvg?: string;
 }
 export interface MenuItem {
+  id: string;
   name: string;
   link: string;
   active: boolean;
   language: Language;
+  icon?: string;
   current?: boolean;
   isParent?: boolean;
+  children?: MenuItem[];
 }
 
 export interface LanguageMenuItem {
@@ -122,6 +125,10 @@ export interface buildHtmlArgs {
   homeLink: string;
   langMenu: LanguageMenuItem[];
   language: Language;
+  has: {
+    table: boolean;
+    header: boolean;
+  };
 }
 interface PageCss {
   data: string;

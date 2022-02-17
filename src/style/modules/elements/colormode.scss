@@ -5,12 +5,14 @@ $prefix: null;
 }
 
 @mixin colormode() {
+  $switch-size: 2em;
+
   $colorModeClass: get-setting("define.colormode.class");
 
-  $switch-stroke: calc(#{variable(space)} * 0.1);
-  $switch-color: currentColor;
-  $switch-margin: calc(#{variable(space)} * 4);
-  $switch-dot-size: calc(#{variable(space)} - (#{variable(space)} * 0.4));
+  $switch-stroke: calc(#{$switch-size} * 0.1);
+  $switch-color: v(foreground50);
+  $switch-margin: calc(#{$switch-size} * 4);
+  $switch-dot-size: calc(#{$switch-size} - (#{$switch-size} * 0.4));
 
   $switch-settings: (
     switchStroke: $switch-stroke,
@@ -26,11 +28,11 @@ $prefix: null;
         switchColor,
         $switch-color
       )};
-    width: calc(#{variable(space)} * 1.5);
-    height: calc(#{variable(space)} * 1);
+    width: calc(#{$switch-size} * 1.5);
+    height: calc(#{$switch-size} * 1);
     display: block;
     background-color: transparent;
-    border-radius: variable(space);
+    border-radius: $switch-size;
     position: relative;
     text-indent: -999em;
     color: variable(switchColor, $switch-color);
@@ -67,7 +69,7 @@ $prefix: null;
       );
 
       background-repeat: no-repeat;
-      background-size: calc(#{variable(space)} * 2) 100%;
+      background-size: calc(#{$switch-size} * 2) 100%;
       background-position: -0% 50%;
     }
     // The after is a label shown to display the current mode. By default this doesn't show because the after does not have a content.

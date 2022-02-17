@@ -51,6 +51,7 @@ export const createBaseCss = async (
 
   if (mockMenu.length > 0) {
     const ph = {
+      id: "",
       name: "placeholder",
       active: true,
     };

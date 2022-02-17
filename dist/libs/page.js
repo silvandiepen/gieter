@@ -21,35 +21,40 @@ const files_1 = require("./files");
 const system_1 = require("@sil/tools/dist/lib/system");
 const style_1 = require("./style");
 const kleur_1 = __importDefault(require("kleur"));
+const media_1 = require("./media");
 const simplifyUrl = (url) => url.replace("/index.html", "");
 const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current);
 const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
     simplifyUrl(current) !== "" &&
     simplifyUrl(link) !== "";
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _a;
     const currentLink = (0, files_1.makePath)(file);
     const currentLanguage = file.language;
     /*
      * Generate the html for this page
      */
-    const menu = payload.menu
-        ? payload.menu
-            .map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink) })))
-            .filter((item) => item.language == currentLanguage)
-        : [];
+    const menuStatus = (menu) => {
+        if (menu) {
+            return menu
+                .map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink), children: menuStatus(item.children) })))
+                .filter((item) => item.language == currentLanguage);
+        }
+        else {
+            return [];
+        }
+    };
+    const menu = payload.menu ? menuStatus(payload.menu) : [];
     const tags = payload.tags
         ? payload.tags.filter((tag) => tag.parent == file.parent)
         : [];
-    const thumbnail = ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.thumbnail)
-        ? file.meta.thumbnail
-        : ((_b = file.meta) === null || _b === void 0 ? void 0 : _b.image)
-            ? file.meta.image
-            : null;
-    // const thumbnailSvg =
-    //   thumbnail && thumbnail.endsWith(".svg")
-    //     ? await getSVGData(thumbnail)
-    //     : null;
+    const thumbnail = (0, media_1.getThumbnail)(file);
+    const hasTable = () => {
+        return file.html && file.html.includes("<table>");
+    };
+    const hasHeader = () => {
+        return menu.length > 0;
+    };
     const data = {
         menu,
         tags,
@@ -59,11 +64,15 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         media: payload.media,
         meta: file.meta,
         contentOnly: false,
-        showContentImage: ((_c = file.meta) === null || _c === void 0 ? void 0 : _c.image) && file.meta.type !== "photo",
+        showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
         favicon: payload.favicon,
         homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
         langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
+        has: {
+            table: hasTable(),
+            header: hasHeader(),
+        },
     };
     const html = yield (0, files_1.buildHtml)(file, data);
     /*

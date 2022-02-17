@@ -4,20 +4,12 @@
 
   #{$footer} {
     position: relative;
-    filter: blur(0);
-    transform: translate(0);
-    transition: transform variable(transition), filter variable(transition);
-    @media #{breakpoint(small,only)} {
-      #{$navigation} {
-        &__list {
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-        &__item {
-          padding: 0;
-        }
-      }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: v(space);
+    @media #{bp(small,only)} {
+      justify-content: start;
     }
   }
 }

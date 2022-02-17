@@ -3,7 +3,7 @@ const { writeFile } = require("fs").promises;
 import { join } from "path";
 import { blockLine, blockLineSuccess } from "cli-block";
 
-import { Payload, File, Page, buildHtmlArgs } from "../types";
+import { Payload, File, Page, buildHtmlArgs, MenuItem } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml } from "./files";
 
@@ -11,6 +11,7 @@ import { createDir } from "@sil/tools/dist/lib/system";
 import { createCss } from "./style";
 import kleur from "kleur";
 import { getSVGData } from "./svg";
+import { getThumbnail } from "./media";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
 
@@ -33,30 +34,35 @@ export const buildPage = async (
    * Generate the html for this page
    */
 
-  const menu = payload.menu
-    ? payload.menu
+  const menuStatus = (menu: MenuItem[]): MenuItem[] => {
+    if (menu) {
+      return menu
         .map((item) => ({
           ...item,
           current: isActiveMenu(item.link, currentLink),
           isParent: isActiveMenuParent(item.link, currentLink),
+          children: menuStatus(item.children),
         }))
-        .filter((item) => item.language == currentLanguage)
-    : [];
+        .filter((item) => item.language == currentLanguage);
+    } else {
+      return [];
+    }
+  };
+
+  const menu = payload.menu ? menuStatus(payload.menu) : [];
 
   const tags = payload.tags
     ? payload.tags.filter((tag) => tag.parent == file.parent)
     : [];
 
-  const thumbnail = file.meta?.thumbnail
-    ? file.meta.thumbnail
-    : file.meta?.image
-    ? file.meta.image
-    : null;
+  const thumbnail = getThumbnail(file);
 
-  // const thumbnailSvg =
-  //   thumbnail && thumbnail.endsWith(".svg")
-  //     ? await getSVGData(thumbnail)
-  //     : null;
+  const hasTable = () => {
+    return file.html && file.html.includes("<table>");
+  };
+  const hasHeader = () => {
+    return menu.length > 0;
+  };
 
   const data: buildHtmlArgs = {
     menu,
@@ -72,6 +78,10 @@ export const buildPage = async (
     homeLink: file.language == defaultLanguage ? "/" : `/${file.language}`,
     langMenu: getLanguageMenu(payload, file),
     language: currentLanguage,
+    has: {
+      table: hasTable(),
+      header: hasHeader(),
+    },
   };
 
   const html = await buildHtml(file, data);

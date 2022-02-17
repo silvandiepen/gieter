@@ -11,11 +11,12 @@ import { createDir } from "@sil/tools/dist/lib/system";
 import { getSVGData } from "./svg";
 
 export const getThumbnail = (file: File): string | null => {
-  return file.meta?.thumbnail
-    ? file.meta.thumbnail
-    : file.meta?.image
-    ? file.meta.image
-    : null;
+  const thumb = file.meta.thumb;
+  const image = file.meta.image;
+  const icon = file.meta.icon;
+
+  const thumbnail = thumb || image || icon || null;
+  return thumbnail;
 };
 
 export const getSvgThumbnail = async (thumb: string): Promise<string> => {

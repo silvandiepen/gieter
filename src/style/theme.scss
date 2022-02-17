@@ -142,12 +142,6 @@ $theme-output: (
   "default.custom-properties"
 );
 
-$theme-base: (
-  "space": 2em,
-  "border-radius": 0.3em,
-  "transition": 0.3s ease-in-out,
-);
-
 $theme-typography: (
   codeFontFamily:
     'Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace',
@@ -157,5 +151,5 @@ $theme-colors: (
   foreground: rgb(13, 7, 31),
   background: rgb(255, 251, 232),
   primary: rgb(79, 63, 92),
-  secondary: rgb(164, 207, 219),
+  secondary: rgb(88, 158, 177),
 );

@@ -1,0 +1,19 @@
+nav.navigation
+    - var ti = 1;
+    ul.navigation__list          
+        each item in menu
+            li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current ? 'navigation__item--parent' : ''}`)
+                a.navigation__link(href= item.link, tabindex= ti++)
+                    if item.icon 
+                        span.navigation__icon
+                            | !{item.icon}
+                    span.navigation__text= item.name
+                if item.children
+                    ul.navigation__list.navigation__list--sub 
+                        each subitem in item.children
+                            li.navigation__item.navigation__item--sub(class= `${subitem.current ? 'navigation__item--current' : ''}${subitem.isParent && !subitem.current ? 'navigation__item--parent' : ''}`)      
+                                a.navigation__link.navigation__link--sub(href= subitem.link)
+                                    if subitem.icon 
+                                        span.navigation__icon.navigation__icon--sub
+                                            | !{subitem.icon}
+                                    span.navigation__text.navigation__text--sub= subitem.name

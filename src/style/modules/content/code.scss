@@ -43,12 +43,22 @@
     color: v(foreground);
     border: 1px solid v(foreground10);
     color: v(foreground);
-    padding: v(space);
+    padding: v(space-s);
     font-family: v(codeFontFamily);
     border-radius: v(borderRadius);
     overflow: scroll;
     max-width: 100%;
     display: block;
+    @include bp(small, only) {
+      padding: v(space);
+      width: calc(100% + #{v(space-xl)});
+      max-width: calc(100% + #{v(space-xl)});
+      margin-left: calc(#{v(space)} * -1);
+      margin-right: calc(#{v(space)} * -1);
+      border: none;
+      border-radius: 0;
+      background-color: v(foreground10);
+    }
     & + code {
       margin: 0;
     }
@@ -63,11 +73,13 @@
 
   pre[class^="language-"] {
     position: relative;
+    padding: 0;
+    overflow: visible;
     &::before {
       content: "";
       display: block;
       position: absolute;
-      right: v(space);
+      right: v(space-s);
       top: 0;
       font-size: 0.75em;
       font-weight: bold;
@@ -76,6 +88,9 @@
       transform: translateY(-50%);
       padding: 0.5em;
       border-radius: v(borderRadius);
+      @include bp(small, only) {
+        right: v(space);
+      }
     }
     &.language-js::before {
       content: "js";
@@ -98,12 +113,13 @@
     &.language-ts::before {
       content: "ts";
     }
-    padding: 0;
-    overflow: visible;
     code {
       overflow: scroll;
-      padding: v(space);
+      padding: v(space-s);
       display: block;
+      @include bp(small, only) {
+        padding: v(space);
+      }
     }
   }
   td code,

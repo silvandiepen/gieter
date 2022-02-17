@@ -4,23 +4,55 @@
 
   #{$header} {
     position: relative;
-    display: flex;
-    justify-content: space-between;
     z-index: 10;
+    @media #{breakpoint(medium,up)} {
+      padding: v(space-s);
+    }
     &--sticky {
       position: sticky;
       top: 0;
+    }
+
+    &__container {
+      display: flex;
+      justify-content: space-between;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+      background-color: v(background50);
+      backdrop-filter: blur(1em);
+      border-bottom: 2px solid var(--border-color);
+
+      @media #{breakpoint(medium,up)} {
+        border-radius: v(borderRadius);
+        border: 2px solid var(--border-color, transparent);
+      }
+
+      &--hide {
+        transform: translateY(-50%);
+        opacity: 0;
+      }
+      &--show {
+        transform: translateY(0%);
+        opacity: 1;
+      }
+      &--off-top {
+        --border-color: #{v(foreground10)};
+      }
+      &--on-top {
+        --border-color: transparent;
+      }
     }
   }
 
   #{$header} #{$logo} {
     @include property(
       (
-        padding: variable(space),
         font-weight: bold,
         color: currentColor,
         text-decoration: none,
         display: flex,
+        align-items: center,
+        padding: 0 v(space-s),
       )
     );
     &--image-only ~ span {
@@ -29,6 +61,8 @@
     img {
       max-width: 5em;
       max-height: 5em;
+    }
+    &__text {
     }
     svg {
       display: block;

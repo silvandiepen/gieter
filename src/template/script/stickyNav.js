@@ -1,14 +1,21 @@
-const navigation = document.querySelector(".navigation");
+const navigation = document.querySelector(".header__container");
 let ticking = false;
 let lastScrollPosition = 0;
 
 const setActiveNavigation = (scrollPosition) => {
-  if (lastScrollPosition > scrollPosition || scrollPosition < 10) {
-    navigation.classList.add("navigation--show");
-    navigation.classList.remove("navigation--hide");
+  if (scrollPosition < 10) {
+    navigation.classList.add("header__container--on-top");
+    navigation.classList.remove("header__container--off-top");
   } else {
-    navigation.classList.add("navigation--hide");
-    navigation.classList.remove("navigation--show");
+    navigation.classList.remove("header__container--on-top");
+    navigation.classList.add("header__container--off-top");
+  }
+  if (lastScrollPosition > scrollPosition || scrollPosition < 10) {
+    navigation.classList.add("header__container--show");
+    navigation.classList.remove("header__container--hide");
+  } else {
+    navigation.classList.add("header__container--hide");
+    navigation.classList.remove("header__container--show");
   }
   lastScrollPosition = scrollPosition;
 };

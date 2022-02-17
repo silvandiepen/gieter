@@ -5,7 +5,7 @@
     &__list {
       display: flex;
       flex-wrap: wrap;
-      gap: calc(#{variable(space)} / 4);
+      gap: 0.5em;
     }
     &__item {
       display: block;
@@ -16,7 +16,7 @@
       text-decoration: none;
       color: currentColor;
       display: block;
-      padding: calc(#{variable(space)} / 4);
+      padding: 0.5em;
       position: relative;
       &:hover {
         background-color: transparent;
@@ -30,8 +30,8 @@
         z-index: 1;
         position: absolute;
         left: 50%;
-        width: calc(100% + (#{variable(space)} / 2));
-        height: calc(100% + (#{variable(space)} / 2));
+        width: calc(100% + 1em);
+        height: calc(100% + 1em);
         background-color: variable(secondary);
         top: 50%;
         transform: translate(-50%, -50%) scale(0.75);
