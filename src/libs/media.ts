@@ -84,7 +84,7 @@ export const createThumbnail = async (file: File): Promise<any> => {
 export const getMedia = async (payload: Payload): Promise<File[]> => {
   let mediaFiles: File[] = [];
   await asyncForEach(["assets", "media"], async (folder: string) => {
-    const exists = await existsSync(join(process.cwd(), folder));
+    const exists = existsSync(join(process.cwd(), folder));
 
     if (exists) {
       await copy(

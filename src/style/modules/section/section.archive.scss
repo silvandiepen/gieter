@@ -37,7 +37,7 @@
           display: flex;
           flex-wrap: wrap;
           width: 100%;
-          @media #{breakpoint("medium")} {
+          @media #{breakpoint("medium", up)} {
             width: calc(100% + #{variable(space)});
             margin-left: calc(#{variable(space)} * -1);
             position: relative;
@@ -48,7 +48,7 @@
           font-size: 1.5em;
           display: block;
           font-weight: bold;
-          transition: variable(transition);
+          transition: v(transition);
         }
         &__excerpt {
           opacity: 0.5;
@@ -65,10 +65,10 @@
           margin: 0.5em;
           font-size: 0.8em;
           font-weight: bold;
-          background-color: variable(background);
+          background-color: v(background);
           color: currentColor;
           padding: 0.5em;
-          border-radius: variable(borderRadius);
+          border-radius: v(borderRadius);
         }
         &__info {
           display: block;
@@ -78,13 +78,13 @@
           display: block;
           margin-top: #{variable(space)};
           transform: scale(1);
-          transition: transform variable(transition);
+          transition: transform v(transition);
           width: 100%;
-          border-radius: variable(borderRadius);
+          border-radius: v(borderRadius);
 
-          @media #{breakpoint(medium)} {
-            width: calc(33.33% - #{variable(space)});
-            margin-left: #{variable(space)};
+          @media #{bp(medium,up)} {
+            width: calc(33.33% - #{v(space)});
+            margin-left: #{v(space)};
           }
           & + #{$archive}__item {
             flex-direction: column;
@@ -93,19 +93,18 @@
           &::before {
             content: "";
             display: block;
-            width: calc(100% + #{variable(space)});
-            height: calc(100% + #{variable(space)});
+            width: calc(100% + #{v(space)});
+            height: calc(100% + #{v(space)});
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(0.8);
             background-color: variable(background);
             z-index: -1;
-            box-shadow: 0 0 1em 0 variable(accent);
+            box-shadow: 0 0 1em 0 v(background10);
             opacity: 0;
-            border-radius: calc(#{variable(borderRadius)} * 2);
-            transition: opacity variable(transition),
-              transform variable(transition);
+            border-radius: calc(#{v(borderRadius)} * 2);
+            transition: opacity v(transition), transform v(transition);
           }
           &:hover {
             #{$archive}__date {
@@ -153,6 +152,9 @@
             align-items: center;
             justify-content: center;
             svg {
+              color: v(secondary);
+              width: 100%;
+              height: 100%;
               max-width: 100%;
               max-height: 100%;
             }
@@ -172,7 +174,7 @@
           }
           &--empty {
             position: relative;
-            background-color: variable(background10);
+            background-color: v(background10);
             &::before {
               content: "?";
               position: absolute;
@@ -186,9 +188,9 @@
               height: 2em;
               line-height: 2em;
               text-align: center;
-              background-color: variable(background);
-              border-radius: variable(borderRadius);
-              color: variable(accent);
+              background-color: v(background);
+              border-radius: v(borderRadius);
+              color: v(background10);
             }
           }
         }
@@ -305,6 +307,8 @@
             svg {
               max-width: 100%;
               max-height: 100%;
+              width: 100%;
+              height: 100%;
             }
           }
         }

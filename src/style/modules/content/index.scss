@@ -26,6 +26,9 @@
 @if export("content.default") or export("content.definition-list") {
   @include content-definition-list();
 }
+@if export("content.default") or export("content.color-preview") {
+  @include content-color-preview();
+}
 
 @mixin styled-content() {
   @include content-table();

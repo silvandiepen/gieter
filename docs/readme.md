@@ -2,10 +2,10 @@
 title: Documentation
 type: articles
 isArchive: true
-# image: /media/logo.png
+menuChildren: true
 ---
 
-# Documentation
+# Docs
 
 ### Use
 

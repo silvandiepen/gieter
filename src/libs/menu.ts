@@ -80,6 +80,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
 
   if (menu.length > 0) {
     if (menu.length == 1 && menu[0].link == "/index.html") {
+      menu = [];
       blockLine("no menu to display");
     } else {
       menu.forEach((item) => {

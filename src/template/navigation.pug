@@ -8,7 +8,7 @@ nav.navigation
                         span.navigation__icon
                             | !{item.icon}
                     span.navigation__text= item.name
-                if item.children
+                if item.children.length > 0
                     ul.navigation__list.navigation__list--sub 
                         each subitem in item.children
                             li.navigation__item.navigation__item--sub(class= `${subitem.current ? 'navigation__item--current' : ''}${subitem.isParent && !subitem.current ? 'navigation__item--parent' : ''}`)      

@@ -128,6 +128,8 @@ export interface buildHtmlArgs {
   has: {
     table: boolean;
     header: boolean;
+    urlToken: boolean;
+    colors: boolean;
   };
 }
 interface PageCss {

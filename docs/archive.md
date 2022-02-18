@@ -1,5 +1,5 @@
 ---
-thumbnail: /media/icon_archive.svg
+icon: /media/icon_archive.svg
 tags: documentation
 ---
 # Archives
@@ -10,7 +10,7 @@ You can create an archive by creating a folder with a readme.md. An example;
 
 `blog/readme.md`
 
-```
+```markdown
 ---
 type: blog
 isArchive: true

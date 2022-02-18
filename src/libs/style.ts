@@ -1,12 +1,14 @@
 import { PurgeCSS } from "purgecss";
 
-import { createDir } from "@sil/tools/dist/lib/system";
+import { createDir, createFile, fileExists } from "@sil/tools/dist/lib/system";
 import { buildCss } from "../style/compile/compile";
 import { Style, Payload, Language } from "../types";
 import { buildPage } from "./page";
 const { readFile, writeFile } = require("fs").promises;
 
-import { join } from "path";
+import { join, resolve } from "path";
+import { compileStringAsync } from "sass";
+import { blockLineSuccess } from "cli-block";
 
 /*
  * createCss
@@ -125,8 +127,35 @@ export const createStylesheets = async (
   style.og = styleData;
 
   if (payload.project.styleOverrule) style.path = payload.project.styleOverrule;
-  if (payload.project.style) style.add = payload.project.style;
+  if (payload.project.style) {
+    if (payload.project.style.includes(".scss")) {
+      const stylePath = join(process.cwd(), payload.project.style);
+      const styleExists = await fileExists(stylePath);
+      const nodeModulesPath = resolve(join(__dirname, `../../node_modules/`));
 
+      if (styleExists) {
+        let file = await readFile(stylePath).then((res) => res.toString());
+
+        file = `@import "@sil/themer/src/use.scss";\n${file}`;
+
+        const result = await compileStringAsync(file, {
+          loadPaths: [nodeModulesPath],
+        });
+
+        await createFile(
+          stylePath.replace(".scss", ".css"),
+          result.css.toString()
+        );
+        blockLineSuccess(
+          `Custom css generated → ${payload.project.style.replace(
+            ".scss",
+            ".css"
+          )}`
+        );
+      }
+    }
+    style.add = payload.project.style.replace(".scss", ".css");
+  }
   return { ...payload, style };
 };
 

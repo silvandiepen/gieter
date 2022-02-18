@@ -4,8 +4,8 @@
     @include property(
       (
         display: inline-block,
-        padding: space(0.5),
-        background-color: accentColor,
+        padding: space-s,
+        background-color: background10,
         border-radius: borderRadius,
         color: currentColor,
       )

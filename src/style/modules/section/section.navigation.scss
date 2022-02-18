@@ -45,15 +45,16 @@
             background-color: v(foreground10);
             position: absolute;
             left: 50%;
-            top: calc(50% + 2.5em);
+            top: calc(50% + 2em);
             flex-direction: column;
             padding: 0.75em;
             opacity: 0;
+            backdrop-filter: blur(0.5em);
             pointer-events: none;
 
-            transform-origin: 0 50%;
-            transform: scale(0.85) translateX(-50%);
-            transition: all 0.3s ease-in-out;
+            transform-origin: 50% 0;
+            transform: scale(0.85) translateX(var(--nav-translate-x, -50%));
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
             z-index: 2;
 
             &::before {
@@ -81,12 +82,32 @@
     }
 
     &__item {
-      position: relative;
-      &--parent > #{$navigation}__link::after {
-        background-color: v(navigation-dot-parent, v(primary));
+      // Sub on last child
+
+      &:last-of-type {
+        #{$navigation}__list--sub {
+          left: auto;
+          right: 0;
+          --nav-translate-x: 0;
+        }
       }
-      &--current > #{$navigation}__link::after {
-        background-color: v(navigation-dot-current, v(secondary));
+
+      position: relative;
+      &--parent > #{$navigation}__link {
+        #{$navigation}__icon {
+          color: v(primary);
+        }
+        &::after {
+          background-color: v(navigation-dot-parent, v(primary));
+        }
+      }
+      &--current > #{$navigation}__link {
+        #{$navigation}__icon {
+          color: v(secondary);
+        }
+        &::after {
+          background-color: v(navigation-dot-current, v(secondary));
+        }
       }
       &:hover,
       &:focus-within {
@@ -95,7 +116,7 @@
             #{$navigation}__list {
               opacity: 1;
               pointer-events: all;
-              transform: scale(1) translateX(-50%);
+              transform: scale(1) translateX(var(--nav-translate-x, -50%));
             }
           }
         }
@@ -107,6 +128,13 @@
       margin-right: 0.5em;
       z-index: 2;
       position: relative;
+      @media #{bp('small',only)} {
+        width: 2.5em;
+        height: 2.5em;
+        & + #{$navigation}__text {
+          line-height: 2.5;
+        }
+      }
     }
     &__text {
       position: relative;
@@ -114,6 +142,7 @@
       display: block;
       transition: transform v(transition);
       line-height: 1.5;
+      white-space: nowrap;
     }
 
     &__link {
@@ -127,6 +156,14 @@
           transition: transform v(transition),
         )
       );
+
+      @media #{bp(small,only)} {
+        &--sub {
+          font-size: 0.875em;
+          opacity: 0.75;
+          padding: 0 v(space-s);
+        }
+      }
       @media #{bp(medium,up)} {
         &--sub {
           padding: 0.5em;
@@ -293,6 +330,7 @@
       background-color: variable(background);
       opacity: 0;
       z-index: 5;
+      transition: opacity 0.3s ease-in-out;
     }
     /*
       * Inactive Mobile Header Navigation Control
@@ -342,11 +380,11 @@
 
       @media #{breakpoint(small,only)} {
         &:checked {
-          & ~ footer.footer,
-          & ~ main.content {
-            transform: translateX(-10%);
-            filter: blur(2px);
-          }
+          // & ~ footer.footer,
+          // & ~ main.content {
+          //   transform: translateX(-10%);
+          //   filter: blur(2px);
+          // }
           /*
           * Active Mobile Header Navigation
           */

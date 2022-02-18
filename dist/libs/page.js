@@ -49,12 +49,11 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         ? payload.tags.filter((tag) => tag.parent == file.parent)
         : [];
     const thumbnail = (0, media_1.getThumbnail)(file);
-    const hasTable = () => {
-        return file.html && file.html.includes("<table>");
-    };
-    const hasHeader = () => {
-        return menu.length > 0;
-    };
+    const hasTable = () => file.html && file.html.includes("<table>");
+    const hasUrlToken = () => file.html && file.html.includes('<span class="token url">http');
+    const hasHeader = () => menu.length > 0;
+    const hasColors = () => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+    const matches = file.html && file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
     const data = {
         menu,
         tags,
@@ -72,6 +71,8 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         has: {
             table: hasTable(),
             header: hasHeader(),
+            urlToken: hasUrlToken(),
+            colors: hasColors(),
         },
     };
     const html = yield (0, files_1.buildHtml)(file, data);

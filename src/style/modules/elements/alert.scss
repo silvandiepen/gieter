@@ -1,10 +1,10 @@
 @mixin alert() {
   $alert: get-setting("define.alert.class");
   #{$alert} {
-    padding: variable(space);
-    border-radius: variable(borderRadius);
-    background-color: variable(alert-background-color, variable(accent));
-    color: variable(alert-text-color, currentColor);
+    padding: v(space);
+    border-radius: v(borderRadius);
+    background-color: v(alert-background-color, v(background10));
+    color: v(alert-text-color, currentColor);
 
     &--success {
       --alert-background-color: #{variable(green-80)};

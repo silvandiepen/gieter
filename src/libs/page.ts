@@ -57,12 +57,18 @@ export const buildPage = async (
 
   const thumbnail = getThumbnail(file);
 
-  const hasTable = () => {
-    return file.html && file.html.includes("<table>");
-  };
-  const hasHeader = () => {
-    return menu.length > 0;
-  };
+  const hasTable = () => file.html && file.html.includes("<table>");
+
+  const hasUrlToken = () =>
+    file.html && file.html.includes('<span class="token url">http');
+
+  const hasHeader = () => menu.length > 0;
+
+  const hasColors = () =>
+    file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+
+  const matches =
+    file.html && file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
 
   const data: buildHtmlArgs = {
     menu,
@@ -81,6 +87,8 @@ export const buildPage = async (
     has: {
       table: hasTable(),
       header: hasHeader(),
+      urlToken: hasUrlToken(),
+      colors: hasColors(),
     },
   };
 

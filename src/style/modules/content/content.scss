@@ -13,14 +13,12 @@
         )
       );
 
-      @if export("content.paragraphs.first") {
-        &:first-of-type {
-          @include property(
-            (
-              font-size: 1.25em,
-            )
-          );
-        }
+      &:first-of-type {
+        @include property(
+          (
+            font-size: 1.25em,
+          )
+        );
       }
     }
   }
@@ -154,7 +152,7 @@
         line-height: 1.5em;
         font-size: 1em;
         &::before {
-          padding-right: v(space-s);
+          padding-right: 0.5em;
         }
         & + li {
           margin-top: 0.5em;
@@ -196,6 +194,21 @@
           content: counter(list) ".";
         }
       }
+    }
+  }
+}
+
+@mixin content-color-preview() {
+  $parent: get-setting("define.color-preview.class");
+  #{$parent} {
+    &::after {
+      content: "";
+      width: 1em;
+      height: 1em;
+      background-color: var(--color-preview);
+      display: inline-block;
+      border-radius: 50%;
+      margin-left: 0.5em;
     }
   }
 }

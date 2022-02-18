@@ -9,7 +9,6 @@ import defList from "markdown-it-deflist";
 
 import { extractMeta, removeMeta } from "./markdown-meta";
 import { MarkdownData } from "../types";
-import { match } from "assert";
 import { getGist } from "./download";
 import { asyncForEach } from "@sil/tools";
 
@@ -20,7 +19,9 @@ const md = new MarkdownIt({
   breaks: true,
 });
 
-md.use(prism);
+md.use(prism, {
+  plugins: ["autolinker"],
+});
 md.use(emoji);
 md.use(anchor);
 md.use(tasks, { enabled: true, label: true, labelAfter: true });
@@ -42,7 +43,7 @@ export const replaceData = async (input: string): Promise<string> => {
     await asyncForEach(matches, async (match) => {
       const gistId = match.split("[gist=").pop().split("]")[0];
       const gistData = await getGist(gistId);
-      input = input.replace(match, gistData);
+      input = input.replace(match, `\n${gistData}\n`);
     });
   }
   return input;

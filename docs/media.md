@@ -1,5 +1,5 @@
 ---
-thumbnail: /media/icon_media.svg
+icon: /media/icon_media.svg
 tags: documentation
 ---
 # Media and Assets

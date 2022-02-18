@@ -1,8 +1,10 @@
-.content a[href*=tel] {
-  border: 1px solid red;
-}
-.content a[href*=mailto] {
-  border: 1px solid blue;
+.content {
+  a[href*="tel"] {
+    border: 1px solid red;
+  }
+  a[href*="mailto"] {
+    border: 1px solid blue;
+  }
 }
 
 @media screen and (min-width: 0) {

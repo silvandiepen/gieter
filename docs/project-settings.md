@@ -1,5 +1,5 @@
 ---
-thumbnail: /media/icon_project.svg
+icon: /media/icon_project.svg
 tags: documentation
 ---
 
@@ -7,13 +7,13 @@ tags: documentation
 
 There are also a few project settings you can alter defining them in **any** of the markdown files.
 
-```
+```markdown
 ---
 projectTitle: My Project Title
-projectLogo: media/my-logo.svg
+projectLogo: /media/my-logo.svg
 projectIgnore: src, test
-projectStyle: assets/my-css.css
-projectStyleOverrule: assets/my-alt-css.css
+projectStyle: /assets/my-css.css
+projectStyleOverrule: /assets/my-alt-css.css
 ---
 ```
 

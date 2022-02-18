@@ -1,13 +1,13 @@
 @mixin section-tags() {
   $tags: get-setting("define.tags.class");
   #{$tags} {
-    border-top: 1px solid variable(accent);
-    border-bottom: 1px solid variable(accent);
+    border-top: 1px solid v(foreground10);
+    border-bottom: 1px solid v(foreground10);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0.25;
-    transition: opacity variable(transition);
+    transition: opacity v(transition);
     &:hover {
       opacity: 1;
     }

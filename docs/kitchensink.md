@@ -1,11 +1,10 @@
 ---
-date: 2-12-2020
 title: KitchenSink
-projectTitle: Open Letter
-projectLogo: media/logo.svg
-projectStyle: media/custom.css
-thumbnail: /media/icon_kitchensink.svg
+icon: /media/icon_kitchensink.svg
 tags: documentation,preview
+projectTitle: Open Letter
+projectLogo: /media/logo.svg
+
 ---
 
 # Header 123
@@ -40,13 +39,16 @@ tags: documentation,preview
 >
 >     Markdown.generate();
 
-    > ## This is a header.
-    > 1. This is the first list item.
-    > 2. This is the second list item.
-    >
-    > Here's some example code:
-    >
-    >     Markdown.generate();
+```markdown
+## This is a header.
+
+1. This is the first list item.
+2. This is the second list item.
+
+Here's some example code:
+
+Markdown.generate();
+```
 
 - Red
 - Green

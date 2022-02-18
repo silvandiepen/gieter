@@ -61,6 +61,7 @@ $theme-settings: (
   "define.task-list.class": ".task-list",
   "define.alert.class": "alert",
   "define.language.class": ".language",
+  "define.color-preview.class": ".color-preview",
 ) !default;
 
 $theme-output: (
@@ -101,6 +102,7 @@ $theme-output: (
   "content.adaptive-svg",
   "content.image",
   "content.definition-list",
+  "content.color-preview",
   "color.custom-properties",
   "color.shades",
   "color.classes.background",
@@ -148,8 +150,8 @@ $theme-typography: (
 );
 
 $theme-colors: (
-  foreground: rgb(13, 7, 31),
-  background: rgb(255, 251, 232),
-  primary: rgb(79, 63, 92),
-  secondary: rgb(88, 158, 177),
+  foreground: rgb(14, 1, 29),
+  background: rgb(241, 255, 254),
+  primary: rgb(69, 40, 94),
+  secondary: rgb(37, 122, 146),
 );

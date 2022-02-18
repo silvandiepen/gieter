@@ -13,8 +13,19 @@
 }
 
 @mixin styled-code() {
-  $primary-color: map-get($colors, primary);
-  $secondary-color: map-get($colors, secondary);
+  $primary-rgb: str-to-list(map-get($colors, "primary-rgb"), ",");
+  $secondary-rgb: str-to-list(map-get($colors, "secondary-rgb"), ",");
+
+  $primary-color: rgba(
+    parseInt(nth($primary-rgb, 1)),
+    parseInt(nth($primary-rgb, 2)),
+    parseInt(nth($primary-rgb, 3))
+  );
+  $secondary-color: rgba(
+    parseInt(nth($secondary-rgb, 1)),
+    parseInt(nth($secondary-rgb, 2)),
+    parseInt(nth($secondary-rgb, 3))
+  );
 
   $primary-saturation: math.round(saturation($primary-color));
   $secondary-saturation: math.round(saturation($secondary-color));
@@ -48,6 +59,7 @@
     border-radius: v(borderRadius);
     overflow: scroll;
     max-width: 100%;
+    line-height: 1.5;
     display: block;
     @include bp(small, only) {
       padding: v(space);
@@ -112,6 +124,9 @@
     }
     &.language-ts::before {
       content: "ts";
+    }
+    &.language-markdown::before {
+      content: "markdown";
     }
     code {
       overflow: scroll;
