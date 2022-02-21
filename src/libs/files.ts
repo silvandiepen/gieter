@@ -179,3 +179,6 @@ export const makeLink = (path: string): string => {
     ? uri.replace(".html", "/index.html")
     : uri;
 };
+
+export const getParentFile = (parent: File, files: File[]): File | undefined =>
+  files.find((f) => f.parent == parent.parent && f.home && f.id !== parent.id);

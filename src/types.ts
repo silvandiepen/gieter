@@ -118,6 +118,7 @@ export interface buildHtmlArgs {
   archives?: File[];
   contentOnly: boolean;
   tags?: Tag[];
+  subtitle: string;
   thumbnail?: string | null;
   meta?: Meta;
   showContentImage?: boolean;

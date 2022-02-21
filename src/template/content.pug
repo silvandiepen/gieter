@@ -1,6 +1,8 @@
 main.main.content(class=`${meta.type ? 'content--'+ meta.type : ''}`)
     section.section
         div.container
+            if subtitle
+                h6=subtitle
             if showContentImage
                 h1=title
                 figure

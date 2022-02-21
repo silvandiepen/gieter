@@ -8,14 +8,14 @@
     &__item {
       display: block;
       & + & {
-        margin-top: 0em;
+        margin-top: 0.5em;
       }
     }
 
     &__label {
       padding: 1em;
       border-radius: v(borderRadius);
-      background-color: v(foreground90);
+      background-color: v(foreground10);
       padding-left: 2.5em;
       position: relative;
       display: block;

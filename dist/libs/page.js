@@ -53,7 +53,10 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
     const hasUrlToken = () => file.html && file.html.includes('<span class="token url">http');
     const hasHeader = () => menu.length > 0;
     const hasColors = () => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
-    const matches = file.html && file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+    const subtitle = () => {
+        const parent = (0, files_1.getParentFile)(file, payload.files);
+        return (parent === null || parent === void 0 ? void 0 : parent.title) || "";
+    };
     const data = {
         menu,
         tags,
@@ -68,6 +71,7 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
         langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
+        subtitle: subtitle(),
         has: {
             table: hasTable(),
             header: hasHeader(),

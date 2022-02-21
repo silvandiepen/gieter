@@ -5,7 +5,7 @@ import { blockLine, blockLineSuccess } from "cli-block";
 
 import { Payload, File, Page, buildHtmlArgs, MenuItem } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
-import { makePath, buildHtml } from "./files";
+import { makePath, buildHtml, getParentFile } from "./files";
 
 import { createDir } from "@sil/tools/dist/lib/system";
 import { createCss } from "./style";
@@ -67,8 +67,10 @@ export const buildPage = async (
   const hasColors = () =>
     file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
 
-  const matches =
-    file.html && file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+  const subtitle = (): string => {
+    const parent = getParentFile(file, payload.files);
+    return parent?.title || "";
+  };
 
   const data: buildHtmlArgs = {
     menu,
@@ -84,6 +86,7 @@ export const buildPage = async (
     homeLink: file.language == defaultLanguage ? "/" : `/${file.language}`,
     langMenu: getLanguageMenu(payload, file),
     language: currentLanguage,
+    subtitle: subtitle(),
     has: {
       table: hasTable(),
       header: hasHeader(),
