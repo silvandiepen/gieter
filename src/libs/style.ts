@@ -136,7 +136,11 @@ export const createStylesheets = async (
       if (styleExists) {
         let file = await readFile(stylePath).then((res) => res.toString());
 
-        file = `@import "@sil/themer/src/use.scss";\n${file}`;
+        file = `
+        @import "${join(__dirname, "../../src/style/theme.scss")}";
+        @import "@sil/themer/src/use.scss";
+        ${file}
+        `;
 
         const result = await compileStringAsync(file, {
           loadPaths: [nodeModulesPath],

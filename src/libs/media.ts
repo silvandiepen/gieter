@@ -138,7 +138,7 @@ export const getLogo = async (
     }
   }
 
-  if (logo.ext == ".svg") {
+  if (logo && logo.ext == ".svg") {
     logo.data = await getSVGData(logo.relativePath);
   }
 
