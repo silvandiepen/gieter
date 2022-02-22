@@ -29,6 +29,7 @@ export interface Payload extends Settings {
   style?: Style;
   settings?: Settings;
   project?: Project;
+  logo?: File;
   menu?: MenuItem[];
   archives?: File[];
   tags?: Tag[];
@@ -114,6 +115,7 @@ export interface buildHtmlArgs {
   style: Style;
   project: Project;
   media: File[];
+  logo: Payload["logo"];
   archives?: File[];
   contentOnly: boolean;
   tags?: Tag[];

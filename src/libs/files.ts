@@ -20,7 +20,7 @@ export const fileId = (path: string): string =>
 
 export const getFileTree = async (
   dir: string,
-  filter = ""
+  filter: string[] = null
 ): Promise<File[]> => {
   // Do not search the following folders;
   const excludes = ["node_modules", ".git"];
@@ -66,11 +66,13 @@ export const getFileTree = async (
     .concat(...files)
     .filter((r) => r !== null)
     .filter((file) => file)
-    .filter((file) => (filter ? file.ext == filter : true));
+    .filter((file) =>
+      filter ? (filter as string[]).includes(file.ext) : true
+    );
 };
 
 export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
-  const fileTree = await getFileTree(dir, ext);
+  const fileTree = await getFileTree(dir, [ext]);
 
   const files = [];
 

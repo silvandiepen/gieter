@@ -171,12 +171,11 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
 
 export const media = async (payload: Payload): Promise<Payload> => {
   const media = await getMedia(payload);
-
   const logo: File = await getLogo(payload, media);
 
   await createThumbnails(payload);
 
-  return { ...payload, media };
+  return { ...payload, media, logo };
 };
 
 hello()

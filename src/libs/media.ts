@@ -95,7 +95,12 @@ export const getMedia = async (payload: Payload): Promise<File[]> => {
         .catch((err) => console.error(err));
 
       mediaFiles = [
-        ...(await getFileTree(join(process.cwd(), folder), ".svg")),
+        ...(await getFileTree(join(process.cwd(), folder), [
+          ".svg",
+          ".png",
+          ".jpg",
+          ".gif",
+        ])),
       ];
     }
   });
@@ -111,6 +116,7 @@ export const getLogo = async (
   // Find Logo
   if (!payload.project.logo) {
     const logos = media.filter((l) => l.fileName.toLowerCase() === "logo");
+
     if (logos.length == 1) {
       logo = logos[0];
     } else if (logos.length > 1) {

@@ -27,6 +27,14 @@ const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current
 const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
     simplifyUrl(current) !== "" &&
     simplifyUrl(link) !== "";
+const hasTable = (file) => file.html && file.html.includes("<table>");
+const hasUrlToken = (file) => file.html && file.html.includes('<span class="token url">http');
+const hasHeader = (menu) => menu.length > 0;
+const hasColors = (file) => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+const subtitle = (file, payload) => {
+    const parent = (0, files_1.getParentFile)(file, payload.files);
+    return (parent === null || parent === void 0 ? void 0 : parent.title) || "";
+};
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const currentLink = (0, files_1.makePath)(file);
@@ -45,25 +53,16 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         }
     };
     const menu = payload.menu ? menuStatus(payload.menu) : [];
-    const tags = payload.tags
-        ? payload.tags.filter((tag) => tag.parent == file.parent)
-        : [];
-    const thumbnail = (0, media_1.getThumbnail)(file);
-    const hasTable = () => file.html && file.html.includes("<table>");
-    const hasUrlToken = () => file.html && file.html.includes('<span class="token url">http');
-    const hasHeader = () => menu.length > 0;
-    const hasColors = () => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
-    const subtitle = () => {
-        const parent = (0, files_1.getParentFile)(file, payload.files);
-        return (parent === null || parent === void 0 ? void 0 : parent.title) || "";
-    };
     const data = {
         menu,
-        tags,
-        thumbnail,
+        tags: payload.tags
+            ? payload.tags.filter((tag) => tag.parent == file.parent)
+            : [],
+        thumbnail: (0, media_1.getThumbnail)(file),
         style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
         project: payload.project,
         media: payload.media,
+        logo: payload.logo,
         favicon: payload.favicon,
         meta: file.meta,
         contentOnly: false,
@@ -71,12 +70,12 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
         langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
-        subtitle: subtitle(),
+        subtitle: subtitle(file, payload),
         has: {
-            table: hasTable(),
-            header: hasHeader(),
-            urlToken: hasUrlToken(),
-            colors: hasColors(),
+            table: hasTable(file),
+            header: hasHeader(menu),
+            urlToken: hasUrlToken(file),
+            colors: hasColors(file),
         },
     };
     const html = yield (0, files_1.buildHtml)(file, data);

@@ -10,7 +10,6 @@ import { makePath, buildHtml, getParentFile } from "./files";
 import { createDir } from "@sil/tools/dist/lib/system";
 import { createCss } from "./style";
 import kleur from "kleur";
-import { getSVGData } from "./svg";
 import { getThumbnail } from "./media";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
@@ -22,6 +21,21 @@ const isActiveMenuParent = (link: string, current: string): boolean =>
   simplifyUrl(current).includes(simplifyUrl(link)) &&
   simplifyUrl(current) !== "" &&
   simplifyUrl(link) !== "";
+
+const hasTable = (file: File) => file.html && file.html.includes("<table>");
+
+const hasUrlToken = (file: File) =>
+  file.html && file.html.includes('<span class="token url">http');
+
+const hasHeader = (menu: MenuItem[]) => menu.length > 0;
+
+const hasColors = (file: File) =>
+  file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+
+const subtitle = (file: File, payload: Payload): string => {
+  const parent = getParentFile(file, payload.files);
+  return parent?.title || "";
+};
 
 export const buildPage = async (
   payload: Payload,
@@ -51,34 +65,16 @@ export const buildPage = async (
 
   const menu = payload.menu ? menuStatus(payload.menu) : [];
 
-  const tags = payload.tags
-    ? payload.tags.filter((tag) => tag.parent == file.parent)
-    : [];
-
-  const thumbnail = getThumbnail(file);
-
-  const hasTable = () => file.html && file.html.includes("<table>");
-
-  const hasUrlToken = () =>
-    file.html && file.html.includes('<span class="token url">http');
-
-  const hasHeader = () => menu.length > 0;
-
-  const hasColors = () =>
-    file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
-
-  const subtitle = (): string => {
-    const parent = getParentFile(file, payload.files);
-    return parent?.title || "";
-  };
-
   const data: buildHtmlArgs = {
     menu,
-    tags,
-    thumbnail,
+    tags: payload.tags
+      ? payload.tags.filter((tag) => tag.parent == file.parent)
+      : [],
+    thumbnail: getThumbnail(file),
     style: { ...payload.style, page: currentLink.replace(".html", ".css") },
     project: payload.project,
     media: payload.media,
+    logo: payload.logo,
     favicon: payload.favicon,
     meta: file.meta,
     contentOnly: false,
@@ -86,12 +82,12 @@ export const buildPage = async (
     homeLink: file.language == defaultLanguage ? "/" : `/${file.language}`,
     langMenu: getLanguageMenu(payload, file),
     language: currentLanguage,
-    subtitle: subtitle(),
+    subtitle: subtitle(file, payload),
     has: {
-      table: hasTable(),
-      header: hasHeader(),
-      urlToken: hasUrlToken(),
-      colors: hasColors(),
+      table: hasTable(file),
+      header: hasHeader(menu),
+      urlToken: hasUrlToken(file),
+      colors: hasColors(file),
     },
   };
 

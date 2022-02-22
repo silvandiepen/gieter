@@ -25,7 +25,6 @@ export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
 };
 
 export const generateMenu = async (payload: Payload): Promise<Payload> => {
-  // console.log(payload.files);
   let menu: MenuItem[] = payload.files
     .map((file) => {
       let active = file.meta.hide !== "true" || !file.meta.hide;
