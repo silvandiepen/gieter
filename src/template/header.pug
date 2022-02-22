@@ -10,15 +10,16 @@ if menu.length > 0
     header.header.header--sticky
         div.header__container
             if project
-            if project.logoData
-                a.logo(href=`${homeLink}`, class= `${project.logoData ? 'logo--image-only' : ''}`, aria-label=`${project.title}`,tabindex=0)
-                    | !{project.logoData}
-            else if project.logo
-                a.logo(href=`${homeLink}`,tabindex=0)=project.title
-                    img(src=project.logo)
-            else if project.title
-                a.logo(href=`${homeLink}`,tabindex=0)
-                    span.logo__text=project.title
+                if project.logo
+                    if project.logo.data
+                        a.logo(href=`${homeLink}`, class= `${project.logo.data ? 'logo--image-only' : ''}`, aria-label=`${project.title}`,tabindex=0)
+                            | !{project.logo.data}
+                    else if project.logo.relativePath
+                        a.logo(href=`${homeLink}`,tabindex=0)=project.title
+                            img(src=project.logo.relativePath)
+                else if project.title
+                    a.logo(href=`${homeLink}`,tabindex=0)
+                        span.logo__text=project.title
 
             if menu.length > 0
                 include navigation.pug 

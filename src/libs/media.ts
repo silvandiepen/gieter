@@ -101,3 +101,40 @@ export const getMedia = async (payload: Payload): Promise<File[]> => {
   });
   return mediaFiles;
 };
+
+export const getLogo = async (
+  payload: Payload,
+  media: File[]
+): Promise<File | null> => {
+  let logo: File;
+
+  // Find Logo
+  if (!payload.project.logo) {
+    const logos = media.filter((l) => l.fileName.toLowerCase() === "logo");
+    if (logos.length == 1) {
+      logo = logos[0];
+    } else if (logos.length > 1) {
+      const svg = logos.find((l) => l.ext == ".svg");
+      const png = logos.find((l) => l.ext == ".png");
+      const jpg = logos.find((l) => l.ext == ".jpg");
+      const gif = logos.find((l) => l.ext == ".gif");
+      logo = svg || png || jpg || gif;
+    }
+    if (logo) {
+      blockLineSuccess(`found logo ${logo.relativePath}`);
+    }
+  } else {
+    const logoFile = media.find((m) => m.relativePath == payload.project.logo);
+    if (logoFile) {
+      logo = logoFile;
+
+      blockLineSuccess(`loaded logo ${payload.project.logo}`);
+    }
+  }
+
+  if (logo.ext == ".svg") {
+    logo.data = await getSVGData(logo.relativePath);
+  }
+
+  return logo;
+};

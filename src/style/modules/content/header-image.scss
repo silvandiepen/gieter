@@ -8,13 +8,15 @@
 
     @media #{breakpoint(medium)} {
       h1 + figure {
-        width: calc(100% + (#{variable(space)} * 2));
-        margin-left: calc(#{variable(space)} * -1);
+        width: calc(100vw + (#{variable(space)} * 2));
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
     h1 + figure img {
       width: 100vw;
-      max-width: auto;
+      max-width: 100vw;
       position: relative;
       left: 50%;
       margin-left: -50vw;

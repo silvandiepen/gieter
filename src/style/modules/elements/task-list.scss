@@ -27,6 +27,8 @@
       height: 0;
 
       &:checked + #{$task-list}__label {
+        background-color: v(primary);
+        color: v(primaryText);
         &::after {
           transform: translateY(-50%) scale(0.5);
         }

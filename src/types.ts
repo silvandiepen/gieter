@@ -4,8 +4,7 @@ export interface Settings {
 }
 
 export interface Project {
-  logo?: string;
-  logoData?: string;
+  logo?: File | string;
   title?: string;
   description?: string;
   ignore?: string[];

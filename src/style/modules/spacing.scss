@@ -12,8 +12,16 @@ h3,
 h4,
 h5,
 h6,
-p {
-  + .task-list {
+p,
+.task-list {
+  & + h1,
+  & + h2,
+  & + h3,
+  & + h4,
+  & + h5,
+  & + h6,
+  & + p,
+  & + .task-list {
     margin-top: 1em;
   }
 }

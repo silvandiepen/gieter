@@ -3,7 +3,6 @@ title: KitchenSink
 icon: /media/icon_kitchensink.svg
 tags: documentation,preview
 projectTitle: Open Letter
-projectLogo: /media/logo.svg
 
 ---
 

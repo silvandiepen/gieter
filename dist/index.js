@@ -19,7 +19,6 @@ const helpers_1 = require("./libs/helpers");
 const media_1 = require("./libs/media");
 const files_1 = require("./libs/files");
 const project_1 = require("./libs/project");
-const svg_1 = require("./libs/svg");
 const page_1 = require("./libs/page");
 const tags_1 = require("./libs/tags");
 const style_1 = require("./libs/style");
@@ -90,10 +89,6 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (project === null || project === void 0 ? void 0 : project.ignore)
         files = files.filter((file) => !project.ignore.some((ignore) => file.path.includes(ignore)));
     /*
-     * If the logo is set in project settings, the logo will be downloaded and injected.
-     */
-    project.logoData = yield (0, svg_1.getSVGLogo)(project);
-    /*
      * Logging
      */
     if (Object.keys(project).length) {
@@ -139,6 +134,7 @@ const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* ()
 exports.contentPages = contentPages;
 const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const media = yield (0, media_1.getMedia)(payload);
+    const logo = yield (0, media_1.getLogo)(payload, media);
     yield (0, media_1.createThumbnails)(payload);
     return Object.assign(Object.assign({}, payload), { media });
 });

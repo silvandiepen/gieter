@@ -35,9 +35,9 @@ In a scss you can do everything you can do with default `dart-sass` and you get 
 
 :root {
   --ol-primary-font-family: "Inter";
-  --ol-dark-rgb: #{rgbValues(rgb(31, 20, 2))};
-  --ol-light-rgb: #{rgbValues(rgb(255, 254, 246))};
-  --ol-primary-rgb: #{rgbValues(rgb(175, 81, 163))};
-  --ol-secondary-rgb: #{rgbValues(rgb(74, 197, 197))};
+  --ol-dark-rgb: #{rgbValues(#111111)};
+  --ol-light-rgb: #{rgbValues(#f7f7f7)};
+  --ol-primary-rgb: #{rgbValues(#ff0000)};
+  --ol-secondary-rgb: #{rgbValues(#00ff00)};
 }
 ```
