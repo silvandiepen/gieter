@@ -1,7 +1,7 @@
 import { blockLine, blockSettings, blockMid } from "cli-block";
 
-import { makePath } from "./files";
-import { Payload, MenuItem } from "../types";
+import { getParentFile, makePath } from "./files";
+import { Payload, MenuItem, ArchiveType } from "../types";
 import { getSVGData } from "./svg";
 
 export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
@@ -39,10 +39,25 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
       // Index in first depth can also be in menu
       if (depth === 1 && file.home) active = true;
 
+      const parent = getParentFile(file, payload.files);
+      console.log(parent?.meta);
+
+      let link = "";
+
+      if (
+        parent?.meta &&
+        parent.meta.archive &&
+        parent.meta.archive == ArchiveType.SECTIONS
+      ) {
+        link = `/#${file.id}`;
+      } else {
+        link = makePath(file);
+      }
+
       return {
         id: file.id,
         name: file.title,
-        link: makePath(file),
+        link: link,
         active,
         language: file.language,
         icon: file.meta.icon,

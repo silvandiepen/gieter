@@ -20,6 +20,7 @@
       position: relative;
       left: 50%;
       margin-left: -50vw;
+      object-fit: cover;
     }
     h1 + figure + * {
       margin-top: variable(space);
