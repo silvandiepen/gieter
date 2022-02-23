@@ -130,7 +130,10 @@ export const getLogo = async (
       blockLineSuccess(`found logo ${logo.relativePath}`);
     }
   } else {
-    const logoFile = media.find((m) => m.relativePath == payload.project.logo);
+    const logoFile = media.find((m) =>
+      m.relativePath.includes(payload.project.logo)
+    );
+
     if (logoFile) {
       logo = logoFile;
 

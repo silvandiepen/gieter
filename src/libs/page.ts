@@ -33,8 +33,12 @@ const hasColors = (file: File) =>
   file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
 
 const subtitle = (file: File, payload: Payload): string => {
-  const parent = getParentFile(file, payload.files);
-  return parent?.title || "";
+  if (!file.home) {
+    const parent = getParentFile(file, payload.files);
+    return parent?.title || "";
+  } else {
+    return "";
+  }
 };
 
 export const buildPage = async (

@@ -1,7 +1,6 @@
 ---
 title: Documentation
-type: articles
-isArchive: true
+archive: articles
 menuChildren: true
 ---
 

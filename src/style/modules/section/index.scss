@@ -4,6 +4,7 @@
 @import "section.footer";
 @import "section.navigation";
 @import "section.body";
+@import "section.content";
 @import "section.archive";
 @import "section.tags";
 
@@ -33,4 +34,8 @@
 }
 @if export("section.tags") {
   @include section-tags();
+}
+
+@if export("section.content") {
+  @include section-content();
 }

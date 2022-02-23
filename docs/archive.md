@@ -12,8 +12,7 @@ You can create an archive by creating a folder with a readme.md. An example;
 
 ```markdown
 ---
-type: blog
-isArchive: true
+archive: blog
 ---
 
 # Blog
@@ -25,4 +24,31 @@ This will create a blog page. All other `.md` files will be shown as a list on t
 
 ### Archive Types
 
-There are two types of archives, the `articles` and the `blog`, the difference is in how they articles are displayed.
+#### Articles
+
+Articles are dated, they can be all kinds of things. The overview will be tiles with images and the order will be defined by the filenames.
+
+```md
+---
+archive: articles
+---
+```
+
+#### Blog
+
+A list of blogs, will be shown with dates. It will be shown as a list and ordered by their given date.
+
+```md
+---
+archive: blog
+---
+```
+
+#### Sections
+
+When selecting type `sections` all child files will be loaded within the parent as sections. This is to create bigger pages consisting of multiple sections without having to add all the data to one single file.
+```markdown
+---
+archive: sections
+---
+```

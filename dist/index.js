@@ -56,8 +56,8 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, tools_1.asyncForEach)(files, (file, index) => __awaiter(void 0, void 0, void 0, function* () {
         const relativePath = file.path.replace(process.cwd(), "");
         const pathGroup = relativePath.split("/");
-        const isHome = pathGroup[pathGroup.length - 1].toLowerCase().includes("readme") ||
-            pathGroup[pathGroup.length - 1].toLowerCase().includes("index");
+        const thePath = pathGroup[pathGroup.length - 1].toLowerCase();
+        const isHome = thePath.includes("readme") || thePath.includes("index");
         files[index].home = isHome;
     }));
     /*

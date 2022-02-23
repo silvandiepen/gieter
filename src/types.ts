@@ -4,7 +4,7 @@ export interface Settings {
 }
 
 export interface Project {
-  logo?: File | string;
+  logo?: string;
   title?: string;
   description?: string;
   ignore?: string[];
@@ -48,9 +48,15 @@ export enum FileType {
   ARCHIVE = "archive",
 }
 
+export enum ArchiveType {
+  BLOG = "blog",
+  SECTIONS = "sections",
+  ARTICLES = "articles",
+  COLLECTION = "collection",
+}
 export interface Archive {
   name: string;
-  type: string;
+  type: ArchiveType;
   children: File[];
 }
 
@@ -94,6 +100,7 @@ export interface MenuItem {
   current?: boolean;
   isParent?: boolean;
   children?: MenuItem[];
+  order?: number;
 }
 
 export interface LanguageMenuItem {
@@ -115,7 +122,7 @@ export interface buildHtmlArgs {
   style: Style;
   project: Project;
   media: File[];
-  logo: Payload["logo"];
+  logo: File;
   archives?: File[];
   contentOnly: boolean;
   tags?: Tag[];

@@ -32,7 +32,6 @@ md.use(svgImages);
 export const unp = (input: string): string => {
   // const regex = new RegExp("<p>(?:<img[^>]+>|<svg[^>]+>(.*?)</svg>)</p>", "g");
   // const images = input.match(regex);
-  // console.log(images);
   return input;
 };
 

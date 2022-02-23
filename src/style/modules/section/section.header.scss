@@ -17,6 +17,7 @@
       display: flex;
       justify-content: space-between;
       transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      align-items: center;
 
       background-color: v(background50);
       backdrop-filter: blur(1em);

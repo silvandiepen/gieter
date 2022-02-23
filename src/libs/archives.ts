@@ -1,7 +1,7 @@
 import { parentPath } from "@sil/tools/dist/lib/system";
 
 import { makePath } from "./files";
-import { Payload } from "../types";
+import { ArchiveType, Payload } from "../types";
 import { getExcerpt } from "./helpers";
 /*
  *  Archives
@@ -13,11 +13,16 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
     // Map all Archive parents and get their children
     .map((file, index) => {
       const archiveName = file.name;
-      const archiveType = file.meta.type;
+      const archiveType = file.meta.archive;
 
       let children = [];
 
-      if (file.home && file.meta.isArchive) {
+      const order =
+        archiveType == ArchiveType.BLOG
+          ? (a, b) => parseInt(b.created) - parseInt(a.created)
+          : (a, b) => a.meta.order - b.meta.order;
+
+      if (file.home && !!archiveType) {
         children = payload.files
           .filter((item) => item.parent == file.parent && !item.home)
 
@@ -33,7 +38,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
               ? payload.tags.filter((tag) => item?.meta.tags.includes(tag.name))
               : [],
           }))
-          .sort((a, b) => parseInt(b.created) - parseInt(a.created));
+          .sort(order);
       } else {
         /*
          * Inherit the parents type on each child
@@ -47,13 +52,13 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             );
           });
 
-          if (parent?.meta && parent.meta.type)
+          if (parent?.meta && !!archiveType)
             if (file?.meta)
               payload.files[index].meta = {
                 ...file.meta,
-                type: parent.meta.type,
+                type: archiveType,
               };
-            else payload.files[index].meta = { type: parent.meta.type };
+            else payload.files[index].meta = { type: archiveType };
         }
       }
 

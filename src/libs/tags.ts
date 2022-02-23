@@ -1,6 +1,6 @@
 import { asyncForEach } from "@sil/tools";
 
-import { Payload, File, FileType, Tag, Language } from "../types";
+import { Payload, File, FileType, Tag, Language, ArchiveType } from "../types";
 import { createPage } from "./page";
 import { fileId } from "./files";
 
@@ -72,7 +72,7 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
       archives: [
         {
           name: tag.name,
-          type: "articles",
+          type: ArchiveType.ARTICLES,
           children: archive,
         },
       ],

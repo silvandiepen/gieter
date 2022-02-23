@@ -12,7 +12,7 @@
     "serve": "npx serve public",
     "build": "tsc",
     "build:full": "rimraf dist && rimraf .cache && npm run build && npm run style && npm run test:run",
-    "build:style": "node dist/style/compile/index.js",
+    "build:style": "npm run style:clean && node dist/style/compile/index.js",
     "style": "sass --load-path=node_modules/ src/style/app.scss dist/style/app.css",
     "style:clean": "rm -rf .cache && rm -rf dist/style/app.css",
     "dev": "tsc -w",

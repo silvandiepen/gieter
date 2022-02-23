@@ -32,8 +32,13 @@ const hasUrlToken = (file) => file.html && file.html.includes('<span class="toke
 const hasHeader = (menu) => menu.length > 0;
 const hasColors = (file) => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
 const subtitle = (file, payload) => {
-    const parent = (0, files_1.getParentFile)(file, payload.files);
-    return (parent === null || parent === void 0 ? void 0 : parent.title) || "";
+    if (!file.home) {
+        const parent = (0, files_1.getParentFile)(file, payload.files);
+        return (parent === null || parent === void 0 ? void 0 : parent.title) || "";
+    }
+    else {
+        return "";
+    }
 };
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

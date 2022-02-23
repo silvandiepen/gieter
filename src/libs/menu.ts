@@ -46,16 +46,18 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
         active,
         language: file.language,
         icon: file.meta.icon,
+        order: file.meta.order || 999,
       };
     })
-    .filter((item) => item.active);
+    .filter((item) => item.active)
+    .sort((a, b) => a.order - b.order);
 
   // Get Children of Articles
 
   menu.forEach((item) => {
     const file = payload.files.find((f) => f.id == item.id);
 
-    if (file.meta.isArchive && file.meta.menuChildren) {
+    if (!!file.meta.archive && file.meta.menuChildren) {
       const children = payload.files
         .filter((f) => f.parent == file.parent && !f.home)
         .map((c) => ({
@@ -65,7 +67,9 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
           active: c.meta.hide !== true || !c.meta.hide,
           language: c.language,
           icon: c.meta.icon,
-        }));
+          order: c.meta.order || 999,
+        }))
+        .sort((a, b) => a.order - b.order);
 
       item.children = children;
     }
