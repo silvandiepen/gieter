@@ -40,7 +40,6 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
       if (depth === 1 && file.home) active = true;
 
       const parent = getParentFile(file, payload.files);
-      console.log(parent?.meta);
 
       let link = "";
 
