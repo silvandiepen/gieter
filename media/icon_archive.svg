@@ -1,8 +1,8 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 216 144" style="enable-background:new 0 0 216 144;" xml:space="preserve">
-<style type="text/css">
+<svg:style type="text/css">
 	.st0{fill:none;stroke:currentColor;stroke-width:2;stroke-miterlimit:10;}
-</style>
+</svg:style>
 <path class="st0" d="M69.88,18c-4.42,0-8,3.58-8,8v10v90H162V40c0-2.21-1.79-4-4-4h-51.12V26c0-4.42-3.58-8-8-8H69.88z"/>
 <path class="st0" d="M61.88,126L45.12,58.97C44.49,56.45,46.4,54,49,54h91.87c1.84,0,3.44,1.25,3.88,3.03L162,126H61.88z"/>
 </svg>

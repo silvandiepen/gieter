@@ -1,6 +1,6 @@
 ---
 icon: /media/icon_archive.svg
-tags: documentation
+tags: documentation,archive
 ---
 # Archives
 

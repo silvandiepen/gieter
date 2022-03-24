@@ -3,7 +3,7 @@
   #{$block} {
     display: flex;
     font-size: 1em;
-    padding: var(--ol-space);
+    padding: var(--gtr-space);
 
     @media screen and (max-width: 720px) {
       width: 100%;
@@ -13,8 +13,8 @@
       position: fixed;
       left: 0;
       bottom: 0;
-      // left: var(--ol-space);
-      // bottom: var(--ol-space);
+      // left: var(--gtr-space);
+      // bottom: var(--gtr-space);
     }
     &__link {
       display: block;
@@ -23,7 +23,7 @@
       padding: 0.5em;
       text-decoration: none;
       color: currentColor;
-      transition: opacity var(--ol-transition);
+      transition: opacity var(--gtr-transition);
     }
     &__item {
       position: relative;
@@ -36,8 +36,8 @@
         z-index: 0;
         top: 50%;
         opacity: 0.25;
-        background-color: var(--ol-primary);
-        border-radius: calc(var(--ol-border-radius) / 2);
+        background-color: var(--gtr-primary);
+        border-radius: calc(var(--gtr-border-radius) / 2);
         transform: translate(-50%, -50%);
       }
       &--active::before {

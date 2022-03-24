@@ -11,7 +11,7 @@ main.main.content(class=`${meta.type ? 'content--'+ meta.type : ''}`)
             else 
                 | !{content}  
 
-    if archives.length
+    if has.archive
         include archive.pug
         
     if tags.length

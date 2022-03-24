@@ -1,7 +1,7 @@
-import { blockLine, blockSettings, blockMid } from "cli-block";
+import { blockLine, blockSettings, blockMid, blockLineError } from "cli-block";
 
 import { getParentFile, makePath } from "./files";
-import { Payload, MenuItem, ArchiveType } from "../types";
+import { Payload, MenuItem, ArchiveType, File } from "../types";
 import { getSVGData } from "./svg";
 
 export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
@@ -11,83 +11,80 @@ export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
 
       if (icon && icon.includes(".svg")) {
         icon = await getSVGData(item.icon);
+        if (icon == "") {
+          blockLineError(`${item.icon} doesnt exist`);
+        }
       }
 
-      if (item.children) {
+      if (item.children)
         item = {
           ...item,
           children: await getMenuIcons(item.children),
         };
-      }
+
       return { ...item, icon: icon || "" };
     })
   );
 };
 
+export const getLink = (file: File, payload: Payload): string => {
+  const parent = getParentFile(file, payload.files);
+
+  let link = "";
+
+  if (
+    parent?.meta &&
+    parent.meta.archive &&
+    parent.meta.archive == ArchiveType.SECTIONS
+  ) {
+    link = `${makePath(parent)}#${file.id}`;
+  } else {
+    link = makePath(file);
+  }
+
+  link = link.replace("index.html", "");
+
+  if (payload.languages.length < 2) {
+    return link.replace(`${payload.languages[0]}-`, ``);
+  } else return link;
+};
+
+const toMenuItem = (file: File, payload: Payload): MenuItem => ({
+  id: file.id,
+  name: file.title,
+  link: getLink(file, payload),
+  active: file.meta.hide !== true || !file.meta.hide,
+  language: file.language,
+  icon: file.meta.icon,
+  order: file.meta.order || 999,
+});
+
+const depth = (file: File): number =>
+  (file.relativePath.match(/\//g) || []).length;
+
 export const generateMenu = async (payload: Payload): Promise<Payload> => {
   let menu: MenuItem[] = payload.files
+    .filter((f) => depth(f) === 1)
     .map((file) => {
       let active = file.meta.hide !== "true" || !file.meta.hide;
 
-      const relativePath = file.path.replace(process.cwd(), "");
-      const pathGroup = relativePath.split("/");
-      const depth = pathGroup.length - 2;
-
-      // Only items from the main depth should be in the menu
-      if (depth > 0) active = false;
-
-      // Index in first depth can also be in menu
-      if (depth === 1 && file.home) active = true;
-
-      const parent = getParentFile(file, payload.files);
-
-      let link = "";
-
-      if (
-        parent?.meta &&
-        parent.meta.archive &&
-        parent.meta.archive == ArchiveType.SECTIONS
-      ) {
-        link = `/#${file.id}`;
-      } else {
-        link = makePath(file);
-      }
+      const children = file.meta.menuChildren
+        ? payload.files
+            .filter((f) => depth(f) > 1)
+            .filter((f) => f.parent.id == file.id)
+            .map((f) => toMenuItem(f, payload))
+            .filter((item) => item.active)
+            .sort((a, b) => a.order - b.order)
+        : [];
 
       return {
-        id: file.id,
-        name: file.title,
-        link: link,
+        ...toMenuItem(file, payload),
+        children,
         active,
-        language: file.language,
-        icon: file.meta.icon,
-        order: file.meta.order || 999,
       };
     })
     .filter((item) => item.active)
     .sort((a, b) => a.order - b.order);
-
-  // Get Children of Articles
-
-  menu.forEach((item) => {
-    const file = payload.files.find((f) => f.id == item.id);
-
-    if (!!file.meta.archive && file.meta.menuChildren) {
-      const children = payload.files
-        .filter((f) => f.parent == file.parent && !f.home)
-        .map((c) => ({
-          id: c.id,
-          name: c.title,
-          link: makePath(c),
-          active: c.meta.hide !== true || !c.meta.hide,
-          language: c.language,
-          icon: c.meta.icon,
-          order: c.meta.order || 999,
-        }))
-        .sort((a, b) => a.order - b.order);
-
-      item.children = children;
-    }
-  });
 
   menu = await getMenuIcons(menu);
 

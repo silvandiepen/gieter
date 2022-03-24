@@ -8,9 +8,9 @@ menuChildren: true
 
 ### Use
 
-You can use **open letter** in any folder where there are markdown files. Open letter will automatically generate html pages out of all the markdown files, ready to deploy.
+You can use **Gieter** in any folder where there are markdown files. Gieter will automatically generate html pages out of all the markdown files, ready to deploy.
 
 ```bash
-npx open-letter
+npx gieter
 ```
 

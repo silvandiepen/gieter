@@ -1,0 +1,34 @@
+
+if project.script
+    if typeof project.script === "string"
+        script(lang="text/javascript", src=`${project.script}`)        
+    else 
+        each script in project.script
+            script(lang="text/javascript", src=`${script}`)
+
+script
+    include script/colorMode.js 
+    if has.menu      
+        include script/closeMenu.js 
+    if has.colors
+        include script/findColors.js
+    if has.header
+        include script/stickyNav.js
+    if has.table
+        include script/wrapTables.js
+    if has.urlToken
+        include script/linkify.js
+
+if has.shop
+    script(type="importmap")
+        | {
+        |   "imports": {      
+        |       "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js"
+        |   }
+        | }
+    script(type="module")
+        include script/basket.js
+    if has.paypal 
+        script(type='text/javascript',src=`https://www.paypal.com/sdk/js?client-id=${shop.clientId}`)
+        script
+            include script/paypal.js

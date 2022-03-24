@@ -1,6 +1,6 @@
 ---
 icon: /media/icon_meta.svg
-tags: documentation
+tags: documentation, meta
 ---
 
 # Meta

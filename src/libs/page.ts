@@ -3,7 +3,7 @@ const { writeFile } = require("fs").promises;
 import { join } from "path";
 import { blockLine, blockLineSuccess } from "cli-block";
 
-import { Payload, File, Page, buildHtmlArgs, MenuItem } from "../types";
+import { Payload, File, Page, buildHtmlArgs, MenuItem, Tag } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
 import { makePath, buildHtml, getParentFile } from "./files";
 
@@ -41,6 +41,14 @@ const subtitle = (file: File, payload: Payload): string => {
   }
 };
 
+const getTags = (payload: Payload, file: File): Tag[] =>
+  file.parent?.id
+    ? payload.tags.filter((tag) => tag.parent.id === file.parent.id)
+    : [];
+
+const homeLink = (file: File) =>
+  file.language == defaultLanguage ? "/" : `/${file.language}`;
+
 export const buildPage = async (
   payload: Payload,
   file: File
@@ -71,9 +79,7 @@ export const buildPage = async (
 
   const data: buildHtmlArgs = {
     menu,
-    tags: payload.tags
-      ? payload.tags.filter((tag) => tag.parent == file.parent)
-      : [],
+    tags: getTags(payload, file),
     thumbnail: getThumbnail(file),
     style: { ...payload.style, page: currentLink.replace(".html", ".css") },
     project: payload.project,
@@ -83,11 +89,15 @@ export const buildPage = async (
     meta: file.meta,
     contentOnly: false,
     showContentImage: file.meta?.image && file.meta.type !== "photo",
-    homeLink: file.language == defaultLanguage ? "/" : `/${file.language}`,
+    homeLink: homeLink(file),
     langMenu: getLanguageMenu(payload, file),
     language: currentLanguage,
     subtitle: subtitle(file, payload),
+    shop: payload.shop,
     has: {
+      ...payload.has,
+      archive: !!file.archive,
+      menu: !!menu.length,
       table: hasTable(file),
       header: hasHeader(menu),
       urlToken: hasUrlToken(file),

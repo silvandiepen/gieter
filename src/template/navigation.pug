@@ -1,9 +1,8 @@
 nav.navigation
-    - var ti = 1;
-    ul.navigation__list          
+    ul.navigation__list         
         each item in menu
             li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current ? 'navigation__item--parent' : ''}`)
-                a.navigation__link(href= item.link, tabindex= ti++)
+                a.navigation__link(href= item.link)
                     if item.icon 
                         span.navigation__icon
                             | !{item.icon}
@@ -17,3 +16,8 @@ nav.navigation
                                         span.navigation__icon.navigation__icon--sub
                                             | !{subitem.icon}
                                     span.navigation__text.navigation__text--sub= subitem.name
+        if has.shop
+            li.navigation__item.navigation__item--basket(id="basket" :data-count='totalAmount',v-if="totalAmount > 0")
+                a.navigation__link
+                    span.navigation__text
+                        span.icon.icon--basket

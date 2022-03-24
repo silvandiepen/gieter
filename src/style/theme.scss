@@ -1,5 +1,5 @@
 $theme-settings: (
-  "prefix": "ol",
+  "prefix": "gtr",
   colors: (
     shades: true,
     opacity: true,
@@ -59,7 +59,9 @@ $theme-settings: (
   "define.tag.class": ".tag",
   "define.tags.class": ".tags",
   "define.task-list.class": ".task-list",
-  "define.alert.class": "alert",
+  "define.alert.class": ".alert",
+  "define.basket.class": ".basket",
+  "define.icon.class": ".icon",
   "define.language.class": ".language",
   "define.color-preview.class": ".color-preview",
 ) !default;
@@ -143,6 +145,8 @@ $theme-output: (
   "elements.task-list",
   "elements.alert",
   "elements.language",
+  "elements.basket",
+  "elements.icon",
   "default.custom-properties"
 );
 
@@ -152,8 +156,8 @@ $theme-typography: (
 );
 
 $theme-colors: (
-  foreground: rgb(14, 1, 29),
-  background: rgb(255, 254, 242),
-  primary: rgb(108, 72, 139),
-  secondary: rgb(74, 130, 146),
+  foreground: #011219,
+  background: #f7fcfa,
+  primary: #1078b1,
+  secondary: #4eb183,
 );

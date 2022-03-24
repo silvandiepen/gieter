@@ -1,0 +1,82 @@
+@mixin icon() {
+  $icon: get-setting("define.icon.class");
+  #{$icon} {
+    width: 1em;
+    height: 1em;
+    &::before {
+      content: "";
+      display: block;
+      width: 1em;
+      height: 1em;
+    }
+
+    &--forward {
+      &::before {
+        content: "\279E";
+      }
+    }
+    &--delete {
+      &::before {
+        content: "\2715";
+      }
+    }
+    &--basket {
+      &::before {
+        $transparent: transparent;
+        $position1: 75%;
+        $width: 0.1em;
+
+        background-image: linear-gradient(
+            100deg,
+            $transparent $position1,
+            currentColor $position1,
+            currentColor calc(#{$position1} + #{$width}),
+            $transparent calc(10% + #{$width})
+          ),
+          linear-gradient(
+            -100deg,
+            $transparent $position1,
+            currentColor #{$position1},
+            currentColor calc(#{$position1} + #{$width}),
+            $transparent calc(#{$position1} + #{$width})
+          ),
+          linear-gradient(
+            to bottom,
+            currentColor 0,
+            currentColor #{$width},
+            $transparent #{$width}
+          ),
+          linear-gradient(
+            to top,
+            currentColor 0,
+            currentColor $width,
+            $transparent #{$width}
+          ),
+          radial-gradient(
+            at bottom,
+            $transparent 30%,
+            currentColor 30%,
+            currentColor calc(30% + #{$width}),
+            transparent calc(30% + #{$width})
+          ),
+          linear-gradient(
+            to right,
+            currentColor #{$width},
+            $transparent #{$width},
+            $transparent calc(100% - #{$width}),
+            currentColor calc(100% - #{$width})
+          );
+
+        $size: 1.5em;
+
+        background-size: ($size * 0.75) ($size * 0.4),
+          ($size * 0.75) ($size * 0.4), ($size * 0.5) ($size * 0.4),
+          ($size * 0.375) ($size * 0.4), ($size * 0.35) ($size * 0.175),
+          ($size * 0.3) ($size * 0.15);
+        background-position: 50% 60%, 50% 60%, 50% 60%, 50% 60%, 50% 0%, 50% 30%;
+        background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+          no-repeat;
+      }
+    }
+  }
+}

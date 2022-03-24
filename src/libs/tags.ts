@@ -19,7 +19,7 @@ export const generateTags = async (payload: Payload): Promise<Payload> => {
         file.meta.tags = [file.meta.tags];
 
       for (let i = 0; i < file.meta.tags.length; i++) {
-        const parent = payload.files.find((f) => f.name == file.parent);
+        const parent = payload.files.find((f) => f.name == file.parent?.name);
 
         const tag = {
           name: file.meta.tags[i],
@@ -31,7 +31,8 @@ export const generateTags = async (payload: Payload): Promise<Payload> => {
         if (payload.project.groupTags) {
           if (
             !tags.some(
-              (item) => item.name === tag.name && item.parent === tag.parent
+              (item) =>
+                item.name === tag.name && item.parent?.id === tag.parent.id
             )
           )
             tags.push(tag);
@@ -55,7 +56,8 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
     const archive = payload.project.groupTags
       ? payload.files.filter(
           (file) =>
-            file.meta?.tags?.includes(tag.name) && file.parent == tag.parent
+            file.meta?.tags?.includes(tag.name) &&
+            file.parent?.id === tag.parent.id
         )
       : payload.files.filter((file) => file.meta?.tags?.includes(tag.name));
 
@@ -69,13 +71,11 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
       fileName: "index.html",
       parent: tag.parent,
       meta: { type: tag.type },
-      archives: [
-        {
-          name: tag.name,
-          type: ArchiveType.ARTICLES,
-          children: archive,
-        },
-      ],
+      archive: {
+        name: tag.name,
+        type: ArchiveType.ARTICLES,
+        children: archive,
+      },
       html: `<h1>#${tag.name}</h1>`,
       type: FileType.TAG,
     };

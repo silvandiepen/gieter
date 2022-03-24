@@ -5,15 +5,19 @@ html(lang=`${language}`)
      
   body(class= `page--${name}`)
   
-    include header.pug 
+    div#app
+      div.wrapper
+
+        include header.pug 
+        
+        include content.pug
+        
+        include footer.pug
+
+  include scripts.pug 
+
+  if meta.redirect
+    script.
+      window.location.replace("#{meta.redirect}");
+
     
-    include content.pug
-    
-    include footer.pug
-
-
-
-if meta.redirect
-  script.
-    window.location.replace("#{meta.redirect}");
-

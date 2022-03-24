@@ -2,13 +2,7 @@
 "use strict";
 
 import { join } from "path";
-import {
-  blockMid,
-  blockHeader,
-  blockFooter,
-  blockSettings,
-  blockLineSuccess,
-} from "cli-block";
+import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
 import { hello, asyncForEach } from "@sil/tools";
 
 import { toHtml } from "./libs/markdown";
@@ -29,6 +23,9 @@ import { generateMenu } from "./libs/menu";
 import { generateArchives } from "./libs/archives";
 import { generateFavicon } from "./libs/favicon";
 import { getThumbnail } from "./libs/media";
+import { generateShop } from "./libs/shop";
+import { parent } from "./libs/parent";
+import { createSitemap } from "./libs/sitemap";
 
 // eslint-disable-next-line
 const PackageJson = require("../package.json");
@@ -72,7 +69,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
     const pathGroup = relativePath.split("/");
 
     const thePath = pathGroup[pathGroup.length - 1].toLowerCase();
-    const isHome = thePath.includes("readme") || thePath.includes("index");
+    const isHome = !thePath.includes(".md");
 
     files[index].home = isHome;
   });
@@ -160,7 +157,12 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
     blockMid("Pages");
 
     await asyncForEach(
-      payload.files.filter((file: File) => !file.name.startsWith("-")), // Don't pages that start with a -
+      payload.files
+        .filter((file: File) => !file.name.startsWith("-")) // Don't pages that start with a -
+        .map((file: File) => ({
+          ...file,
+          id: file.id.replace(`${payload.languages[0]}-`, ""),
+        })), // remove language from file id
       async (file: File) => await createPage(payload, file)
     );
   }
@@ -180,18 +182,21 @@ export const media = async (payload: Payload): Promise<Payload> => {
 hello()
   .then(settings)
   .then((s) => {
-    blockHeader(`Open Letter ${PackageJson.version}`);
+    blockHeader(`Gieter ${PackageJson.version}`);
     return s;
   })
   .then(files)
+  .then(parent)
   .then(media)
   .then(generateTags)
   .then(generateArchives)
+  .then(generateShop)
   .then(generateMenu)
   .then(generateStyles)
   .then(generateFavicon)
   .then(contentPages)
   .then(createTagPages)
+  .then(createSitemap)
   .then(() => {
     blockFooter();
   });

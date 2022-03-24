@@ -7,20 +7,20 @@
     color: v(alert-text-color, currentColor);
 
     &--success {
-      --alert-background-color: #{variable(green-80)};
-      --alert-text-color: #{variable(green-20)};
+      --alert-background-color: #{v(success90)};
+      --alert-text-color: #{v(success10)};
     }
     &--warning {
-      --alert-background-color: #{variable(orange-80)};
-      --alert-text-color: #{variable(orange-20)};
+      --alert-background-color: #{v(warning90)};
+      --alert-text-color: #{v(warning10)};
     }
     &--error {
-      --alert-background-color: #{variable(red-80)};
-      --alert-text-color: #{variable(red-20)};
+      --alert-background-color: #{v(error90)};
+      --alert-text-color: #{v(error10)};
     }
     &--tip {
-      --alert-background-color: #{variable(blue-80)};
-      --alert-text-color: #{variable(blue-20)};
+      --alert-background-color: #{v(notication90)};
+      --alert-text-color: #{v(noticiation10)};
     }
   }
 }

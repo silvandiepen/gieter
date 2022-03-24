@@ -121,6 +121,27 @@
           }
         }
       }
+
+      &--basket {
+        &::before {
+          content: attr(data-count);
+          background-color: v(primary);
+          color: v(primaryText);
+          position: absolute;
+          right: calc(50% - 2em);
+          top: calc(50% - 2em);
+          border-radius: 50%;
+          width: 1.75em;
+          height: 1.75em;
+          line-height: 1.75em;
+          font-size: 0.75em;
+          text-align: center;
+          z-index: 10;
+        }
+        &[data-count="0"]::before {
+          content: none;
+        }
+      }
     }
     &__icon {
       width: 1.5em;

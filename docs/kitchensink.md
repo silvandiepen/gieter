@@ -1,8 +1,8 @@
 ---
 title: KitchenSink
 icon: /media/icon_kitchensink.svg
-tags: documentation,preview
-projectTitle: Open Letter
+tags: documentation,preview,kitchensink
+projectTitle: Gieter
 
 ---
 

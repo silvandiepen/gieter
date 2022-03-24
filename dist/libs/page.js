@@ -40,6 +40,13 @@ const subtitle = (file, payload) => {
         return "";
     }
 };
+const getTags = (payload, file) => {
+    var _a;
+    return ((_a = file.parent) === null || _a === void 0 ? void 0 : _a.id)
+        ? payload.tags.filter((tag) => tag.parent.id === file.parent.id)
+        : [];
+};
+const homeLink = (file) => file.language == language_1.defaultLanguage ? "/" : `/${file.language}`;
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const currentLink = (0, files_1.makePath)(file);
@@ -60,9 +67,7 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
     const menu = payload.menu ? menuStatus(payload.menu) : [];
     const data = {
         menu,
-        tags: payload.tags
-            ? payload.tags.filter((tag) => tag.parent == file.parent)
-            : [],
+        tags: getTags(payload, file),
         thumbnail: (0, media_1.getThumbnail)(file),
         style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
         project: payload.project,
@@ -72,16 +77,12 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         meta: file.meta,
         contentOnly: false,
         showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
-        homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
+        homeLink: homeLink(file),
         langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
         subtitle: subtitle(file, payload),
-        has: {
-            table: hasTable(file),
-            header: hasHeader(menu),
-            urlToken: hasUrlToken(file),
-            colors: hasColors(file),
-        },
+        shop: payload.shop,
+        has: Object.assign(Object.assign({}, payload.has), { archive: !!file.archive, menu: !!menu.length, table: hasTable(file), header: hasHeader(menu), urlToken: hasUrlToken(file), colors: hasColors(file) }),
     };
     const html = yield (0, files_1.buildHtml)(file, data);
     /*

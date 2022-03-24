@@ -126,9 +126,7 @@ export const getLogo = async (
       const gif = logos.find((l) => l.ext == ".gif");
       logo = svg || png || jpg || gif;
     }
-    if (logo) {
-      blockLineSuccess(`found logo ${logo.relativePath}`);
-    }
+    if (logo) blockLineSuccess(`found logo ${logo.relativePath}`);
   } else {
     const logoFile = media.find((m) =>
       m.relativePath.includes(payload.project.logo)
@@ -136,7 +134,6 @@ export const getLogo = async (
 
     if (logoFile) {
       logo = logoFile;
-
       blockLineSuccess(`loaded logo ${payload.project.logo}`);
     }
   }

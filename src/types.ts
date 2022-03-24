@@ -22,6 +22,26 @@ export interface Style {
   page?: string;
   og?: string;
 }
+
+export interface Has {
+  table: boolean;
+  header: boolean;
+  urlToken: boolean;
+  colors: boolean;
+  shop: boolean;
+  paypal: boolean;
+  menu: boolean;
+  archive: boolean;
+}
+
+export enum Currency {
+  EUR = "eur",
+  USD = "usd",
+  GBP = "gbp",
+  RUB = "rub",
+  JPY = "jpy",
+}
+
 export interface Payload extends Settings {
   input?: string;
   files: File[];
@@ -31,14 +51,17 @@ export interface Payload extends Settings {
   project?: Project;
   logo?: File;
   menu?: MenuItem[];
-  archives?: File[];
+  // archives?: File[];
   tags?: Tag[];
   favicon?: string;
+  currency?: Currency;
+  has?: Partial<Has>;
+  shop?: Shop;
 }
 export interface Tag {
   name: string;
   link?: string;
-  parent?: string;
+  parent?: Parent;
   type: string;
 }
 
@@ -53,6 +76,8 @@ export enum ArchiveType {
   SECTIONS = "sections",
   ARTICLES = "articles",
   COLLECTION = "collection",
+  SHOP = "shop",
+  NONE = "none",
 }
 export interface Archive {
   name: string;
@@ -67,6 +92,23 @@ export enum Language {
   MT = "mt",
   AM = "am",
 }
+
+export interface Product {
+  id: string;
+  title: string;
+  price: number;
+  category: string;
+  formattedPrice: string;
+  currency: Currency;
+}
+
+export interface Parent {
+  title: string;
+  id: string;
+  name: string;
+  archive: ArchiveType;
+}
+
 export interface File {
   id: string;
   name: string;
@@ -77,8 +119,8 @@ export interface File {
   home?: boolean;
   title?: string;
   relativePath?: string;
-  parent?: string;
-  archives?: Archive[];
+  parent?: Parent;
+  archive?: Archive;
   ext?: string;
   date?: Date;
   data?: string;
@@ -89,6 +131,7 @@ export interface File {
   type?: FileType;
   thumbnail?: string;
   thumbnailSvg?: string;
+  product?: Product;
 }
 export interface MenuItem {
   id: string;
@@ -116,6 +159,10 @@ export interface MarkdownData {
   meta?: Meta;
   document?: string;
 }
+export interface Shop {
+  currency: Currency;
+  clientId: string;
+}
 
 export interface buildHtmlArgs {
   menu: MenuItem[];
@@ -123,7 +170,7 @@ export interface buildHtmlArgs {
   project: Project;
   media: File[];
   logo: File;
-  archives?: File[];
+  archive?: Archive;
   contentOnly: boolean;
   tags?: Tag[];
   subtitle: string;
@@ -134,12 +181,8 @@ export interface buildHtmlArgs {
   homeLink: string;
   langMenu: LanguageMenuItem[];
   language: Language;
-  has: {
-    table: boolean;
-    header: boolean;
-    urlToken: boolean;
-    colors: boolean;
-  };
+  shop: Shop;
+  has: Partial<Has>;
 }
 interface PageCss {
   data: string;

@@ -12,6 +12,10 @@
       font-size: 0.8em;
       position: relative;
     }
+    &__text {
+      position: relative;
+      z-index: 2;
+    }
     &__link {
       text-decoration: none;
       color: currentColor;

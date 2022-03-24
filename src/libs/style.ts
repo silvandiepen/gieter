@@ -73,7 +73,7 @@ export const createBaseCss = async (
     title: "",
     html: null,
     meta: {},
-    archive: [],
+    archive: null,
   };
 
   const customHtml = await buildPage(
@@ -146,10 +146,17 @@ export const createStylesheets = async (
           loadPaths: [nodeModulesPath],
         });
 
+        const styleOutput = result.css.toString();
+
+        await createFile(stylePath.replace(".scss", ".css"), styleOutput);
         await createFile(
-          stylePath.replace(".scss", ".css"),
-          result.css.toString()
+          join(payload.settings.output, payload.project.style).replace(
+            ".scss",
+            ".css"
+          ),
+          styleOutput
         );
+
         blockLineSuccess(
           `Custom css generated → ${payload.project.style.replace(
             ".scss",

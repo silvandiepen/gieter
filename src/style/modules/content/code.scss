@@ -57,7 +57,7 @@
     padding: v(space-s);
     font-family: v(codeFontFamily);
     border-radius: v(borderRadius);
-    overflow: scroll;
+    overflow: auto;
     max-width: 100%;
     line-height: 1.5;
     display: block;
@@ -129,7 +129,7 @@
       content: "markdown";
     }
     code {
-      overflow: scroll;
+      overflow: auto;
       padding: v(space-s);
       display: block;
       @include bp(small, only) {

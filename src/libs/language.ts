@@ -24,9 +24,8 @@ export const fixLangInPath = (
       : partial;
   });
 
-  if (language == defaultLanguage && removeDefault) {
-    return path.join("/");
-  }
+  if (language == defaultLanguage && removeDefault) return path.join("/");
+
   return `${language ? `/${language}` : ""}/${path.join("/")}`.replace(
     "//",
     "/"

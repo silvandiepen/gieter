@@ -10,30 +10,3 @@ footer.footer
                 li.language__item(class= `${language.active ? 'language__item--active' : ''}`)
                     a.language__link(href=`${language.link}`)
                         span.language__text=language.name
-
-if project.script
-    if typeof project.script === "string"
-        script(lang="text/javascript", src=`${project.script}`)        
-    else 
-        each script in project.script
-            script(lang="text/javascript", src=`${script}`)
-
-script
-
-    include script/colorMode.js   
-    include script/closeMenu.js 
-    if has.colors
-        include script/findColors.js
-    if has.header
-        include script/stickyNav.js
-    if has.table
-        include script/wrapTables.js
-    if has.urlToken
-        include script/linkify.js
-
-
-
-
-   
-
-

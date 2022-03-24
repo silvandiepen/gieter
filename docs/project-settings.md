@@ -1,6 +1,6 @@
 ---
 icon: /media/icon_project.svg
-tags: documentation
+tags: documentation, setting, project
 ---
 
 # Project Settings

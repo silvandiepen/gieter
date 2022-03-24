@@ -26,6 +26,9 @@ const menu_1 = require("./libs/menu");
 const archives_1 = require("./libs/archives");
 const favicon_1 = require("./libs/favicon");
 const media_2 = require("./libs/media");
+const shop_1 = require("./libs/shop");
+const parent_1 = require("./libs/parent");
+const sitemap_1 = require("./libs/sitemap");
 // eslint-disable-next-line
 const PackageJson = require("../package.json");
 /*
@@ -57,7 +60,7 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         const relativePath = file.path.replace(process.cwd(), "");
         const pathGroup = relativePath.split("/");
         const thePath = pathGroup[pathGroup.length - 1].toLowerCase();
-        const isHome = thePath.includes("readme") || thePath.includes("index");
+        const isHome = !thePath.includes(".md");
         files[index].home = isHome;
     }));
     /*
@@ -126,7 +129,9 @@ const contentPages = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     }
     else {
         (0, cli_block_1.blockMid)("Pages");
-        yield (0, tools_1.asyncForEach)(payload.files.filter((file) => !file.name.startsWith("-")), // Don't pages that start with a -
+        yield (0, tools_1.asyncForEach)(payload.files
+            .filter((file) => !file.name.startsWith("-")) // Don't pages that start with a -
+            .map((file) => (Object.assign(Object.assign({}, file), { id: file.id.replace(`${payload.languages[0]}-`, "") }))), // remove language from file id
         (file) => __awaiter(void 0, void 0, void 0, function* () { return yield (0, page_1.createPage)(payload, file); }));
     }
     return Object.assign({}, payload);
@@ -142,18 +147,21 @@ exports.media = media;
 (0, tools_1.hello)()
     .then(exports.settings)
     .then((s) => {
-    (0, cli_block_1.blockHeader)(`Open Letter ${PackageJson.version}`);
+    (0, cli_block_1.blockHeader)(`Gieter ${PackageJson.version}`);
     return s;
 })
     .then(exports.files)
+    .then(parent_1.parent)
     .then(exports.media)
     .then(tags_1.generateTags)
     .then(archives_1.generateArchives)
+    .then(shop_1.generateShop)
     .then(menu_1.generateMenu)
     .then(style_1.generateStyles)
     .then(favicon_1.generateFavicon)
     .then(exports.contentPages)
     .then(tags_1.createTagPages)
+    .then(sitemap_1.createSitemap)
     .then(() => {
     (0, cli_block_1.blockFooter)();
 });

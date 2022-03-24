@@ -3,3 +3,24 @@
 
 @import "tools";
 @import "modules";
+
+// Scrollbars
+
+// * {
+//   --gtr-scrollbar-foreground: v(primary);
+//   --gtr-scrollbar-background-color: v(background);
+
+//   scrollbar-width: thin;
+//   scrollbar-color: v(scrollbarForeground) v(scrollbarBackgroundColor);
+//   &::-webkit-scrollbar {
+//     width: 0.75em;
+//   }
+//   &::-webkit-scrollbar-track {
+//     background: v(scrollbarBackgroundColor);
+//   }
+//   &::-webkit-scrollbar-thumb {
+//     background-color: v(scrollbarForeground, primary);
+//     border-radius: 0.75em;
+//     border: 0.1em solid v(scrollbarBackgroundColor);
+//   }
+// }

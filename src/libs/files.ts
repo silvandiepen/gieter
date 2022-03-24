@@ -1,5 +1,5 @@
 const { readdir } = require("fs").promises;
-
+const fs = require("fs");
 import pug from "pug";
 import { extname, resolve, basename, join } from "path";
 import { statSync } from "fs";
@@ -7,16 +7,31 @@ import { format } from "date-fns";
 import { asyncForEach } from "@sil/tools";
 import { getFileData, renamePath } from "@sil/tools/dist/lib/system";
 
-import { File, buildHtmlArgs, FileType, Dirent, Archive } from "../types";
-import { fixLangInPath, getLangFromFilename } from "./language";
+import { File, buildHtmlArgs, FileType, Dirent } from "../types";
+import { fixLangInPath, getLangFromPath } from "./language";
 import { removeTitle } from "./helpers";
 
 /*
 	::getFileTree
 	Get all files and folders from the input
 */
-export const fileId = (path: string): string =>
-  fixLangInPath(path, false).replace(/\//g, "-").substring(1).split(".")[0];
+export const fileId = (path: string): string => {
+  const language = getLangFromPath(path);
+  const converted = path
+    .replace(process.cwd(), "")
+    .replace(/\//g, "-")
+    .replace(".md", "")
+    .substring(1)
+    .toLowerCase();
+
+  return language + "-" + converted;
+};
+
+const cleanupRelativePath = (p): string => {
+  p = p.toLowerCase().replace("readme.md", "").replace("index.md");
+  if (p.length > 1 && p.charAt(p.length - 1) === "/") p = p.slice(0, -1);
+  return p;
+};
 
 export const getFileTree = async (
   dir: string,
@@ -28,15 +43,24 @@ export const getFileTree = async (
 
   const direntGroup = await readdir(dir, { withFileTypes: true });
 
+  const direntGroup2 = fs.readdir(dir, { withFileTypes: true }, (_, files) => {
+    return files;
+  });
+  console.log(direntGroup2);
+
   const files = await Promise.all(
     direntGroup.map(async (dirent: Dirent) => {
       const result = resolve(dir, dirent.name);
       const extension = extname(result);
       const fileName = basename(result).replace(extension, "");
-      const relativePath = result.replace(process.cwd(), "");
+      const relativePath = cleanupRelativePath(
+        result.replace(process.cwd(), "")
+      );
 
-      const lang =
-        fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
+      const lang = getLangFromPath(result);
+
+      // const lang =
+      //   fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
 
       const name = (
         fileName == "index"
@@ -50,7 +74,7 @@ export const getFileTree = async (
         const { birthtime } = statSync(result);
 
         return {
-          id: fileId(relativePath),
+          id: fileId(result),
           fileName: fileName.split(":")[0],
           name: name.split(":")[0],
           relativePath,
@@ -76,66 +100,96 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
 
   const files = [];
 
-  await asyncForEach(fileTree, async (file: File) => {
-    const data = await getFileData(file.path);
-    if (file.fileName.indexOf("_") !== 0)
+  await asyncForEach(
+    fileTree.filter((f) => f.fileName.indexOf("_") !== 0),
+    async (file: File) => {
+      const data = await getFileData(file.path);
       files.push({
         ...file,
         type: FileType.CONTENT,
         data,
-        parent:
-          file.relativePath.split("/")[file.relativePath.split("/").length - 2],
       });
+    }
+  );
+
+  files.forEach((f, index) => {
+    const p = f.relativePath;
+
+    const parentPath = `/${p
+      .split("/")
+      .splice(1, p.split("/").length - 2)
+      .join("/")}`;
+
+    const parentFile = files.find(
+      (parentFile) => parentFile.relativePath == parentPath
+    );
+
+    files[index].parent = {
+      id: parentFile.id,
+      name: parentFile.name,
+    };
   });
 
   return files;
 };
 
-const filterArchive = (file: File): Archive[] => {
-  if (file?.archives && file?.archives[0]?.children?.length) {
-    if (!file.relativePath) {
-      return file.archives;
-    }
-    const parentUrl = file.relativePath
-      .split("/")
-      .filter(Boolean)
-      .slice(0, -1)
-      .join("-");
+// const filterArchive = (file: File): Archive[] => {
+//   // console.log(file.archives);
 
-    file.archives[0].children = file.archives[0].children.filter((child) => {
-      const childUrl = child.link
-        .split("/")
-        .filter(Boolean)
-        .slice(0, -2)
-        .join("-");
-      return childUrl == parentUrl;
-    });
+//   return file.archives || [];
 
-    return file.archives;
-  } else {
-    return [];
-  }
-};
+//   // if (file?.archives && file?.archives[0]?.children?.length) {
+//   //   if (!file.relativePath) {
+//   //     return file.archives;
+//   //   }
+//   //   const parentUrl = file.relativePath
+//   //     .split("/")
+//   //     .filter(Boolean)
+//   //     .slice(0, -1)
+//   //     .join("-");
+
+//   //   file.archives[0].children = file.archives[0].children.filter((child) => {
+//   //     const childUrl = child.link
+//   //       .split("/")
+//   //       .filter(Boolean)
+//   //       .slice(0, -2)
+//   //       .join("-");
+//   //     console.log(childUrl, parentUrl);
+//   //     return childUrl == parentUrl;
+//   //   });
+
+//   //   return file.archives;
+//   // } else {
+//   //   return [];
+//   // }
+// };
 
 export const buildHtml = async (
   file: File,
   args: buildHtmlArgs,
   template = ""
 ): Promise<string> => {
-  const archives = filterArchive(file);
+  // const archives = filterArchive(file);
 
-  archives.map((archive) => {
-    if (archive.type === "blog") {
-      archive.children;
-      return {
-        ...archive,
-        children: archive.children.sort((a, b) =>
-          b.created > a.created ? 1 : a.created > b.created ? -1 : 0
-        ),
-      };
-    }
-    return archive;
-  });
+  // console.log(file.archives);
+
+  // archives.map((archive) => {
+  //   if (archive.type === "blog") {
+  //     return {
+  //       ...archive,
+  //       children: archive.children.sort((a, b) =>
+  //         b.created > a.created ? 1 : a.created > b.created ? -1 : 0
+  //       ),
+  //     };
+  //   } else {
+  //     return {
+  //       ...archive,
+  //       children: archive.children.sort((a, b) =>
+  //         b.fileName < a.fileName ? 1 : a.fileName < b.fileName ? -1 : 0
+  //       ),
+  //     };
+  //   }
+  // });
 
   const options = {
     ...args,
@@ -144,7 +198,7 @@ export const buildHtml = async (
     content: file.html,
     meta: file.meta,
     pretty: true,
-    archives: filterArchive(file),
+    archive: file.archive,
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,

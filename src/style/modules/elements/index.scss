@@ -8,6 +8,8 @@
 @import "task-list";
 @import "alert";
 @import "language";
+@import "basket";
+@import "icons";
 
 @if export("elements.alert") {
   @include alert();
@@ -41,4 +43,10 @@
 }
 @if export("elements.language") {
   @include language();
+}
+@if export("elements.basket") {
+  @include basket();
+}
+@if export("elements.icon") {
+  @include icon();
 }
