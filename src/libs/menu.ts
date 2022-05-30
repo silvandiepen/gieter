@@ -63,6 +63,7 @@ const depth = (file: File): number =>
   (file.relativePath.match(/\//g) || []).length;
 
 export const generateMenu = async (payload: Payload): Promise<Payload> => {
+
   let menu: MenuItem[] = payload.files
     .filter((f) => depth(f) === 1)
     .map((file) => {
@@ -103,6 +104,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
       await blockSettings(menuItems);
     }
   }
+// throw new Error;
 
   return { ...payload, menu };
 };

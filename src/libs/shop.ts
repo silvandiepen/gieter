@@ -1,7 +1,9 @@
 import { blockLineWarning, blockMid, blockSettings } from "cli-block";
 import { Payload, File, Currency, ArchiveType, Shop } from "../types";
 
-export const getShopCurrency = async (payload: Payload): Promise<Currency> => {
+export const getShopCurrency = async (
+  payload: Payload
+): Promise<Currency | null> => {
   let currency: Currency;
 
   const currencyFile = payload.files.filter((file) => !!file.meta.currency);
@@ -15,7 +17,7 @@ export const getShopCurrency = async (payload: Payload): Promise<Currency> => {
     currency = currencyFile[0].meta.currency.toLowerCase();
   }
 
-  blockSettings({ currency: currency.toUpperCase() });
+  if (currency) blockSettings({ currency: currency.toUpperCase() });
 
   return currency;
 };
@@ -47,13 +49,13 @@ export const paymentClientId = (payload: Payload): string => {
 };
 
 export const generateShop = async (payload: Payload): Promise<Payload> => {
-  blockMid("Shop");
-
   const currency = await getShopCurrency(payload);
 
   payload = getShopHas(payload);
 
-  if (!payload.has.shop) return payload;
+  if (!payload.has.shop || !currency) return payload;
+
+  blockMid("Shop");
 
   // payload.files.forEach((file: File) => {
   //   // if (file.meta.price) console.log(file);

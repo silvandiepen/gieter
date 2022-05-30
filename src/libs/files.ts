@@ -28,7 +28,7 @@ export const fileId = (path: string): string => {
 };
 
 const cleanupRelativePath = (p): string => {
-  p = p.toLowerCase().replace("readme.md", "").replace("index.md");
+  p = p.toLowerCase().replace("readme.md", "").replace("index.md","");
   if (p.length > 1 && p.charAt(p.length - 1) === "/") p = p.slice(0, -1);
   return p;
 };
@@ -43,10 +43,10 @@ export const getFileTree = async (
 
   const direntGroup = await readdir(dir, { withFileTypes: true });
 
-  const direntGroup2 = fs.readdir(dir, { withFileTypes: true }, (_, files) => {
-    return files;
-  });
-  console.log(direntGroup2);
+  // const direntGroup2 = fs.readdir(dir, { withFileTypes: true }, (_, files) => {
+  //   return files;
+  // });
+  // console.log(direntGroup2);
 
   const files = await Promise.all(
     direntGroup.map(async (dirent: Dirent) => {
@@ -125,8 +125,8 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
     );
 
     files[index].parent = {
-      id: parentFile.id,
-      name: parentFile.name,
+      id: parentFile?.id,
+      name: parentFile?.name,
     };
   });
 
