@@ -11,7 +11,7 @@ import {
   createThumbnails,
   getLogo,
   getMedia,
-  getSvgThumbnail,
+  getSvgThumbnail,copyThumbnails
 } from "./libs/media";
 import { getFiles } from "./libs/files";
 import { getProjectData } from "./libs/project";
@@ -175,6 +175,8 @@ export const media = async (payload: Payload): Promise<Payload> => {
   const logo: File = await getLogo(payload, media);
 
   await createThumbnails(payload);
+  
+  await copyThumbnails(payload);
 
   return { ...payload, media, logo };
 };

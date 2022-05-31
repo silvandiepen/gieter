@@ -15,7 +15,7 @@ section.section.archive.archive--articles
                             if item.thumbnailSvg
                                 div.archive__image--svg !{item.thumbnailSvg}
                             else if item.thumbnail
-                                img(src=item.thumbnail)
+                                img(src=item.thumbnail,alt=item.title)
                         
                         span.archive__info
                             if item.date

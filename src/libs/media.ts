@@ -1,7 +1,7 @@
 import { join, extname, basename } from "path";
 import { existsSync } from "fs";
 import { copy, writeFile } from "fs-extra";
-import { blockLineError, blockLineSuccess } from "cli-block";
+import { blockLine, blockLineError, blockLineSuccess } from "cli-block";
 import sharp from "sharp";
 
 import { getFileTree } from "../libs/files";
@@ -10,13 +10,16 @@ import { asyncForEach } from "@sil/tools";
 import { createDir } from "@sil/tools/dist/lib/system";
 import { getSVGData } from "./svg";
 
+const cacheThumbs = ".cache/thumbs";
+
 export const getThumbnail = (file: File): string | null => {
   const thumb = file.meta.thumb;
   const image = file.meta.image;
   const icon = file.meta.icon;
 
   const thumbnail = thumb || image || icon || null;
-  return thumbnail;
+
+  return thumbnail ? thumbnail.replace('.jpg','.thumb.jpg').replace('.png','.thumb.png') : null; 
 };
 
 export const getSvgThumbnail = async (thumb: string): Promise<string> => {
@@ -35,6 +38,20 @@ export const createThumbnails = async (payload: Payload): Promise<Payload> => {
   return payload;
 };
 
+export const copyThumbnails = async (payload: Payload): Promise<void> => {
+  const folder = cacheThumbs;
+  const thumbPath = join(process.cwd(), cacheThumbs);
+
+  const cachedThumbsExists = existsSync(thumbPath);
+  if (!cachedThumbsExists) return;
+
+  await copy(thumbPath, payload.settings.output)
+    .then(() => blockLineSuccess(`Copied ${folder} folder`))
+    .catch((err) => console.error(err));
+
+  blockLineSuccess("thumbs copied");
+};
+
 export const resizeImage = async (image: string): Promise<void> => {
   const imageUrl = join(process.cwd(), image);
   const exists = await existsSync(imageUrl);
@@ -47,7 +64,7 @@ export const resizeImage = async (image: string): Promise<void> => {
 
   const path = join(
     process.cwd(),
-    ".cache",
+    cacheThumbs,
     image.replace(ext, `.thumb${ext}`)
   );
 
@@ -62,6 +79,7 @@ export const resizeImage = async (image: string): Promise<void> => {
       .then(async (data) => {
         await createDir(path.replace(basename(path), ""));
         await writeFile(path, data);
+
         blockLineSuccess(`created ${image} thumbnail`);
       });
   } else {
@@ -69,16 +87,18 @@ export const resizeImage = async (image: string): Promise<void> => {
   }
 };
 
-export const createThumbnail = async (file: File): Promise<any> => {
+export const createThumbnail = async (file: File): Promise<void> => {
   if (file.meta.image) {
     const ext = extname(file.meta.image);
-    if (ext === ".jpg" || ext === ".png") resizeImage(file.meta.image);
+    if (ext === ".jpg" || ext === ".png") await resizeImage(file.meta.image);
   }
 
   if (file.meta.thumbnail) {
     const ext = extname(file.meta.thumbnail);
-    if (ext === ".jpg" || ext === ".png") resizeImage(file.meta.thumbnail);
+    if (ext === ".jpg" || ext === ".png")
+      await resizeImage(file.meta.thumbnail);
   }
+
 };
 
 export const getMedia = async (payload: Payload): Promise<File[]> => {

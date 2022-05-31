@@ -141,6 +141,7 @@ const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const media = yield (0, media_1.getMedia)(payload);
     const logo = yield (0, media_1.getLogo)(payload, media);
     yield (0, media_1.createThumbnails)(payload);
+    yield (0, media_1.copyThumbnails)(payload);
     return Object.assign(Object.assign({}, payload), { media, logo });
 });
 exports.media = media;
