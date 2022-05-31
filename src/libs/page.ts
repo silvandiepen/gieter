@@ -49,6 +49,28 @@ const getTags = (payload: Payload, file: File): Tag[] =>
 const homeLink = (file: File) =>
   file.language == defaultLanguage ? "/" : `/${file.language}`;
 
+enum BackgroundLocation {
+  BODY = "body",
+  SECTION = "section",
+}
+const getBackground = (
+  file: File,
+  location: BackgroundLocation
+): string | null => {
+  switch (location) {
+    case BackgroundLocation.BODY:
+      return file.meta.bodyBackground
+        ? `background-image: url(${file.meta.bodyBackground})`
+        : null;
+    case BackgroundLocation.SECTION:
+      return file.meta.sectionBackground
+        ? `background-image: url(${file.meta.sectionBackground})`
+        : null;
+    default:
+      return null;
+  }
+};
+
 export const buildPage = async (
   payload: Payload,
   file: File
@@ -102,6 +124,10 @@ export const buildPage = async (
       header: hasHeader(menu),
       urlToken: hasUrlToken(file),
       colors: hasColors(file),
+    },
+    background: {
+      body: getBackground(file, BackgroundLocation.BODY),
+      section: getBackground(file, BackgroundLocation.SECTION),
     },
   };
 

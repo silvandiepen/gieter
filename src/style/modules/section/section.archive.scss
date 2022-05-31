@@ -43,6 +43,9 @@
             position: relative;
             top: calc(#{variable(space)} * -1);
           }
+          @media #{breakpoint("large",up)} {
+            justify-content: center;
+          }
         }
         &__text {
           font-size: 1.5em;
@@ -84,6 +87,14 @@
 
           @media #{bp(medium,up)} {
             width: calc(33.33% - #{v(space)});
+            margin-left: #{v(space)};
+          }
+          @media #{bp(large,up)} {
+            width: calc(25% - #{v(space)});
+            margin-left: #{v(space)};
+          }
+          @media #{bp(xlarge,up)} {
+            width: calc(20% - #{v(space)});
             margin-left: #{v(space)};
           }
           & + #{$archive}__item {

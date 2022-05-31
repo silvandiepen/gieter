@@ -24,7 +24,7 @@ This will create a blog page. All other `.md` files will be shown as a list on t
 
 ### Archive Types
 
-#### Articles
+### Articles
 
 Articles are dated, they can be all kinds of things. The overview will be tiles with images and the order will be defined by the filenames.
 
@@ -34,7 +34,10 @@ archive: articles
 ---
 ```
 
-#### Blog
+You can also add sections to you home articles page. By adding `--` to your filename, the file will be used as a section instead of an article.
+
+
+### Blog
 
 A list of blogs, will be shown with dates. It will be shown as a list and ordered by their given date.
 
@@ -44,7 +47,7 @@ archive: blog
 ---
 ```
 
-#### Sections
+### Sections
 
 When selecting type `sections` all child files will be loaded within the parent as sections. This is to create bigger pages consisting of multiple sections without having to add all the data to one single file.
 ```markdown

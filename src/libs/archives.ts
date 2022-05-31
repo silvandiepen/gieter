@@ -15,6 +15,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
       const archiveType = file.meta.archive;
 
       let children = [];
+      let sections = [];
 
       const order =
         archiveType == ArchiveType.BLOG
@@ -24,6 +25,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 
       children = payload.files
         .filter((f) => f.parent.id == file.id)
+        .filter((f) => !f.fileName.startsWith("--"))
         .map((item) => ({
           ...item,
           date: item?.meta?.date,
@@ -36,6 +38,14 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             : [],
         }))
         .sort(order);
+
+      sections = payload.files
+        .filter((f) => f.parent.id == file.id)
+        .filter((f) => f.fileName.startsWith("--"))
+        .map((item) => ({
+          ...item,
+          meta: { ...item.meta, hide: true },
+        }));
 
       // if (file.home && !!archiveType) {
       //   children = payload.files
@@ -84,7 +94,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
       return {
         ...file,
         archive: children.length
-          ? { name: archiveName, type: archiveType, children }
+          ? { name: archiveName, type: archiveType, children, sections }
           : null,
       };
     });

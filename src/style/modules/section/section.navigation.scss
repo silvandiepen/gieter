@@ -459,7 +459,15 @@
     padding: 1em;
   }
   &__link {
+    border-radius: v(borderRadius);
+    background-color: v(background);
+    color: v(foreground);
     padding: 0.5em;
+  }
+  &__item {
+    & + .navigation__item {
+      margin-left: v(space-xs);
+    }
   }
   .button {
     display: none;

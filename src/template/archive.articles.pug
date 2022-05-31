@@ -1,3 +1,9 @@
+if archive.sections.length
+    each item in archive.sections
+        section.section.archive-item(class=`archive--section`, style=`${item.meta.style ? item.meta.style : "" }`, id=`${item.id}`)
+            div.container
+                | !{item.html}
+
 section.section.archive.archive--articles
     div.container
         ul.archive__list

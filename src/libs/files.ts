@@ -9,7 +9,7 @@ import { getFileData, renamePath } from "@sil/tools/dist/lib/system";
 
 import { File, buildHtmlArgs, FileType, Dirent } from "../types";
 import { fixLangInPath, getLangFromPath } from "./language";
-import { removeTitle } from "./helpers";
+import { removeTitle, spanToParagraph } from "./helpers";
 
 /*
 	::getFileTree
@@ -202,6 +202,7 @@ export const buildHtml = async (
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,
+    spanToParagraph: spanToParagraph
   };
 
   const templatePath = join(

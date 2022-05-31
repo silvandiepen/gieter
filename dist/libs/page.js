@@ -47,6 +47,25 @@ const getTags = (payload, file) => {
         : [];
 };
 const homeLink = (file) => file.language == language_1.defaultLanguage ? "/" : `/${file.language}`;
+var BackgroundLocation;
+(function (BackgroundLocation) {
+    BackgroundLocation["BODY"] = "body";
+    BackgroundLocation["SECTION"] = "section";
+})(BackgroundLocation || (BackgroundLocation = {}));
+const getBackground = (file, location) => {
+    switch (location) {
+        case BackgroundLocation.BODY:
+            return file.meta.bodyBackground
+                ? `background-image: url(${file.meta.bodyBackground})`
+                : null;
+        case BackgroundLocation.SECTION:
+            return file.meta.sectionBackground
+                ? `background-image: url(${file.meta.sectionBackground})`
+                : null;
+        default:
+            return null;
+    }
+};
 const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const currentLink = (0, files_1.makePath)(file);
@@ -83,6 +102,10 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         subtitle: subtitle(file, payload),
         shop: payload.shop,
         has: Object.assign(Object.assign({}, payload.has), { archive: !!file.archive, menu: !!menu.length, table: hasTable(file), header: hasHeader(menu), urlToken: hasUrlToken(file), colors: hasColors(file) }),
+        background: {
+            body: getBackground(file, BackgroundLocation.BODY),
+            section: getBackground(file, BackgroundLocation.SECTION),
+        },
     };
     const html = yield (0, files_1.buildHtml)(file, data);
     /*

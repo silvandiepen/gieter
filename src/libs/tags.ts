@@ -75,6 +75,7 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
         name: tag.name,
         type: ArchiveType.ARTICLES,
         children: archive,
+        sections: []
       },
       html: `<h1>#${tag.name}</h1>`,
       type: FileType.TAG,

@@ -1,5 +1,5 @@
 main.main.content(class=`${meta.type ? 'content--'+ meta.type : ''}`)
-    section.section
+    section.section(class=`${meta.sectionType ? 'section--'+meta.sectionType : ''}`,style=`${background.section}`)
         div.container
             if subtitle
                 h6=subtitle
@@ -7,9 +7,14 @@ main.main.content(class=`${meta.type ? 'content--'+ meta.type : ''}`)
                 h1=title
                 figure
                     img(src=meta.image)
-                | !{removeTitle(content)}  
+                | !{removeTitle(content)}
+            else if meta.sectionType == 'intro'
+                h1
+                    span=title
+                | !{spanToParagraph(removeTitle(content))}
             else 
                 | !{content}  
+
 
     if has.archive
         include archive.pug

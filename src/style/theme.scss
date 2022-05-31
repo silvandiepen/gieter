@@ -22,6 +22,7 @@ $theme-settings: (
     small,
     medium,
     large,
+    xlarge,
   ),
   "grid.breakpoint.sizes": (
     full: 100%,
@@ -38,6 +39,7 @@ $theme-settings: (
   "grid.breakpoint.small": 0,
   "grid.breakpoint.medium": 720,
   "grid.breakpoint.large": 1280,
+  "grid.breakpoint.xlarge": 1600,
   "define.row.class": ".row",
   "define.column.class": ".column",
   "define.body.class": "body",

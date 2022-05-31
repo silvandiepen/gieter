@@ -83,6 +83,7 @@ export interface Archive {
   name: string;
   type: ArchiveType;
   children: File[];
+  sections: File[];
 }
 
 export enum Language {
@@ -183,6 +184,10 @@ export interface buildHtmlArgs {
   language: Language;
   shop: Shop;
   has: Partial<Has>;
+  background: {
+    body: string | null,
+    section: string | null
+  }
 }
 interface PageCss {
   data: string;
