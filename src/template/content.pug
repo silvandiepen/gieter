@@ -6,7 +6,7 @@ main.main.content(class=`${meta.type ? 'content--'+ meta.type : ''}`)
             if showContentImage
                 h1=title
                 figure
-                    img(src=meta.image)
+                    img(src=meta.image,alt=title)
                 | !{removeTitle(content)}
             else if meta.sectionType == 'intro'
                 h1
