@@ -50,7 +50,7 @@ export const createRobots = async (payload: Payload): Promise<Payload> => {
   let robots = ``;
 
 
-  console.log(payload.project);
+  // console.log(payload.project);
 
   if(payload.project.domain){
     robots += `\nsitemap: //${payload.project.domain}/sitemap.xml`

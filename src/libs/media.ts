@@ -9,7 +9,6 @@ import { File, Payload } from "../types";
 import { asyncForEach } from "@sil/tools";
 import { getSVGData } from "./svg";
 
-
 import {
   CACHE_DIR,
   CONVERT_MEDIA_EXTENSIONS,
@@ -66,7 +65,7 @@ export const getMedia = async (payload: Payload): Promise<File[]> => {
 
   // Create all WEBP files in .cache
 
-  await blockMid("Converting all media files to webp");
+  await blockMid("Converting media to webp");
 
   await asyncForEach(
     mediaFiles.filter((f) => CONVERT_MEDIA_EXTENSIONS.includes(f.ext)),
@@ -91,13 +90,13 @@ export const getMedia = async (payload: Payload): Promise<File[]> => {
     }
   );
 
-  await blockMid("Copying all files from cache to public");
+  await blockMid("Copy files - cache to public");
 
   await copy(CACHE_DIR, payload.settings.output, (err) => {
-    blockLineError(err);
+    // blockLineError(err);
     err
       ? blockLineError("Problem with copying all cache files")
-      : blockLineSuccess("\n\ncopied all files from cache");
+      : blockLineSuccess("copied all files from cache");
   });
 
   return mediaFiles;

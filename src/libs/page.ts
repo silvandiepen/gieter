@@ -59,17 +59,24 @@ const getBackground = (
   file: File,
   location: BackgroundLocation
 ): string | null => {
-
-
-  console.log(file.meta.bodyBackground,getImagePath(file.meta.bodyBackground,MEDIA_SIZE_NAME.LARGE) )
+  // console.log(
+  //   file.meta.bodyBackground,
+  //   getImagePath(file.meta.bodyBackground, MEDIA_SIZE_NAME.LARGE)
+  // );
   switch (location) {
     case BackgroundLocation.BODY:
       return file.meta.bodyBackground
-        ? `background-image: url(${getImagePath(file.meta.bodyBackground,MEDIA_SIZE_NAME.LARGE)})`
+        ? `background-image: url(${getImagePath(
+            file.meta.bodyBackground,
+            MEDIA_SIZE_NAME.LARGE
+          )})`
         : null;
     case BackgroundLocation.SECTION:
       return file.meta.sectionBackground
-        ? `background-image: url(${getImagePath(file.meta.sectionBackground,MEDIA_SIZE_NAME.LARGE)})`
+        ? `background-image: url(${getImagePath(
+            file.meta.sectionBackground,
+            MEDIA_SIZE_NAME.LARGE
+          )})`
         : null;
     default:
       return null;

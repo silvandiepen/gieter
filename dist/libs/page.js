@@ -55,7 +55,10 @@ var BackgroundLocation;
     BackgroundLocation["SECTION"] = "section";
 })(BackgroundLocation || (BackgroundLocation = {}));
 const getBackground = (file, location) => {
-    console.log(file.meta.bodyBackground, (0, media_1.getImagePath)(file.meta.bodyBackground, const_1.MEDIA_SIZE_NAME.LARGE));
+    // console.log(
+    //   file.meta.bodyBackground,
+    //   getImagePath(file.meta.bodyBackground, MEDIA_SIZE_NAME.LARGE)
+    // );
     switch (location) {
         case BackgroundLocation.BODY:
             return file.meta.bodyBackground
