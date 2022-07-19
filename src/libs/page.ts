@@ -5,12 +5,14 @@ import { blockLine, blockLineSuccess } from "cli-block";
 
 import { Payload, File, Page, buildHtmlArgs, MenuItem, Tag } from "../types";
 import { getLanguageMenu, defaultLanguage } from "../libs/language";
+import { getImagePath } from "./media";
 import { makePath, buildHtml, getParentFile } from "./files";
 
 import { createDir } from "@sil/tools/dist/lib/system";
 import { createCss } from "./style";
 import kleur from "kleur";
 import { getThumbnail } from "./media";
+import { MEDIA_SIZE_NAME } from "../const";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
 
@@ -57,14 +59,17 @@ const getBackground = (
   file: File,
   location: BackgroundLocation
 ): string | null => {
+
+
+  console.log(file.meta.bodyBackground,getImagePath(file.meta.bodyBackground,MEDIA_SIZE_NAME.LARGE) )
   switch (location) {
     case BackgroundLocation.BODY:
       return file.meta.bodyBackground
-        ? `background-image: url(${file.meta.bodyBackground})`
+        ? `background-image: url(${getImagePath(file.meta.bodyBackground,MEDIA_SIZE_NAME.LARGE)})`
         : null;
     case BackgroundLocation.SECTION:
       return file.meta.sectionBackground
-        ? `background-image: url(${file.meta.sectionBackground})`
+        ? `background-image: url(${getImagePath(file.meta.sectionBackground,MEDIA_SIZE_NAME.LARGE)})`
         : null;
     default:
       return null;

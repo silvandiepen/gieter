@@ -1,6 +1,9 @@
-import { blockRowLine } from "cli-block";
+import { writeFile } from "fs";
 import { Payload, File } from "../types";
 import { createPage } from "./page";
+
+import { createFile } from "./files";
+import { join } from "path";
 
 export const createSitemap = async (payload: Payload): Promise<Payload> => {
   const sitemap = [];
@@ -28,16 +31,34 @@ export const createSitemap = async (payload: Payload): Promise<Payload> => {
 
   payload.files.forEach((file: File) => {
     // blockRowLine([file.name, file.home, file.id, file.parent?.id]);
-
-    blockRowLine([
-      file.name,
-      file.home ? "true" : "false",
-      file.id,
-      file.parent?.id ? file.parent.id : "",
-    ]);
+    // blockRowLine([
+    //   file.name,
+    //   file.home ? "true" : "false",
+    //   file.id,
+    //   file.parent?.id ? file.parent.id : "",
+    // ]);
   });
 
   //   await createPage(payload, file);
+
+  await createRobots(payload);
+
+  return payload;
+};
+
+export const createRobots = async (payload: Payload): Promise<Payload> => {
+  let robots = ``;
+
+
+  console.log(payload.project);
+
+  if(payload.project.domain){
+    robots += `\nsitemap: //${payload.project.domain}/sitemap.xml`
+  }
+
+
+
+  await createFile(robots, join(payload.settings.output, "robots.txt"));
 
   return payload;
 };

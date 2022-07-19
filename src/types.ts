@@ -7,6 +7,7 @@ export interface Project {
   logo?: string;
   title?: string;
   description?: string;
+  domain?:string;
   ignore?: string[];
   style?: string;
   styleOverrule?: string;

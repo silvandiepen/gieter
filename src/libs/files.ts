@@ -1,15 +1,18 @@
 const { readdir } = require("fs").promises;
-const fs = require("fs");
+
+import { statSync } from "fs";
+import { copy, writeFile } from "fs-extra";
 import pug from "pug";
 import { extname, resolve, basename, join } from "path";
-import { statSync } from "fs";
+
 import { format } from "date-fns";
 import { asyncForEach } from "@sil/tools";
-import { getFileData, renamePath } from "@sil/tools/dist/lib/system";
+import { getFileData, renamePath, createDir } from "@sil/tools/dist/lib/system";
 
 import { File, buildHtmlArgs, FileType, Dirent } from "../types";
 import { fixLangInPath, getLangFromPath } from "./language";
 import { removeTitle, spanToParagraph } from "./helpers";
+import { blockLineSuccess } from "cli-block";
 
 /*
 	::getFileTree
@@ -28,7 +31,7 @@ export const fileId = (path: string): string => {
 };
 
 const cleanupRelativePath = (p): string => {
-  p = p.toLowerCase().replace("readme.md", "").replace("index.md","");
+  p = p.toLowerCase().replace("readme.md", "").replace("index.md", "");
   if (p.length > 1 && p.charAt(p.length - 1) === "/") p = p.slice(0, -1);
   return p;
 };
@@ -43,11 +46,6 @@ export const getFileTree = async (
 
   const direntGroup = await readdir(dir, { withFileTypes: true });
 
-  // const direntGroup2 = fs.readdir(dir, { withFileTypes: true }, (_, files) => {
-  //   return files;
-  // });
-  // console.log(direntGroup2);
-
   const files = await Promise.all(
     direntGroup.map(async (dirent: Dirent) => {
       const result = resolve(dir, dirent.name);
@@ -58,9 +56,6 @@ export const getFileTree = async (
       );
 
       const lang = getLangFromPath(result);
-
-      // const lang =
-      //   fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
 
       const name = (
         fileName == "index"
@@ -202,7 +197,7 @@ export const buildHtml = async (
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,
-    spanToParagraph: spanToParagraph
+    spanToParagraph: spanToParagraph,
   };
 
   const templatePath = join(
@@ -243,4 +238,11 @@ export const getParentFile = (child: File, files: File[]): File | undefined => {
   );
 
   return file;
+};
+
+export const createFile = async (data: Buffer | string, filename: string): Promise<void> => {
+  await createDir(filename.replace(basename(filename), ""));
+  await writeFile(filename,data).then(()=>{
+    blockLineSuccess(`${basename(filename)} created`)
+  });
 };

@@ -38,7 +38,5 @@ export const getGist = async (id: string): Promise<string> => {
     .then((response) => response.json())
     .then((data) => data);
 
-  const file = (Object.values(res.files)[0] as any).content;
-
-  return file;
+  return res.files[0] ? (Object.values(res.files)[0] as any).content : "";
 };

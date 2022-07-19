@@ -8,10 +8,12 @@ import { hello, asyncForEach } from "@sil/tools";
 import { toHtml } from "./libs/markdown";
 import { fileTitle } from "./libs/helpers";
 import {
-  createThumbnails,
+  // createThumbnails,
   getLogo,
   getMedia,
-  getSvgThumbnail,copyThumbnails
+  // convertMediaFiles,
+  getSvgThumbnail,
+  // copyThumbnails,
 } from "./libs/media";
 import { getFiles } from "./libs/files";
 import { getProjectData } from "./libs/project";
@@ -112,8 +114,8 @@ export const files = async (payload: Payload): Promise<Payload> => {
    * Logging
    */
   if (Object.keys(project).length) {
-    blockMid("Project settings");
-    blockSettings(project, {}, { exclude: ["logoData"] });
+    await blockMid("Project settings");
+    await blockSettings(project, {}, { exclude: ["logoData"] });
   }
 
   return {
@@ -171,12 +173,8 @@ export const contentPages = async (payload: Payload): Promise<Payload> => {
 };
 
 export const media = async (payload: Payload): Promise<Payload> => {
-  const media = await getMedia(payload);
+  const media: File[] = await getMedia(payload);
   const logo: File = await getLogo(payload, media);
-
-  await createThumbnails(payload);
-  
-  await copyThumbnails(payload);
 
   return { ...payload, media, logo };
 };

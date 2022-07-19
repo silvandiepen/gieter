@@ -17,11 +17,13 @@ const { writeFile } = require("fs").promises;
 const path_1 = require("path");
 const cli_block_1 = require("cli-block");
 const language_1 = require("../libs/language");
+const media_1 = require("./media");
 const files_1 = require("./files");
 const system_1 = require("@sil/tools/dist/lib/system");
 const style_1 = require("./style");
 const kleur_1 = __importDefault(require("kleur"));
-const media_1 = require("./media");
+const media_2 = require("./media");
+const const_1 = require("../const");
 const simplifyUrl = (url) => url.replace("/index.html", "");
 const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current);
 const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
@@ -53,14 +55,15 @@ var BackgroundLocation;
     BackgroundLocation["SECTION"] = "section";
 })(BackgroundLocation || (BackgroundLocation = {}));
 const getBackground = (file, location) => {
+    console.log(file.meta.bodyBackground, (0, media_1.getImagePath)(file.meta.bodyBackground, const_1.MEDIA_SIZE_NAME.LARGE));
     switch (location) {
         case BackgroundLocation.BODY:
             return file.meta.bodyBackground
-                ? `background-image: url(${file.meta.bodyBackground})`
+                ? `background-image: url(${(0, media_1.getImagePath)(file.meta.bodyBackground, const_1.MEDIA_SIZE_NAME.LARGE)})`
                 : null;
         case BackgroundLocation.SECTION:
             return file.meta.sectionBackground
-                ? `background-image: url(${file.meta.sectionBackground})`
+                ? `background-image: url(${(0, media_1.getImagePath)(file.meta.sectionBackground, const_1.MEDIA_SIZE_NAME.LARGE)})`
                 : null;
         default:
             return null;
@@ -87,7 +90,7 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
     const data = {
         menu,
         tags: getTags(payload, file),
-        thumbnail: (0, media_1.getThumbnail)(file),
+        thumbnail: (0, media_2.getThumbnail)(file),
         style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
         project: payload.project,
         media: payload.media,

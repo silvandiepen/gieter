@@ -1,26 +1,35 @@
 import { join, extname, basename } from "path";
 import { existsSync } from "fs";
-import { copy, writeFile } from "fs-extra";
-import { blockLine, blockLineError, blockLineSuccess } from "cli-block";
+import { copy } from "fs-extra";
+import { blockLineError, blockLineSuccess, blockMid } from "cli-block";
 import sharp from "sharp";
 
-import { getFileTree } from "../libs/files";
+import { createFile, getFileTree } from "../libs/files";
 import { File, Payload } from "../types";
 import { asyncForEach } from "@sil/tools";
-import { createDir } from "@sil/tools/dist/lib/system";
 import { getSVGData } from "./svg";
 
-const cacheThumbs = ".cache/thumbs";
+
+import {
+  CACHE_DIR,
+  CONVERT_MEDIA_EXTENSIONS,
+  ALLOWED_MEDIA_EXTENSIONS,
+  MEDIA_SIZES,
+  MEDIA_SIZE_NAME,
+} from "../const";
+import { replaceWith } from "./helpers";
 
 export const getThumbnail = (file: File): string | null => {
-  const thumb = file.meta.thumb;
-  const image = file.meta.image;
-  const icon = file.meta.icon;
+  const thumbnail =
+    file.meta.thumb || file.meta.image || file.meta.icon || null;
 
-  const thumbnail = thumb || image || icon || null;
-
-  return thumbnail ? thumbnail.replace('.jpg','.thumb.jpg').replace('.png','.thumb.png') : null; 
+  return thumbnail
+    ? thumbnail.replace(extname(thumbnail), `.${MEDIA_SIZE_NAME.SMALL}.webp`)
+    : null;
 };
+
+export const getImagePath = (image: string, size: MEDIA_SIZE_NAME): string =>
+  replaceWith(image, CONVERT_MEDIA_EXTENSIONS, `.${size}.webp`);
 
 export const getSvgThumbnail = async (thumb: string): Promise<string> => {
   let svgData = "";
@@ -30,100 +39,67 @@ export const getSvgThumbnail = async (thumb: string): Promise<string> => {
   return svgData;
 };
 
-export const createThumbnails = async (payload: Payload): Promise<Payload> => {
-  await asyncForEach(payload.files, async (file) => {
-    await createThumbnail(file);
-  });
-
-  return payload;
-};
-
-export const copyThumbnails = async (payload: Payload): Promise<void> => {
-  const folder = cacheThumbs;
-  const thumbPath = join(process.cwd(), cacheThumbs);
-
-  const cachedThumbsExists = existsSync(thumbPath);
-  if (!cachedThumbsExists) return;
-
-  await copy(thumbPath, payload.settings.output)
-    .then(() => blockLineSuccess(`Copied ${folder} folder`))
-    .catch((err) => console.error(err));
-
-  blockLineSuccess("thumbs copied");
-};
-
-export const resizeImage = async (image: string): Promise<void> => {
-  const imageUrl = join(process.cwd(), image);
-  const exists = await existsSync(imageUrl);
-
-  if (!exists) {
-    blockLineError(`${image} does not exist`);
-    return;
-  }
-  const ext = extname(image);
-
-  const path = join(
-    process.cwd(),
-    cacheThumbs,
-    image.replace(ext, `.thumb${ext}`)
-  );
-
-  const thumbExists = await existsSync(path);
-  if (thumbExists) return;
-
-  const imageExists = await existsSync(imageUrl);
-  if (imageExists) {
-    await sharp(imageUrl)
-      .resize({ width: 640 })
-      .toBuffer()
-      .then(async (data) => {
-        await createDir(path.replace(basename(path), ""));
-        await writeFile(path, data);
-
-        blockLineSuccess(`created ${image} thumbnail`);
-      });
-  } else {
-    blockLineError(`${imageUrl} does not exist`);
-  }
-};
-
-export const createThumbnail = async (file: File): Promise<void> => {
-  if (file.meta.image) {
-    const ext = extname(file.meta.image);
-    if (ext === ".jpg" || ext === ".png") await resizeImage(file.meta.image);
-  }
-
-  if (file.meta.thumbnail) {
-    const ext = extname(file.meta.thumbnail);
-    if (ext === ".jpg" || ext === ".png")
-      await resizeImage(file.meta.thumbnail);
-  }
-
-};
+const resizeFile = async (file: File, size: 0): Promise<Buffer> =>
+  await sharp(file.path)
+    .resize({ width: size })
+    .webp({ lossless: true })
+    .toBuffer()
+    .then(async (data) => data);
 
 export const getMedia = async (payload: Payload): Promise<File[]> => {
   let mediaFiles: File[] = [];
+
+  await blockMid("Getting all Media files");
+
+  // Get all Media files
   await asyncForEach(["assets", "media"], async (folder: string) => {
     const exists = existsSync(join(process.cwd(), folder));
-
     if (exists) {
-      await copy(
-        join(process.cwd(), folder),
-        join(payload.settings.output, folder)
-      )
-        .then(() => blockLineSuccess(`Copied ${folder} folder`))
-        .catch((err) => console.error(err));
-
       mediaFiles = [
-        ...(await getFileTree(join(process.cwd(), folder), [
-          ".svg",
-          ".png",
-          ".jpg",
-          ".gif",
-        ])),
+        ...(await getFileTree(
+          join(process.cwd(), folder),
+          ALLOWED_MEDIA_EXTENSIONS
+        )),
       ];
     }
   });
+
+  // Create all WEBP files in .cache
+
+  await blockMid("Converting all media files to webp");
+
+  await asyncForEach(
+    mediaFiles.filter((f) => CONVERT_MEDIA_EXTENSIONS.includes(f.ext)),
+    (file: File) => {
+      Object.keys(MEDIA_SIZES).forEach(async (size) => {
+        const filename = join(
+          CACHE_DIR,
+          file.relativePath.replace(
+            extname(file.relativePath),
+            `.${size.toLowerCase()}.webp`
+          )
+        );
+
+        if (!existsSync(filename)) {
+          const data = await resizeFile(file, MEDIA_SIZES[size]);
+          blockLineSuccess(`${basename(filename)} created in cache`);
+          await createFile(data, filename);
+        } else {
+          blockLineSuccess(`${basename(filename)} exists in cache`);
+        }
+      });
+    }
+  );
+
+  await blockMid("Copying all files from cache to public");
+
+  await copy(CACHE_DIR, payload.settings.output, (err) => {
+    blockLineError(err);
+    err
+      ? blockLineError("Problem with copying all cache files")
+      : blockLineSuccess("\n\ncopied all files from cache");
+  });
+
   return mediaFiles;
 };
 
@@ -141,10 +117,8 @@ export const getLogo = async (
       logo = logos[0];
     } else if (logos.length > 1) {
       const svg = logos.find((l) => l.ext == ".svg");
-      const png = logos.find((l) => l.ext == ".png");
-      const jpg = logos.find((l) => l.ext == ".jpg");
-      const gif = logos.find((l) => l.ext == ".gif");
-      logo = svg || png || jpg || gif;
+      const webp = logos.find((l) => l.ext == ".webp");
+      logo = svg || webp;
     }
     if (logo) blockLineSuccess(`found logo ${logo.relativePath}`);
   } else {

@@ -95,8 +95,8 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
      * Logging
      */
     if (Object.keys(project).length) {
-        (0, cli_block_1.blockMid)("Project settings");
-        (0, cli_block_1.blockSettings)(project, {}, { exclude: ["logoData"] });
+        yield (0, cli_block_1.blockMid)("Project settings");
+        yield (0, cli_block_1.blockSettings)(project, {}, { exclude: ["logoData"] });
     }
     return Object.assign(Object.assign({}, payload), { files: files, project,
         languages });
@@ -140,8 +140,6 @@ exports.contentPages = contentPages;
 const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const media = yield (0, media_1.getMedia)(payload);
     const logo = yield (0, media_1.getLogo)(payload, media);
-    yield (0, media_1.createThumbnails)(payload);
-    yield (0, media_1.copyThumbnails)(payload);
     return Object.assign(Object.assign({}, payload), { media, logo });
 });
 exports.media = media;

@@ -1,5 +1,7 @@
 import { File } from "../types";
+
 import { getStringFromTag, removeTag } from "@sil/tools";
+
 
 export const removeTitle = (input: string): string => removeTag(input, "h1");
 
@@ -13,3 +15,17 @@ export const fileTitle = (file: File): string =>
 
 export const getExcerpt = (file: File): string =>
   getStringFromTag(file.html ? file.html : "", "p");
+
+  export const replaceWith = (
+    input: string = "",
+    find: string | string[],
+    by: string
+  ) => {
+    if (typeof find == "string") {
+      return input.replace(find, by);
+    } else {
+      find.forEach((v) => input.replace(v, by));
+      return input;
+    }
+  };
+  
