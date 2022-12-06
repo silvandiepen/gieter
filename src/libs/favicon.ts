@@ -12,7 +12,7 @@ export const generateFavicon = async (payload: Payload): Promise<Payload> => {
   const ex = (p, f) => existsSync(join(p, f));
 
   if (ex(ap, "favicon.png")) favicon = "assets/favicon.png";
-  else if (ex(mp, "logo.png")) favicon = "media/favicon.png";
+  else if (ex(mp, "favicon.png")) favicon = "media/favicon.png";
   else if (ex(ap, "logo.png")) favicon = "assets/logo.png";
   else if (ex(mp, "logo.png")) favicon = "media/logo.png";
 
