@@ -133,6 +133,9 @@ export const createStylesheets = async (
       const styleExists = await fileExists(stylePath);
       const nodeModulesPath = resolve(join(__dirname, `../../node_modules/`));
 
+      const nodeModulesPath2 = resolve(join(process.cwd(), `/node_modules/`));
+
+
       if (styleExists) {
         let file = await readFile(stylePath).then((res) => res.toString());
 
@@ -142,8 +145,11 @@ export const createStylesheets = async (
         ${file}
         `;
 
+        console.log(nodeModulesPath)
+        console.log(nodeModulesPath2)
+
         const result = await compileStringAsync(file, {
-          loadPaths: [nodeModulesPath],
+          loadPaths: [nodeModulesPath2],
         });
 
         await createFile(
