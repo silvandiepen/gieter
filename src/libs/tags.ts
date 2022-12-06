@@ -44,10 +44,13 @@ export const generateTags = async (payload: Payload): Promise<Payload> => {
   return { ...payload, tags };
 };
 
+
+
 export const createTagPages = async (payload: Payload): Promise<Payload> => {
   if (payload.tags.length) blockMid("Tag pages");
 
   await asyncForEach(payload.tags, async (tag: Tag) => {
+
     const path = `/tag/${payload.project.groupTags ? `${tag.parent}/` : ``}${
       tag.name
     }/index.html`;

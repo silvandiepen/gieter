@@ -17,6 +17,7 @@ const tools_1 = require("@sil/tools");
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
 const media_1 = require("./libs/media");
+const partials_1 = require("./libs/partials");
 const files_1 = require("./libs/files");
 const project_1 = require("./libs/project");
 const page_1 = require("./libs/page");
@@ -26,7 +27,6 @@ const menu_1 = require("./libs/menu");
 const archives_1 = require("./libs/archives");
 const favicon_1 = require("./libs/favicon");
 const media_2 = require("./libs/media");
-// eslint-disable-next-line
 const PackageJson = require("../package.json");
 /*
  * Files
@@ -142,10 +142,11 @@ exports.media = media;
 (0, tools_1.hello)()
     .then(exports.settings)
     .then((s) => {
-    (0, cli_block_1.blockHeader)(`Open Letter ${PackageJson.version}`);
+    (0, cli_block_1.blockHeader)(`Gieter ${PackageJson.version}`);
     return s;
 })
     .then(exports.files)
+    .then(partials_1.processPartials)
     .then(exports.media)
     .then(tags_1.generateTags)
     .then(archives_1.generateArchives)

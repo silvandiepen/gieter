@@ -19,6 +19,7 @@ import {
   getMedia,
   getSvgThumbnail,
 } from "./libs/media";
+import { processPartials } from "./libs/partials";
 import { getFiles } from "./libs/files";
 import { getProjectData } from "./libs/project";
 import { File, Payload, Settings, Project } from "./types";
@@ -30,7 +31,6 @@ import { generateArchives } from "./libs/archives";
 import { generateFavicon } from "./libs/favicon";
 import { getThumbnail } from "./libs/media";
 
-// eslint-disable-next-line
 const PackageJson = require("../package.json");
 
 /*
@@ -111,6 +111,8 @@ export const files = async (payload: Payload): Promise<Payload> => {
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
 
+
+
   /*
    * Logging
    */
@@ -180,10 +182,11 @@ export const media = async (payload: Payload): Promise<Payload> => {
 hello()
   .then(settings)
   .then((s) => {
-    blockHeader(`Open Letter ${PackageJson.version}`);
+    blockHeader(`Gieter ${PackageJson.version}`);
     return s;
   })
   .then(files)
+  .then(processPartials)
   .then(media)
   .then(generateTags)
   .then(generateArchives)

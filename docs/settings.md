@@ -4,7 +4,7 @@ tags: documentation
 ---
 # Settings
 
-Open letter does not support any settings from the cli. Just to keep it as straightforward as possible.
+Gieter does not support any settings from the cli. Just to keep it as straightforward as possible.
 
 But if you do want to change some things in your settings, of course you can.
 

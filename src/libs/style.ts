@@ -145,8 +145,8 @@ export const createStylesheets = async (
         ${file}
         `;
 
-        console.log(nodeModulesPath)
-        console.log(nodeModulesPath2)
+        // console.log(nodeModulesPath)
+        // console.log(nodeModulesPath2)
 
         const result = await compileStringAsync(file, {
           loadPaths: [nodeModulesPath2],

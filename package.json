@@ -1,10 +1,10 @@
 {
-  "name": "open-letter",
+  "name": "gieter",
   "version": "0.12.13",
-  "description": "Create an open letter html from Markdown",
+  "description": "Create an Gieter html from Markdown",
   "main": "dist/index.js",
   "bin": {
-    "open-letter": "dist/index.js"
+    "gieter": "dist/index.js"
   },
   "type": "commonjs",
   "scripts": {
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/silvandiepen/open-letter.git"
+    "url": "git+https://github.com/silvandiepen/gieter.git"
   },
   "keywords": [
     "open",
@@ -37,9 +37,9 @@
   "author": "Sil van Diepen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/silvandiepen/open-letter/issues"
+    "url": "https://github.com/silvandiepen/gieter/issues"
   },
-  "homepage": "https://github.com/silvandiepen/open-letter#readme",
+  "homepage": "https://github.com/silvandiepen/gieter#readme",
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/markdown-it": "^12.2.3",

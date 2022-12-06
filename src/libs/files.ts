@@ -1,6 +1,7 @@
 const { readdir } = require("fs").promises;
 
 import pug from "pug";
+
 import { extname, resolve, basename, join } from "path";
 import { statSync } from "fs";
 import { format } from "date-fns";
@@ -16,7 +17,11 @@ import { removeTitle } from "./helpers";
 	Get all files and folders from the input
 */
 export const fileId = (path: string): string =>
-  fixLangInPath(path, false).replace(/\//g, "-").substring(1).split(".")[0];
+  fixLangInPath(path, false)
+    .replace(/\//g, "-")
+    .substring(1)
+    .split(".")[0]
+    .toLowerCase();
 
 export const getFileTree = async (
   dir: string,
@@ -44,15 +49,15 @@ export const getFileTree = async (
           : fileName
       ).toLowerCase();
 
-      if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0)
-        return getFileTree(result);
-      else {
+      if (dirent.isDirectory() && dirent.name.indexOf("_") !== 0) {
+        return getFileTree(result, filter);
+      } else if (filter.includes(extension)) {
         const { birthtime } = statSync(result);
 
         return {
           id: fileId(relativePath),
           fileName: fileName.split(":")[0],
-          name: name.split(":")[0],
+          name,
           relativePath,
           created: birthtime,
           path: result,
@@ -62,6 +67,7 @@ export const getFileTree = async (
       }
     })
   );
+
   return Array.prototype
     .concat(...files)
     .filter((r) => r !== null)
@@ -87,7 +93,6 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
           file.relativePath.split("/")[file.relativePath.split("/").length - 2],
       });
   });
-
   return files;
 };
 

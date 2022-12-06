@@ -26,7 +26,7 @@ All colors should be defined as the `*-rgb` custom property with just the three 
 
 #### Sass
 
-If you want, you can use a `scss` file for your custom styling, open letter will automatically generate this file and use the outcome as your custom styling. 
+If you want, you can use a `scss` file for your custom styling, Gieter will automatically generate this file and use the outcome as your custom styling. 
 
 In a scss you can do everything you can do with default `dart-sass` and you get all the options from (themer)[https://themer.sil.mt].
 

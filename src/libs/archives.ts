@@ -24,7 +24,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 
       if (file.home && !!archiveType) {
         children = payload.files
-          .filter((item) => item.parent == file.parent && !item.home)
+          .filter((item) => item.parent == file.id && !item.home)
 
           //  Enrich each child with meta information, a link and the excerpt
           .map((item) => ({
@@ -44,6 +44,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
          * Inherit the parents type on each child
          */
         if (file.parent && !file.meta.type) {
+
           const parent = payload.files.find((parentFile) => {
             if (!parentFile.home) return false;
             return (
@@ -51,6 +52,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
               (parentPath(file.path) + "/readme.md").toLowerCase()
             );
           });
+
 
           if (parent?.meta && !!archiveType)
             if (file?.meta)
