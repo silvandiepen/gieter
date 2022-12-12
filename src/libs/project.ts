@@ -1,5 +1,5 @@
 import { asyncForEach } from "@sil/tools";
-
+import { camelCase } from "@sil/case";
 import { Project, Meta, File } from "../types";
 
 const fixProjectTypes = (input: Project): Project => {
@@ -24,7 +24,8 @@ const getProjectConfig = (meta: Meta): Project => {
   // Merge configs
   Object.keys(meta).forEach((item) => {
     if (item.includes("project") && typeof item == "string") {
-      const key = item.toLowerCase().replace("project", "");
+
+      const key = camelCase(item.replace("project", ""));
       if (key == "ignore") {
         project[key] = [];
         meta[item]

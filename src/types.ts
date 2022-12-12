@@ -13,6 +13,7 @@ export interface Project {
   language?: Language;
   script?: string | string[];
   groupTags?: boolean;
+  copyFiles?: string | string[];
 }
 
 export interface Style {

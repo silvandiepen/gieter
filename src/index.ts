@@ -7,13 +7,13 @@ import {
   blockHeader,
   blockFooter,
   blockSettings,
-  blockLineSuccess,
 } from "cli-block";
 import { hello, asyncForEach } from "@sil/tools";
 
 import { toHtml } from "./libs/markdown";
 import { fileTitle } from "./libs/helpers";
 import {
+  copyToAssets,
   createThumbnails,
   getLogo,
   getMedia,
@@ -175,6 +175,7 @@ export const media = async (payload: Payload): Promise<Payload> => {
   const logo: File = await getLogo(payload, media);
 
   await createThumbnails(payload);
+  await copyToAssets(payload);
 
   return { ...payload, media, logo };
 };

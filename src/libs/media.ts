@@ -1,5 +1,5 @@
-import { join, extname, basename } from "path";
-import { existsSync } from "fs";
+import { join, extname, basename, resolve } from "path";
+import { copyFile, existsSync } from "fs";
 import { copy, writeFile } from "fs-extra";
 import { blockLineError, blockLineSuccess } from "cli-block";
 import sharp from "sharp";
@@ -146,4 +146,36 @@ export const getLogo = async (
   }
 
   return logo;
+};
+
+const toArray = (value: string | string[]): string[] => {
+  if (typeof value !== "string") return value;
+  return [value];
+};
+
+const assetFolder = (): string => {
+  const exists = existsSync(join(process.cwd(), "media"));
+  return exists ? "media" : "assets";
+};
+
+export const copyToAssets = async (payload: Payload): Promise<void> => {
+  const copyFiles = payload.project.copyFiles;
+
+  if (!copyFiles) return;
+
+  await asyncForEach(toArray(copyFiles), async (file) => {
+    const assets = assetFolder();
+    const input = join(process.cwd(), file);
+    const output = join(payload.settings.output, assets, basename(file));
+
+    try {
+      await createDir(output.replace(basename(output),''));
+      copyFile(input, output, (err) => {
+        if (err) throw err;
+      });
+      blockLineSuccess(`${file} copied to ${assets}/${basename(file)}`);
+    } catch (err) {
+      blockLineError(err);
+    }
+  });
 };
