@@ -23,8 +23,9 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
           : (a, b) => a.meta.order - b.meta.order;
 
       if (file.home && !!archiveType) {
+
         children = payload.files
-          .filter((item) => item.parent == file.id && !item.home)
+          .filter((item) => item.parent == file.parent && !item.home)
 
           //  Enrich each child with meta information, a link and the excerpt
           .map((item) => ({
