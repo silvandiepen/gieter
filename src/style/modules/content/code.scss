@@ -1,4 +1,5 @@
 @use "sass:math";
+@use "sass:map";
 
 @function code-hsl($hue) {
   @return hsl(
@@ -13,25 +14,31 @@
 }
 
 @mixin styled-code() {
-  $primary-rgb: str-to-list(map-get($colors, "primary-rgb"), ",");
-  $secondary-rgb: str-to-list(map-get($colors, "secondary-rgb"), ",");
+  // $primary-rgb: str-to-list(map-get($colors, "primary-rgb"), ",");
+  // $secondary-rgb: str-to-list(map-get($colors, "secondary-rgb"), ",");
 
-  $primary-color: rgba(
-    parseInt(nth($primary-rgb, 1)),
-    parseInt(nth($primary-rgb, 2)),
-    parseInt(nth($primary-rgb, 3))
-  );
-  $secondary-color: rgba(
-    parseInt(nth($secondary-rgb, 1)),
-    parseInt(nth($secondary-rgb, 2)),
-    parseInt(nth($secondary-rgb, 3))
-  );
+  // $primary-color: rgba(
+  //   parseInt(nth($primary-rgb, 1)),
+  //   parseInt(nth($primary-rgb, 2)),
+  //   parseInt(nth($primary-rgb, 3))
+  // );
+  // $secondary-color: rgba(
+  //   parseInt(nth($secondary-rgb, 1)),
+  //   parseInt(nth($secondary-rgb, 2)),
+  //   parseInt(nth($secondary-rgb, 3))
+  // );
 
-  $primary-saturation: math.round(saturation($primary-color));
-  $secondary-saturation: math.round(saturation($secondary-color));
+  // $primary-saturation: math.round(saturation($primary-color));
+  // $secondary-saturation: math.round(saturation($secondary-color));
 
-  $primary-hue: math.round(hue($primary-color));
-  $secondary-hue: math.round(hue($secondary-color));
+  // $primary-hue: math.round(hue($primary-color));
+  // $secondary-hue: math.round(hue($secondary-color));
+
+  $primary-color: map.get($theme-colors, "primary");
+  $secondary-color: map.get($theme-colors, "secondary");
+
+  $primary-hue: hue($primary-color);
+  $secondary-hue: hue($secondary-color);
 
   [color-mode="dark"] {
     --code-lightness: 80;
@@ -42,35 +49,18 @@
     --code-saturation: 80;
   }
   code {
-    background-color: v(primary75);
-    color: v(primary75Text);
+    background-color: v(primary-10);
+    border: 1px solid v(primary-25);
+    // color: v(primary-text);
     font-size: 0.875em;
     border-radius: v(borderRadius);
   }
 
   pre:not([class]) code,
   pre[class^="language-"] {
-    background-color: transparent;
-    color: v(foreground);
-    border: 1px solid v(foreground10);
-    color: v(foreground);
-    padding: v(space-s);
     font-family: v(codeFontFamily);
+    background-color: v(foreground-5);
     border-radius: v(borderRadius);
-    overflow: scroll;
-    max-width: 100%;
-    line-height: 1.5;
-    display: block;
-    @include bp(small, only) {
-      padding: v(space);
-      width: calc(100% + #{v(space-xl)});
-      max-width: calc(100% + #{v(space-xl)});
-      margin-left: calc(#{v(space)} * -1);
-      margin-right: calc(#{v(space)} * -1);
-      border: none;
-      border-radius: 0;
-      background-color: v(foreground10);
-    }
     & + code {
       margin: 0;
     }
@@ -85,18 +75,18 @@
 
   pre[class^="language-"] {
     position: relative;
-    padding: 0;
     overflow: visible;
     &::before {
       content: "";
       display: block;
       position: absolute;
-      right: v(space-s);
+      right: v(space);
       top: 0;
       font-size: 0.75em;
       font-weight: bold;
-      background-color: v(secondary);
-      color: v(secondaryText);
+      background-color: v(background);
+      color: v(foreground);
+      // border: 1px solid v(foreground);
       transform: translateY(-50%);
       padding: 0.5em;
       border-radius: v(borderRadius);
@@ -130,11 +120,8 @@
     }
     code {
       overflow: scroll;
-      padding: v(space-s);
+      padding: v(space-l);
       display: block;
-      @include bp(small, only) {
-        padding: v(space);
-      }
     }
   }
   td code,

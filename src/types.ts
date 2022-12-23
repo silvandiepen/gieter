@@ -157,6 +157,7 @@ export interface Page {
   html: PageHtml;
   link: string;
   name: string;
+  title: string;
 }
 
 export interface Dirent {

@@ -63,6 +63,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
         order: file.meta.order || 999,
       };
     })
+    .filter((item) => item.link !== "/index.html")
     .filter((item) => item.active)
     .sort((a, b) => a.order - b.order);
 

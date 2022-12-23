@@ -1,15 +1,16 @@
-main.main.content(class=`${meta.type ? 'content--'+ meta.type : ''}`)
+main.main(class=`${meta.type ? 'content--'+ meta.type : ''}`)
     section.section
         div.container
-            if subtitle
-                h6=subtitle
-            if showContentImage
-                h1=title
-                figure
-                    img(src=meta.image)
-                | !{removeTitle(content)}  
-            else 
-                | !{content}  
+            div.content
+                if subtitle
+                    h6=subtitle
+                if showContentImage
+                    h1=title
+                    figure
+                        img(src=meta.image)
+                    | !{removeTitle(content)}  
+                else 
+                    | !{content}  
 
     if archives.length
         include archive.pug

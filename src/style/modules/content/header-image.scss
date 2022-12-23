@@ -2,13 +2,13 @@
   $parent: get-setting("define.content.class");
   #{$parent} {
     h1 + figure {
-      margin-top: calc(#{variable(space)} * 2);
+      margin-top: calc(#{v(space)} * 2);
       width: 100%;
     }
 
     @media #{breakpoint(medium)} {
       h1 + figure {
-        width: calc(100vw + (#{variable(space)} * 2));
+        width: calc(100vw + (#{v(space)} * 2));
         position: relative;
         left: 50%;
         transform: translateX(-50%);
@@ -23,7 +23,7 @@
       object-fit: cover;
     }
     h1 + figure + * {
-      margin-top: variable(space);
+      margin-top: v(space);
     }
   }
 }

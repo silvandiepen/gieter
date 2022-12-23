@@ -4,14 +4,14 @@
 
   #{$section} {
     position: relative;
-    padding: #{variable(space)};
+    // padding: #{v(space)};
 
-    @media #{breakpoint(medium)} {
-      padding: calc(#{variable(space)} * 2);
-    }
+    // @media #{breakpoint(medium)} {
+    //   padding: calc(#{v(space)} * 2);
+    // }
 
     & > #{$container} {
-      max-width: variable("content.max-width");
+      max-width: v(max-width);
       margin-left: auto;
       margin-right: auto;
       & + #{$container} {

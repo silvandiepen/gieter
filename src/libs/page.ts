@@ -133,6 +133,7 @@ export const buildPage = async (
     },
     name: file.name,
     link: currentLink,
+    title: file.title
   };
 };
 
@@ -147,8 +148,17 @@ export const createPage = async (
     await writeFile(page.html.file, page.html.data);
     await writeFile(page.css.file, page.css.data);
 
-    blockLineSuccess(`${page.name}`);
+    blockLineSuccess(`${page.title}`);
     blockLine(kleur.blue(`   ${page.link.replace("/index.html", "")}`));
+    if(file.archives){
+      file.archives.forEach((f)=>{
+        blockLine(`   Archive`);
+        f.children.forEach((c)=>{
+          blockLine(`   - ${c.title}`);
+        })
+      })
+    }
+    // console.log(file.archives);
   } catch (err) {
     throw Error(err);
   }

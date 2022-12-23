@@ -10,7 +10,7 @@ $prefix: null;
   $colorModeClass: get-setting("define.colormode.class");
 
   $switch-stroke: calc(#{$switch-size} * 0.1);
-  $switch-color: v(foreground50);
+  $switch-color: v(foreground-50);
   $switch-margin: calc(#{$switch-size} * 4);
   $switch-dot-size: calc(#{$switch-size} - (#{$switch-size} * 0.4));
 
@@ -22,9 +22,9 @@ $prefix: null;
   );
 
   #{$colorModeClass} {
-    @include customProperties($switch-settings);
+    // @include customProperties($switch-settings);
 
-    border: #{variable(switchStroke, $switch-stroke)} solid #{variable(
+    border: #{v(switchStroke, $switch-stroke)} solid #{v(
         switchColor,
         $switch-color
       )};
@@ -35,15 +35,15 @@ $prefix: null;
     border-radius: $switch-size;
     position: relative;
     text-indent: -999em;
-    color: variable(switchColor, $switch-color);
-    transition: opacity variable(transition);
+    color: v(switchColor, $switch-color);
+    transition: opacity v(transition);
     opacity: 0.5;
     &:hover {
       opacity: 1;
     }
     &:focus {
       outline: none;
-      box-shadow: 0 0 10px 0 variable(primary);
+      box-shadow: 0 0 10px 0 v(primary);
     }
     &::before {
       content: "";
@@ -54,18 +54,18 @@ $prefix: null;
       transition: transform 0.3s ease-in-out,
         background-position 0.3s ease-in-out, background-size 0.3s ease-in-out;
       transform: translate(
-        calc(0% + #{variable(switchStroke, $switch-stroke)}),
+        calc(0% + #{v(switchStroke, $switch-stroke)}),
         -50%
       );
       background-color: currentColor;
       border-radius: 50%;
-      width: variable(switchDotSize, $switch-dot-size);
-      height: variable(switchDotSize, $switch-dot-size);
+      width: v(switchDotSize, $switch-dot-size);
+      height: v(switchDotSize, $switch-dot-size);
       background: radial-gradient(
         circle at 50%,
         transparent,
         transparent 33.33%,
-        #{variable(switchColor, $switch-color)} 33.33%
+        #{v(switchColor, $switch-color)} 33.33%
       );
 
       background-repeat: no-repeat;
@@ -75,22 +75,22 @@ $prefix: null;
     // The after is a label shown to display the current mode. By default this doesn't show because the after does not have a content.
     // The after can be shown by adding a content in custom css.
     &::after {
-      background-color: variable(text);
-      color: variable(background);
+      background-color: v(text);
+      color: v(background);
       position: absolute;
       left: 50%;
       top: 100%;
-      transform: translate(-50%, calc(#{variable(switch-stroke)} * 2)) scale(0);
+      transform: translate(-50%, calc(#{v(switch-stroke)} * 2)) scale(0);
       font-size: 0.8em;
       padding: 0.5em 1em;
-      border-radius: variable(borderRadius);
+      border-radius: v(borderRadius);
       display: block;
       text-indent: 0;
       opacity: 0;
-      transition: transform variable(transition);
+      transition: transform v(transition);
     }
     &:hover::after {
-      transform: translate(-50%, calc(#{variable(switch-stroke)} * 2)) scale(1);
+      transform: translate(-50%, calc(#{v(switch-stroke)} * 2)) scale(1);
       opacity: 1;
     }
   }

@@ -7,20 +7,20 @@
     color: v(alert-text-color, currentColor);
 
     &--success {
-      --alert-background-color: #{variable(green-80)};
-      --alert-text-color: #{variable(green-20)};
+      --alert-background-color: #{v(green-80)};
+      --alert-text-color: #{v(green-20)};
     }
     &--warning {
-      --alert-background-color: #{variable(orange-80)};
-      --alert-text-color: #{variable(orange-20)};
+      --alert-background-color: #{v(orange-80)};
+      --alert-text-color: #{v(orange-20)};
     }
     &--error {
-      --alert-background-color: #{variable(red-80)};
-      --alert-text-color: #{variable(red-20)};
+      --alert-background-color: #{v(red-80)};
+      --alert-text-color: #{v(red-20)};
     }
     &--tip {
-      --alert-background-color: #{variable(blue-80)};
-      --alert-text-color: #{variable(blue-20)};
+      --alert-background-color: #{v(blue-80)};
+      --alert-text-color: #{v(blue-20)};
     }
   }
 }

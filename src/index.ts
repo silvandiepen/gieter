@@ -2,12 +2,7 @@
 "use strict";
 
 import { join } from "path";
-import {
-  blockMid,
-  blockHeader,
-  blockFooter,
-  blockSettings,
-} from "cli-block";
+import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
 import { hello, asyncForEach } from "@sil/tools";
 
 import { toHtml } from "./libs/markdown";
@@ -74,7 +69,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
     const thePath = pathGroup[pathGroup.length - 1].toLowerCase();
     const isHome = thePath.includes("readme") || thePath.includes("index");
 
-    files[index].home = isHome;
+    files[index].home = isHome ? isHome && file.meta.archive : false;
   });
 
   /*
@@ -110,8 +105,6 @@ export const files = async (payload: Payload): Promise<Payload> => {
     files = files.filter(
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
-
-
 
   /*
    * Logging
@@ -179,6 +172,18 @@ export const media = async (payload: Payload): Promise<Payload> => {
 
   return { ...payload, media, logo };
 };
+const removeUrlParts = (payload: Payload): Payload => {
+  payload.files = payload.files.map((file) => {
+    return {
+      ...file,
+      id: file.id.replace("-src-", "-"),
+      relativePath: file.relativePath.replace("/src/", "/"),
+      path: file.path.replace("/src/", "/"),
+    };
+  });
+  
+  return payload;
+};
 
 hello()
   .then(settings)
@@ -187,6 +192,7 @@ hello()
     return s;
   })
   .then(files)
+  .then(removeUrlParts)
   .then(processPartials)
   .then(media)
   .then(generateTags)

@@ -12,6 +12,7 @@
   h5,
   h6,
   p,
+  pre,
   .task-list {
     & + h1,
     & + h2,
@@ -20,6 +21,7 @@
     & + h5,
     & + h6,
     & + p,
+    & + pre,
     & + .task-list {
       margin-top: 1em;
     }

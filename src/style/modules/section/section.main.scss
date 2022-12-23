@@ -5,6 +5,6 @@
     filter: blur(0);
     transform: translate(0);
     position: relative;
-    transition: transform variable(transition), filter variable(transition);
+    transition: transform v(transition), filter v(transition);
   }
 }

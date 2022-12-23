@@ -11,12 +11,12 @@
 {
   @include column(null, unquote("#{$column}"));
 }
-@if (export("grid.column") or export("grid.default")) and
-  export("grid.column.responsive-partials")
-{
-  @each $breakpoint in $breakpoint-names {
-    @include breakpoint($breakpoint) {
-      //   @include column(unquote(".#{$breakpoint}"), $column);
-    }
-  }
-}
+// @if (export("grid.column") or export("grid.default")) and
+//   export("grid.column.responsive-partials")
+// {
+//   @each $breakpoint in $breakpoint-names {
+//     // @include bp($breakpoint) {
+//       //   @include column(unquote(".#{$breakpoint}"), $column);
+//     // }
+//   }
+// }

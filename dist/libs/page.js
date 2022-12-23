@@ -105,6 +105,7 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         },
         name: file.name,
         link: currentLink,
+        title: file.title
     };
 });
 exports.buildPage = buildPage;
@@ -114,8 +115,17 @@ const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function
     try {
         yield writeFile(page.html.file, page.html.data);
         yield writeFile(page.css.file, page.css.data);
-        (0, cli_block_1.blockLineSuccess)(`${page.name}`);
+        (0, cli_block_1.blockLineSuccess)(`${page.title}`);
         (0, cli_block_1.blockLine)(kleur_1.default.blue(`   ${page.link.replace("/index.html", "")}`));
+        if (file.archives) {
+            file.archives.forEach((f) => {
+                (0, cli_block_1.blockLine)(`   Archive`);
+                f.children.forEach((c) => {
+                    (0, cli_block_1.blockLine)(`   - ${c.title}`);
+                });
+            });
+        }
+        // console.log(file.archives);
     }
     catch (err) {
         throw Error(err);

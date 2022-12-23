@@ -14,26 +14,19 @@
       }
       &--auto {
         .box {
-          width: variable(box-width, 100%);
-          padding-bottom: variable(box-height, 100%);
+          width: v(box-width, 100%);
+          padding-bottom: v(box-height, 100%);
         }
       }
     }
     .box {
-      @include property(
-        (
-          width: 100%,
-          height: 100%,
-          border-radius: borderRadius,
-        )
-      );
+          width: 100%;
+          height: 100%;
+          border-radius: v(borderRadius),
       &--auto {
-        @include property(
-          (
-            width: auto,
-            height: auto,
-          )
-        );
+            width: auto;
+            height: auto;
+   
       }
     }
   }

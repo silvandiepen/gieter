@@ -1,12 +1,12 @@
+@use "sass:map";
+
 $theme-settings: (
-  "prefix": "ol",
+  "prefix": "",
   colors: (
     shades: true,
     opacity: true,
   ),
   "content.block": ".content",
-  "content.paragraph.max-width": max(75ch, 960px),
-  "content.max-width": max(75ch, 720px),
   "content.color.current10": true,
   "content.link.colors": (
     contra,
@@ -18,10 +18,19 @@ $theme-settings: (
   "h6.color": var(--current-color, var(--contra, var(--primary))),
   "logo.max-height": 3rem,
   "grid.total": 12,
-  "grid.breakpoint.names": (
-    small,
-    medium,
-    large,
+  "grid.breakpoint": (
+    small: (
+      0px,
+      max(75ch, 720px),
+    ),
+    medium: (
+      max(75ch, 720px),
+      1280px,
+    ),
+    large: (
+      1280px,
+      9999px,
+    ),
   ),
   "grid.breakpoint.sizes": (
     full: 100%,
@@ -35,9 +44,6 @@ $theme-settings: (
     three-fifth: 60%,
     four-fifth: 80%,
   ),
-  "grid.breakpoint.small": 0,
-  "grid.breakpoint.medium": 720,
-  "grid.breakpoint.large": 1280,
   "define.row.class": ".row",
   "define.column.class": ".column",
   "define.body.class": "body",
@@ -146,14 +152,29 @@ $theme-output: (
   "default.custom-properties"
 );
 
+$theme-base: (
+  borderRadius: 0.5em,
+  baseSize: 16px,
+  space: 1em,
+  space-s: 0.5em,
+  space-l: 2em,
+  max-width: max(75ch, 720px),
+);
+
 $theme-typography: (
+  primaryFontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
   codeFontFamily:
     'Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace',
 );
 
 $theme-colors: (
-  foreground: rgb(14, 1, 29),
-  background: rgb(255, 254, 242),
+  dark: rgb(14, 1, 29),
+  light: rgb(255, 254, 242),
   primary: rgb(108, 72, 139),
   secondary: rgb(74, 130, 146),
-);
+  error: rgb(218, 41, 17),
+  warning: rgb(238, 154, 37),
+) !default;
+
+$theme-all: map-merge($theme-base, map-merge($theme-colors, $theme-typography));

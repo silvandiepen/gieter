@@ -4,17 +4,13 @@
     scroll-behavior: smooth;
   }
   #{$class} {
-    @include property(
-      (
-        margin: 0,
-        padding: 0,
-        min-height: 100vh,
-        width: 100%,
-        font-family: primaryFontFamily,
-        position: relative,
-        background-color: background,
-        color: foreground,
-      )
-    );
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100%;
+    font-family: v(primaryFontFamily);
+    position: relative;
+    background-color: v(background);
+    color: v(foreground);
   }
 }

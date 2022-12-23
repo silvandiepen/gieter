@@ -32,10 +32,10 @@
         left: 50%;
         width: calc(100% + 1em);
         height: calc(100% + 1em);
-        background-color: variable(secondary);
+        background-color: v(secondary);
         top: 50%;
         transform: translate(-50%, -50%) scale(0.75);
-        border-radius: variable(borderRadius);
+        border-radius: v(borderRadius);
         opacity: 0;
         transition: transform 0.3s ease-in-out;
       }

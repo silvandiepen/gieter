@@ -1,15 +1,12 @@
 @mixin notification() {
   $notification: get-setting("define.notification.class");
   #{$notification} {
-    @include property(
-      (
-        display: inline-block,
-        padding: space-s,
-        background-color: background10,
-        border-radius: borderRadius,
-        color: currentColor,
-      )
-    );
+    display: inline-block;
+    padding: v(space-s);
+    background-color: v(background10);
+    border-radius: v(borderRadius);
+    color: currentColor;
+
     $notifications: (
       "error",
       "warning",
@@ -21,14 +18,10 @@
 
     @each $name, $color in $notifications {
       &--#{$name} {
-        @include property(
-          (
-            border: 1px solid,
-            border-color: $name,
-            background-color: #{$name}25,
-            color: #{$name}25text,
-          )
-        );
+        border: 1px solid;
+        border-color: $name;
+        background-color: v("#{$name}25");
+        color: v("#{$name}25text");
       }
       p,
       p:first-of-type {

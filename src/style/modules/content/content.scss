@@ -5,20 +5,16 @@
 
   #{$parent} {
     p {
-      @include property(
-        (
-          font-size: baseSize,
-          line-height: 1.5,
-          max-width: variable("content.paragraph.max-width"),
-        )
-      );
+
+          font-size: baseSize;
+          line-height: 1.5;
+          max-width: v("content.paragraph.max-width");
+        
+    
 
       &:first-of-type {
-        @include property(
-          (
-            font-size: 1.25em,
-          )
-        );
+            font-size: 1.25em;
+      
       }
     }
   }
@@ -28,14 +24,12 @@
   $parent: get-setting("define.content.class");
   #{$parent} {
     img {
-      @include property(
-        (
-          max-width: 100%,
-          width: 100vw,
-          max-height: 80vh,
-          margin: auto,
-        )
-      );
+    
+          max-width: 100%;
+          width: 100vw;
+          max-height: 80vh;
+          margin: auto;
+
     }
   }
 }
@@ -45,14 +39,11 @@
 
   #{$parent} {
     blockquote {
-      @include property(
-        (
-          font-family: inherit,
-          font-size: baseSize,
-          line-height: 1.5,
-          padding: space,
-        )
-      );
+          font-family: inherit;
+          font-size: v(baseSize);
+          line-height: 1.5;
+          padding: space;
+       
     }
   }
 }
@@ -62,31 +53,26 @@
   #{$parent} {
     a:not([class]) {
       position: relative;
-      color: variable(secondary);
+      color: v(secondary);
       display: inline-block;
       &:focus {
         outline: none;
       }
       &::before {
         content: "";
-        @include property(
-          (
-            content: "",
-            width: calc(100% + 1em),
-            height: calc(100% + 1em),
-            left: -0.5em,
-            top: -0.5em,
-            position: absolute,
-            border-radius: borderRadius,
-          )
-        );
+
+            content: "";
+            width: calc(100% + 1em);
+            height: calc(100% + 1em);
+            left: -0.5em;
+            top: -0.5em;
+            position: absolute;
+            border-radius: v(borderRadius);
+
       }
       &:focus::before {
-        @include property(
-          (
-            outline: 2px solid currentColor,
-          )
-        );
+
+            outline: 2px solid currentColor;
       }
     }
   }
@@ -235,14 +221,14 @@
         padding: 1em 0.5em;
       }
       th {
-        font-weight: variable(text-bold, bold);
+        font-weight: v(text-bold, bold);
       }
       thead tr,
       tbody tr:last-child {
-        border-bottom: 1px solid variable(foreground10);
+        border-bottom: 1px solid v(foreground-10);
       }
       tr + tr {
-        border-top: 1px solid variable(foreground10);
+        border-top: 1px solid v(foreground-10);
       }
       @media #{breakpoint(small,only)} {
         &.wrap {
@@ -259,7 +245,7 @@
             td::before {
               width: 33.33%;
               display: block;
-              color: v(foreground50);
+              color: v(foreground-50);
               font-size: 0.875em;
               line-height: 1.5;
               content: attr(data-label);

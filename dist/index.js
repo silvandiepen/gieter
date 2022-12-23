@@ -58,7 +58,7 @@ const files = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         const pathGroup = relativePath.split("/");
         const thePath = pathGroup[pathGroup.length - 1].toLowerCase();
         const isHome = thePath.includes("readme") || thePath.includes("index");
-        files[index].home = isHome;
+        files[index].home = isHome ? isHome && file.meta.archive : false;
     }));
     /*
      * Inherit Parent Metadata
@@ -140,6 +140,12 @@ const media = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return Object.assign(Object.assign({}, payload), { media, logo });
 });
 exports.media = media;
+const removeUrlParts = (payload) => {
+    payload.files = payload.files.map((file) => {
+        return Object.assign(Object.assign({}, file), { id: file.id.replace("-src-", "-"), relativePath: file.relativePath.replace("/src/", "/"), path: file.path.replace("/src/", "/") });
+    });
+    return payload;
+};
 (0, tools_1.hello)()
     .then(exports.settings)
     .then((s) => {
@@ -147,6 +153,7 @@ exports.media = media;
     return s;
 })
     .then(exports.files)
+    .then(removeUrlParts)
     .then(partials_1.processPartials)
     .then(exports.media)
     .then(tags_1.generateTags)

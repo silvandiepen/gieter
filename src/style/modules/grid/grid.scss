@@ -14,13 +14,13 @@ $grid-total: get-setting("grid.total");
   );
   display: grid;
   grid-auto-flow: row;
-  grid-column-gap: variable(gap, map-get($row-settings, gap));
-  grid-row-gap: variable(gap, map-get($row-settings, gap));
+  grid-column-gap: v(gap, map-get($row-settings, gap));
+  grid-row-gap: v(gap, map-get($row-settings, gap));
   --row-columns: repeat(
-    #{variable(row-total, #{map-get($row-settings, total)})},
+    #{v(row-total, #{map-get($row-settings, total)})},
     1fr
   );
-  grid-template-columns: variable(row-columns);
+  grid-template-columns: v(row-columns);
   grid-template-rows: auto;
 }
 

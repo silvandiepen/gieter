@@ -131,9 +131,7 @@ export const createStylesheets = async (
     if (payload.project.style.includes(".scss")) {
       const stylePath = join(process.cwd(), payload.project.style);
       const styleExists = await fileExists(stylePath);
-      const nodeModulesPath = resolve(join(__dirname, `../../node_modules/`));
-
-      const nodeModulesPath2 = resolve(join(process.cwd(), `/node_modules/`));
+      const nodeModulesPath = resolve(join(process.cwd(), `/node_modules/`));
 
 
       if (styleExists) {
@@ -141,15 +139,20 @@ export const createStylesheets = async (
 
         file = `
         @import "${join(__dirname, "../../src/style/theme.scss")}";
-        @import "@sil/themer/src/use.scss";
+        @import "${join(__dirname, "../../src/style/build/functions.scss")}";
+       
         ${file}
         `;
+        // file = `
+        // @import "${join(__dirname, "../../src/style/theme.scss")}";
+        // @import "${join(__dirname, "../../src/style/functions.scss")}";
+        // @import "@sil/themer/src/use.scss";
+        // ${file}
+        // `;
 
-        // console.log(nodeModulesPath)
-        // console.log(nodeModulesPath2)
 
         const result = await compileStringAsync(file, {
-          loadPaths: [nodeModulesPath2],
+          loadPaths: [nodeModulesPath],
         });
 
         await createFile(

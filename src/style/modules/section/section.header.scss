@@ -6,7 +6,7 @@
     position: relative;
     z-index: 10;
     @media #{breakpoint(medium,up)} {
-      padding: v(space-s);
+      padding: v(space);
     }
     &--sticky {
       position: sticky;
@@ -21,11 +21,12 @@
 
       background-color: v(background50);
       backdrop-filter: blur(1em);
-      border-bottom: 2px solid var(--border-color);
+      border-bottom: 2px solid var(--foreground-10);
 
       @media #{breakpoint(medium,up)} {
         border-radius: v(borderRadius);
-        border: 2px solid var(--border-color, transparent);
+        border: 2px solid var(--foreground-10, transparent);
+        padding: v(space);
       }
 
       &--hide {
@@ -37,7 +38,7 @@
         opacity: 1;
       }
       &--off-top {
-        --border-color: #{v(foreground10)};
+        --border-color: #{v(foreground-10)};
       }
       &--on-top {
         --border-color: transparent;
@@ -46,16 +47,15 @@
   }
 
   #{$header} #{$logo} {
-    @include property(
-      (
-        font-weight: bold,
-        color: currentColor,
-        text-decoration: none,
-        display: flex,
-        align-items: center,
-        padding: 0 v(space-s),
-      )
-    );
+    font-weight: bold;
+    color: currentColor;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+
+    @media #{breakpoint(small,only)} {
+      padding: v(space);
+    }
     &--image-only ~ span {
       display: none;
     }
@@ -74,8 +74,8 @@
       width: auto;
       max-width: 8em;
       @media #{breakpoint(small,only)} {
-        min-height: 3em;
-        max-height: 3em;
+        min-height: 2em;
+        max-height: 2em;
       }
       rect,
       polygon,

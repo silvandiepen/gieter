@@ -1,6 +1,6 @@
 import { join, extname, basename, resolve } from "path";
-import { copyFile, existsSync } from "fs";
-import { copy, writeFile } from "fs-extra";
+import { copyFile, existsSync,lstatSync,  } from "fs";
+import { copy, writeFile,copySync } from "fs-extra";
 import { blockLineError, blockLineSuccess } from "cli-block";
 import sharp from "sharp";
 
@@ -13,9 +13,10 @@ import { getSVGData } from "./svg";
 export const getThumbnail = (file: File): string | null => {
   const thumb = file.meta.thumb;
   const image = file.meta.image;
-  const icon = file.meta.icon;
+  // const icon = file.meta.icon;
 
-  const thumbnail = thumb || image || icon || null;
+  // const thumbnail = thumb || image || icon || null;
+  const thumbnail = thumb || image || null;
   return thumbnail;
 };
 
@@ -165,14 +166,27 @@ export const copyToAssets = async (payload: Payload): Promise<void> => {
 
   await asyncForEach(toArray(copyFiles), async (file) => {
     const assets = assetFolder();
+
+
+
     const input = join(process.cwd(), file);
     const output = join(payload.settings.output, assets, basename(file));
 
+
+
     try {
       await createDir(output.replace(basename(output),''));
-      copyFile(input, output, (err) => {
-        if (err) throw err;
-      });
+
+      if(lstatSync(file).isDirectory()){
+        copySync(input, output, { overwrite: true })
+
+      } else {
+        copyFile(input, output, (err) => {
+          if (err) throw err;
+        });
+      }
+
+
       blockLineSuccess(`${file} copied to ${assets}/${basename(file)}`);
     } catch (err) {
       blockLineError(err);

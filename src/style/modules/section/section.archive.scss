@@ -3,17 +3,22 @@
 
   #{$archive} {
     position: relative;
-    background-color: variable(background);
-    color: variable(foreground);
+    background-color: v(background);
+    color: v(foreground);
     background-image: linear-gradient(
       to bottom,
-      #{variable(primary10)},
-      #{variable(background)}
+      #{v(primary-10)},
+      #{v(background)}
     );
-
+    .container {
+      padding: v(space-l) 0;
+      @media #{breakpoint(small,only)} {
+        padding: v(space-l);
+      }
+    }
     &__link {
       display: block;
-      border-radius: variable(borderRadius);
+      border-radius: v(borderRadius);
       text-decoration: none;
       color: currentColor;
     }
@@ -34,14 +39,13 @@
     &--articles {
       #{$archive} {
         &__list {
-          display: flex;
-          flex-wrap: wrap;
+          display: grid;
+          gap: v(space-l);
           width: 100%;
           @media #{breakpoint("medium", up)} {
-            width: calc(100% + #{variable(space)});
-            margin-left: calc(#{variable(space)} * -1);
+            grid-template-columns: 1fr 1fr 1fr;
+
             position: relative;
-            top: calc(#{variable(space)} * -1);
           }
         }
         &__text {
@@ -72,51 +76,20 @@
         }
         &__info {
           display: block;
+          padding: v(space);
         }
         &__item {
           position: relative;
           display: block;
-          margin-top: #{variable(space)};
-          transform: scale(1);
-          transition: transform v(transition);
           width: 100%;
           border-radius: v(borderRadius);
+          border: 2px solid var(--foreground-10);
 
-          @media #{bp(medium,up)} {
-            width: calc(33.33% - #{v(space)});
-            margin-left: #{v(space)};
-          }
-          & + #{$archive}__item {
-            flex-direction: column;
-          }
-
-          &::before {
-            content: "";
-            display: block;
-            width: calc(100% + #{v(space)});
-            height: calc(100% + #{v(space)});
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            background-color: variable(background);
-            z-index: -1;
-            box-shadow: 0 0 1em 0 v(background10);
-            opacity: 0;
-            border-radius: calc(#{v(borderRadius)} * 2);
-            transition: opacity v(transition), transform v(transition);
-          }
           &:hover {
+            background-color: v(background);
+            border-color: v(background);
             #{$archive}__date {
               opacity: 1;
-            }
-          }
-          &:hover,
-          &:focus {
-            transform: scale(1.05);
-            &::before {
-              opacity: 1;
-              transform: translate(-50%, -50%) scale(1);
             }
           }
           &:focus {
@@ -130,9 +103,9 @@
           text-align: center;
           padding: 0;
           opacity: 0.25;
-          transition: opacity variable(transition);
+          transition: opacity v(transition);
           @media #{breakpoint(medium)} {
-            margin-top: calc(#{variable(space)} * -1);
+            margin-top: calc(#{v(space)} * -1);
           }
           &:hover {
             opacity: 1;
@@ -143,7 +116,7 @@
           height: 10em;
           overflow: hidden;
           flex-shrink: 0;
-          border-radius: variable(borderRadius);
+          border-radius: v(borderRadius);
 
           &--svg {
             width: 100%;
@@ -192,6 +165,9 @@
               border-radius: v(borderRadius);
               color: v(background10);
             }
+            &[data-icon]::before {
+              content: attr(data-icon);
+            }
           }
         }
         &__link {
@@ -213,7 +189,7 @@
           flex-direction: column;
         }
         // &__title {
-        //   transition: transform variable(transition);
+        //   transition: transform v(transition);
         // }
         &__excerpt {
           opacity: 0.5;
@@ -230,7 +206,7 @@
           z-index: 1;
           line-height: 1.75;
           display: flex;
-          transition: transform variable(transition);
+          transition: transform v(transition);
           &:focus {
             outline: none;
           }
@@ -241,31 +217,11 @@
         &__item {
           position: relative;
           & + #{$archive}__item {
-            margin-top: #{variable(space)};
-          }
-          &::before {
-            content: "";
-            pointer-events: none;
-            display: block;
-            width: calc(100% + #{variable(space)});
-            height: calc(100% + #{variable(space)});
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            z-index: 0;
-            background-color: variable(background);
-            border-radius: variable(borderRadius);
-            opacity: 0;
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            margin-top: #{v(space)};
           }
 
           &:not(:hover):focus-within {
-            background-color: variable(background);
-            &::before {
-              opacity: 1;
-              transform: translate(-50%, -50%) scale(1);
-            }
+            background-color: v(background);
           }
         }
         &__info {
@@ -283,12 +239,12 @@
           img {
             width: 4em;
             height: 4em;
-            border-radius: variable(borderRadius);
+            border-radius: v(borderRadius);
             object-fit: cover;
           }
           @media #{breakpoint(medium)} {
             &:not(#{$archive}__image--empty) + #{$archive}__date {
-              margin-left: calc(#{variable(space)} / 2);
+              margin-left: calc(#{v(space)} / 2);
             }
           }
           &--empty {
@@ -296,7 +252,7 @@
           }
           @media #{breakpoint(small,only)} {
             float: left;
-            margin-right: calc(#{variable(space)} / 2);
+            margin-right: calc(#{v(space)} / 2);
           }
           &--svg {
             width: 100%;

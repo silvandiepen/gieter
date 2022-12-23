@@ -3,7 +3,7 @@ nav.navigation
     ul.navigation__list          
         each item in menu
             li.navigation__item(class= `${item.current ? 'navigation__item--current' : ''}${item.isParent && !item.current ? 'navigation__item--parent' : ''}`)
-                a.navigation__link(href= item.link, tabindex= ti++)
+                a.navigation__link(href= item.link)
                     if item.icon 
                         span.navigation__icon
                             | !{item.icon}

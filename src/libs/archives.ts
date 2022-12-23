@@ -1,7 +1,7 @@
 import { parentPath } from "@sil/tools/dist/lib/system";
 
 import { makePath } from "./files";
-import { ArchiveType, Payload } from "../types";
+import { ArchiveType, Payload, File } from "../types";
 import { getExcerpt } from "./helpers";
 /*
  *  Archives
@@ -17,15 +17,19 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 
       let children = [];
 
+      const isParent = (item: File, file: File) => {
+        return item.parent == archiveName;
+      };
+
       const order =
         archiveType == ArchiveType.BLOG
           ? (a, b) => parseInt(b.created) - parseInt(a.created)
           : (a, b) => a.meta.order - b.meta.order;
 
       if (file.home && !!archiveType) {
-
         children = payload.files
-          .filter((item) => item.parent == file.parent && !item.home)
+
+          .filter((item) => isParent(item, file) && !item.home)
 
           //  Enrich each child with meta information, a link and the excerpt
           .map((item) => ({
@@ -45,7 +49,6 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
          * Inherit the parents type on each child
          */
         if (file.parent && !file.meta.type) {
-
           const parent = payload.files.find((parentFile) => {
             if (!parentFile.home) return false;
             return (
@@ -53,7 +56,6 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
               (parentPath(file.path) + "/readme.md").toLowerCase()
             );
           });
-
 
           if (parent?.meta && !!archiveType)
             if (file?.meta)
