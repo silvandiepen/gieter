@@ -1,0 +1,59 @@
+// @function breakpoint-exists($name) {
+//   @if get-setting("grid.breakpoint.#{$name}") {
+//     @return true;
+//   } @else {
+//     @return false;
+//   }
+// }
+// @function get-breakpoint($name) {
+//   @if breakpoint-exists($name) {
+//     @return get-setting("grid.breakpoint.#{$name}");
+//   } @else {
+//     @warn "#{$name} does not exist in breakpoints";
+//   }
+// }
+// @function get-next-breakpoint($name) {
+//   $_bp_list: get-setting("grid.breakpoint.names");
+//   $_c_bp-idx: index($_bp_list, $name);
+//   $_n_bp_idx: parseInt($_c_bp-idx + 1);
+//   $_n_bp_name: nth($_bp_list, $_n_bp_idx);
+
+//   @if breakpoint-exists($_n_bp_name) {
+//     @return get-setting("grid.breakpoint.#{$_n_bp_name}");
+//   } @else {
+//     @return 9999;
+//   }
+// }
+// @function get-previous-breakpoint($name) {
+//   $_bp_list: get-setting("grid.breakpoint.names");
+//   $_c_bp-idx: index($_bp_list, $name);
+//   $_p_bp_idx: parseInt($_p_bp-idx - 1);
+//   $_p_bp_name: nth($_bp_list, $_p_bp_idx);
+//   @if breakpoint-exists($_p_bp_name) {
+//     @return get-setting("grid.breakpoint.#{$_p_bp_name}");
+//   } @else {
+//     @return 0;
+//   }
+// }
+
+// @function breakpoint($name, $target: "up") {
+//   @if breakpoint-exists($name) {
+//     @if $target == "up" {
+//       @return "screen and (min-width: #{get-breakpoint($name)}px)";
+//     }
+//     @if $target == "down" {
+//       @return "screen and (max-width: #{get-next-breakpoint($name)}px)";
+//     }
+//     @if $target == "only" {
+//       @return "screen and (min-width: #{get-breakpoint($name)}px) and (max-width: #{get-next-breakpoint($name)}px)";
+//     }
+//   } @else {
+//     @warn "#{$name} does not exist in breakpoints";
+//   }
+// }
+
+// @mixin breakpoint($name, $target: "up") {
+//   @media #{breakpoint($name,$target)} {
+//     @content;
+//   }
+// }

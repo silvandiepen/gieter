@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+ul,
+ol,
+li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+figure {
+  margin: 0;
+}
+
+p,
+figure,
+h1,
+h2,
+h3,
+h4,
+h5,
+pre,
+h6 {
+  margin: 0;
+}
+
+// ul:not([class]),
+// ol:not([class]),
+// li:not([class]){
+//     margin: 0;
+// }

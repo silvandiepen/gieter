@@ -1,0 +1,26 @@
+@use "sass:map";
+
+@function breakpoint($breakpoint, $direction: "down") {
+  $bp: "";
+  $breakpoint: map.get(get-setting("grid.breakpoint"),$breakpoint);
+
+  $min-width: nth($breakpoint, 1);
+  $max-width: nth($breakpoint, 2);
+
+  @if $direction == "down" {
+    $bp: "screen and (max-width: #{$max-width})";
+  }
+  @if $direction == "up" {
+    $bp: "screen and (min-width: #{$min-width})";
+  }
+  @if $direction == "only" {
+    $bp: "screen and (min-width: #{$min-width}) and (max-width: #{$max-width})";
+  }
+  @return $bp;
+}
+
+@mixin bp($breakpoint, $direction) {
+  @media #{breakpoint($breakpoint, $direction)} {
+    @content;
+  }
+}

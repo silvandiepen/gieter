@@ -1,0 +1,5 @@
+:root{
+    @each $name,$value in $theme-base{
+        --#{$name}: #{$value};
+    }
+}
