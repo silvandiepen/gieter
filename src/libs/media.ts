@@ -1,6 +1,6 @@
 import { join, extname, basename, resolve } from "path";
-import { copyFile, existsSync,lstatSync,  } from "fs";
-import { copy, writeFile,copySync } from "fs-extra";
+import { copyFile, existsSync, lstatSync } from "fs";
+import { copy, writeFile, copySync } from "fs-extra";
 import { blockLineError, blockLineSuccess } from "cli-block";
 import sharp from "sharp";
 
@@ -100,7 +100,13 @@ export const getMedia = async (payload: Payload): Promise<File[]> => {
           ".svg",
           ".png",
           ".jpg",
+          ".jpeg",
           ".gif",
+          ".mp3",
+          ".wav",
+          ".otf",
+          ".ttf",
+          ".woff",
         ])),
       ];
     }
@@ -167,25 +173,19 @@ export const copyToAssets = async (payload: Payload): Promise<void> => {
   await asyncForEach(toArray(copyFiles), async (file) => {
     const assets = assetFolder();
 
-
-
     const input = join(process.cwd(), file);
     const output = join(payload.settings.output, assets, basename(file));
 
-
-
     try {
-      await createDir(output.replace(basename(output),''));
+      await createDir(output.replace(basename(output), ""));
 
-      if(lstatSync(file).isDirectory()){
-        copySync(input, output, { overwrite: true })
-
+      if (lstatSync(file).isDirectory()) {
+        copySync(input, output, { overwrite: true });
       } else {
         copyFile(input, output, (err) => {
           if (err) throw err;
         });
       }
-
 
       blockLineSuccess(`${file} copied to ${assets}/${basename(file)}`);
     } catch (err) {
