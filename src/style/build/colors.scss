@@ -38,7 +38,7 @@
   $shades: (5, 10, 25, 50, 75, 90, 95)
 ) {
   @each $shade in $shades {
-    $color: mix($value, $background, $shade);
+    $color: mix($value, $background, math.percentage(math.div($shade,100)));
     --#{$name}-#{$shade}: #{$color};
   }
 }
