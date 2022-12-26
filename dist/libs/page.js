@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -34,14 +25,27 @@ const hasColors = (file) => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-
 const subtitle = (file, payload) => {
     if (!file.home) {
         const parent = (0, files_1.getParentFile)(file, payload.files);
-        return (parent === null || parent === void 0 ? void 0 : parent.title) || "";
+        return parent?.title || "";
     }
     else {
         return "";
     }
 };
-const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+const getProjectByLanguage = (project, language) => {
+    const langProject = {};
+    Object.entries(project).filter((value) => {
+        if (value[0].includes(":")) {
+            if (value[0].includes(`:${language}`)) {
+                langProject[value[0].split(":")[0]] = value[1];
+            }
+        }
+        else {
+            langProject[value[0]] = value[1];
+        }
+    });
+    return langProject;
+};
+const buildPage = async (payload, file) => {
     const currentLink = (0, files_1.makePath)(file);
     const currentLanguage = file.language;
     /*
@@ -50,7 +54,12 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
     const menuStatus = (menu) => {
         if (menu) {
             return menu
-                .map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink), children: menuStatus(item.children) })))
+                .map((item) => ({
+                ...item,
+                current: isActiveMenu(item.link, currentLink),
+                isParent: isActiveMenuParent(item.link, currentLink),
+                children: menuStatus(item.children),
+            }))
                 .filter((item) => item.language == currentLanguage);
         }
         else {
@@ -58,21 +67,22 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         }
     };
     const menu = payload.menu ? menuStatus(payload.menu) : [];
+    const project = getProjectByLanguage(payload.project, currentLanguage);
     const data = {
         menu,
         tags: payload.tags
             ? payload.tags.filter((tag) => tag.parent == file.parent)
             : [],
         thumbnail: (0, media_1.getThumbnail)(file),
-        style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
-        project: payload.project,
+        style: { ...payload.style, page: currentLink.replace(".html", ".css") },
+        project,
         media: payload.media,
         logo: payload.logo,
-        favicon: payload.favicon,
+        favicons: payload.favicons,
         meta: file.meta,
         contentOnly: false,
-        showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
-        homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
+        showContentImage: file.meta?.image && file.meta.type !== "photo",
+        homeLink: file.language == (0, language_1.getDefaultLanguage)() ? "/" : `/${file.language}`,
         langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
         subtitle: subtitle(file, payload),
@@ -83,13 +93,16 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
             colors: hasColors(file),
         },
     };
-    const html = yield (0, files_1.buildHtml)(file, data);
+    const html = await (0, files_1.buildHtml)(file, data);
     /*
      * Generate the custom CSS for this page
      */
     const customCssFilePath = (0, path_1.join)(payload.settings.output, currentLink).replace(".html", ".css");
-    const customHtml = yield (0, files_1.buildHtml)(file, Object.assign(Object.assign({}, data), { contentOnly: true }), "template/content.pug");
-    const customCss = yield (0, style_1.createCss)(customHtml, payload.style.og);
+    const customHtml = await (0, files_1.buildHtml)(file, {
+        ...data,
+        contentOnly: true,
+    }, "template/content.pug");
+    const customCss = await (0, style_1.createCss)(customHtml, payload.style.og);
     /*
      * Return the page
      */
@@ -105,16 +118,16 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         },
         name: file.name,
         link: currentLink,
-        title: file.title
+        title: file.title,
     };
-});
+};
 exports.buildPage = buildPage;
-const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    const page = yield (0, exports.buildPage)(payload, file);
-    yield (0, system_1.createDir)(page.dir);
+const createPage = async (payload, file) => {
+    const page = await (0, exports.buildPage)(payload, file);
+    await (0, system_1.createDir)(page.dir);
     try {
-        yield writeFile(page.html.file, page.html.data);
-        yield writeFile(page.css.file, page.css.data);
+        await writeFile(page.html.file, page.html.data);
+        await writeFile(page.css.file, page.css.data);
         (0, cli_block_1.blockLineSuccess)(`${page.title}`);
         (0, cli_block_1.blockLine)(kleur_1.default.blue(`   ${page.link.replace("/index.html", "")}`));
         if (file.archives) {
@@ -125,11 +138,10 @@ const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function
                 });
             });
         }
-        // console.log(file.archives);
     }
     catch (err) {
         throw Error(err);
     }
-});
+};
 exports.createPage = createPage;
 //# sourceMappingURL=page.js.map

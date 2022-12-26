@@ -3,8 +3,16 @@ const { writeFile } = require("fs").promises;
 import { join } from "path";
 import { blockLine, blockLineSuccess } from "cli-block";
 
-import { Payload, File, Page, buildHtmlArgs, MenuItem } from "../types";
-import { getLanguageMenu, defaultLanguage } from "../libs/language";
+import {
+  Payload,
+  File,
+  Page,
+  buildHtmlArgs,
+  MenuItem,
+  Project,
+  Language,
+} from "../types";
+import { getLanguageMenu, getDefaultLanguage } from "../libs/language";
 import { makePath, buildHtml, getParentFile } from "./files";
 
 import { createDir } from "@sil/tools/dist/lib/system";
@@ -41,6 +49,24 @@ const subtitle = (file: File, payload: Payload): string => {
   }
 };
 
+const getProjectByLanguage = (
+  project: Project,
+  language: Language
+): Project => {
+  const langProject = {};
+  Object.entries(project).filter((value) => {
+    if (value[0].includes(":")) {
+      if (value[0].includes(`:${language}`)) {
+        langProject[value[0].split(":")[0]] = value[1];
+      }
+    } else {
+      langProject[value[0]] = value[1];
+    }
+  });
+
+  return langProject;
+};
+
 export const buildPage = async (
   payload: Payload,
   file: File
@@ -68,6 +94,7 @@ export const buildPage = async (
   };
 
   const menu = payload.menu ? menuStatus(payload.menu) : [];
+  const project = getProjectByLanguage(payload.project, currentLanguage);
 
   const data: buildHtmlArgs = {
     menu,
@@ -76,14 +103,14 @@ export const buildPage = async (
       : [],
     thumbnail: getThumbnail(file),
     style: { ...payload.style, page: currentLink.replace(".html", ".css") },
-    project: payload.project,
+    project,
     media: payload.media,
     logo: payload.logo,
-    favicon: payload.favicon,
+    favicons: payload.favicons,
     meta: file.meta,
     contentOnly: false,
     showContentImage: file.meta?.image && file.meta.type !== "photo",
-    homeLink: file.language == defaultLanguage ? "/" : `/${file.language}`,
+    homeLink: file.language == getDefaultLanguage() ? "/" : `/${file.language}`,
     langMenu: getLanguageMenu(payload, file),
     language: currentLanguage,
     subtitle: subtitle(file, payload),
@@ -133,7 +160,7 @@ export const buildPage = async (
     },
     name: file.name,
     link: currentLink,
-    title: file.title
+    title: file.title,
   };
 };
 
@@ -150,15 +177,14 @@ export const createPage = async (
 
     blockLineSuccess(`${page.title}`);
     blockLine(kleur.blue(`   ${page.link.replace("/index.html", "")}`));
-    if(file.archives){
-      file.archives.forEach((f)=>{
+    if (file.archives) {
+      file.archives.forEach((f) => {
         blockLine(`   Archive`);
-        f.children.forEach((c)=>{
+        f.children.forEach((c) => {
           blockLine(`   - ${c.title}`);
-        })
-      })
+        });
+      });
     }
-    // console.log(file.archives);
   } catch (err) {
     throw Error(err);
   }

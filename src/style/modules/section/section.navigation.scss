@@ -11,6 +11,10 @@
       display: flex;
       background-color: inherit;
 
+      @media #{breakpoint('medium','up')}{
+        gap: v(space);
+      }
+
       @media #{breakpoint('small',only)} {
         flex-direction: column;
       }
@@ -151,7 +155,7 @@
         border-radius: 50%;
         position: absolute;
         z-index: 2;
-        @media #{breakpoint(medium)} {
+        @media #{breakpoint(medium,up)} {
           left: 50%;
           top: calc(50% + 0.5em);
           transform: translate(-50%, 50%);

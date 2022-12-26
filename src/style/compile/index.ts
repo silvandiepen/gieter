@@ -5,6 +5,6 @@ import { buildCss } from "./compile";
 hello().then(async () => {
   blockHeader("Styles");
   blockLine();
-  await buildCss();
+  await buildCss(false);
   blockFooter();
 });

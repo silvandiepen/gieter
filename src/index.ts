@@ -4,6 +4,7 @@
 import { join } from "path";
 import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
 import { hello, asyncForEach } from "@sil/tools";
+import { getArgs } from "@sil/args";
 
 import { toHtml } from "./libs/markdown";
 import { fileTitle } from "./libs/helpers";
@@ -16,7 +17,7 @@ import {
 } from "./libs/media";
 import { processPartials } from "./libs/partials";
 import { getFiles } from "./libs/files";
-import { getProjectData } from "./libs/project";
+import { getConfig, getProjectData } from "./libs/project";
 import { File, Payload, Settings, Project } from "./types";
 import { createPage } from "./libs/page";
 import { generateTags, createTagPages } from "./libs/tags";
@@ -25,6 +26,8 @@ import { generateMenu } from "./libs/menu";
 import { generateArchives } from "./libs/archives";
 import { generateFavicon } from "./libs/favicon";
 import { getThumbnail } from "./libs/media";
+
+import { getLanguageName } from "./libs/language";
 
 const PackageJson = require("../package.json");
 
@@ -57,7 +60,10 @@ export const files = async (payload: Payload): Promise<Payload> => {
     };
   });
 
+
   const project: Project = await getProjectData(files);
+
+
 
   /*
    * When the file is a "home" file, it gets certain privileges
@@ -125,10 +131,15 @@ export const files = async (payload: Payload): Promise<Payload> => {
 /*
  *  Settings
  */
-export const settings = async (payload: Payload): Promise<Payload> => {
+export const settingsAndConfig = async (payload: Payload): Promise<Payload> => {
+  const args = getArgs();
+  const config = await getConfig();
+
   const settings: Settings = {
     output: join(process.cwd(), "public"),
     languages: [],
+    args,
+    config,
   };
 
   return { ...payload, settings };
@@ -138,11 +149,13 @@ export const settings = async (payload: Payload): Promise<Payload> => {
  *  Build
  */
 
+ 
+
 export const contentPages = async (payload: Payload): Promise<Payload> => {
   if (payload.languages.length > 1) {
     // Create Content pages
     await asyncForEach(payload.languages, async (language) => {
-      blockMid(`Pages ${language}`);
+      blockMid(`Pages ${getLanguageName(language)}`);
 
       await asyncForEach(
         payload.files
@@ -181,14 +194,23 @@ const removeUrlParts = (payload: Payload): Payload => {
       path: file.path.replace("/src/", "/"),
     };
   });
-  
+
   return payload;
 };
 
 hello()
-  .then(settings)
+  .then(settingsAndConfig)
   .then((s) => {
     blockHeader(`Gieter ${PackageJson.version}`);
+    return s;
+  })
+  .then((s) => {
+    s.settings.args &&
+      Object.keys(s.settings.args).length &&
+      blockSettings(s.settings.args);
+    s.settings.config &&
+      Object.keys(s.settings.config).length &&
+      blockSettings(s.settings.config);
     return s;
   })
   .then(files)

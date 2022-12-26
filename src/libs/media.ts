@@ -160,7 +160,7 @@ const toArray = (value: string | string[]): string[] => {
   return [value];
 };
 
-const assetFolder = (): string => {
+export const assetFolder = (): string => {
   const exists = existsSync(join(process.cwd(), "media"));
   return exists ? "media" : "assets";
 };

@@ -5,9 +5,9 @@
   #{$header} {
     position: relative;
     z-index: 10;
-    @media #{breakpoint(medium,up)} {
-      padding: v(space);
-    }
+    // @media #{breakpoint(medium,up)} {
+    //   padding: v(space);
+    // }
     &--sticky {
       position: sticky;
       top: 0;
@@ -24,8 +24,8 @@
       border-bottom: 2px solid var(--foreground-10);
 
       @media #{breakpoint(medium,up)} {
-        border-radius: v(borderRadius);
-        border: 2px solid var(--foreground-10, transparent);
+        // border-radius: v(borderRadius);
+        border-bottom: 2px solid var(--foreground-10, transparent);
         padding: v(space);
       }
 
@@ -56,6 +56,11 @@
     @media #{breakpoint(small,only)} {
       padding: v(space);
     }
+
+    &--title {
+      line-height: 3rem;
+      padding: 0;
+    }
     &--image-only ~ span {
       display: none;
     }
@@ -64,7 +69,10 @@
       max-height: 5em;
     }
     &__text {
-      padding: 1em;
+      padding: v(space);
+      @media #{breakpoint(small,only)} {
+        padding-left: v(space-l);
+      }
     }
     svg {
       display: block;

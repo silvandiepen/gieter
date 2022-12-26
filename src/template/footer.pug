@@ -1,15 +1,17 @@
 footer.footer 
-    if menu 
-        include navigation.pug 
-
-
-
     if langMenu.length > 1
         ul.language
             each language in langMenu 
                 li.language__item(class= `${language.active ? 'language__item--active' : ''}`)
-                    a.language__link(href=`${language.link}`)
-                        span.language__text=language.name
+                    a.language__link(href=`${language.link}`,data-title=`${language.title}`,data-code=`${language.code}`,data-name=`${language.name}`)
+                        span.language__text=language.code
+
+    if menu 
+        include navigation.pug 
+
+    button.color-mode(onClick="switchMode()") switch
+
+
 
 if project.script
     if typeof project.script === "string"
@@ -23,6 +25,7 @@ script
     include script/colorMode.js   
     include script/closeMenu.js 
     include script/loadWebComponents.js 
+    include script/detectLanguage.js 
     if has.colors
         include script/findColors.js
     if has.header

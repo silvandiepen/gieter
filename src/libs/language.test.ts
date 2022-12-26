@@ -11,13 +11,13 @@ describe("Language in fileName", () => {
     const input = `index.md`;
     const result = getLangFromFilename(input);
 
-    expect(result).toStrictEqual(Language.EN);
+    expect(result).toStrictEqual("en");
   });
   it("Should return the correct language", () => {
     const input = `index:nl.md`;
     const result = getLangFromFilename(input);
 
-    expect(result).toStrictEqual(Language.NL);
+    expect(result).toStrictEqual("nl");
   });
 });
 
@@ -26,25 +26,25 @@ describe("Language in path", () => {
     const input = `test/index.md`;
     const result = getLangFromPath(input);
 
-    expect(result).toStrictEqual(Language.EN);
+    expect(result).toStrictEqual("en");
   });
   it("Should return the correct language", () => {
     const input = `test/index:nl.md`;
     const result = getLangFromPath(input);
 
-    expect(result).toStrictEqual(Language.NL);
+    expect(result).toStrictEqual("nl");
   });
   it("Should return the correct language", () => {
     const input = `test:nl/index.md`;
     const result = getLangFromPath(input);
 
-    expect(result).toStrictEqual(Language.NL);
+    expect(result).toStrictEqual("nl");
   });
   it("Should return the correct language", () => {
     const input = `test:nl/index:es.md`;
     const result = getLangFromPath(input);
 
-    expect(result).toStrictEqual(Language.NL);
+    expect(result).toStrictEqual("nl");
   });
 });
 describe("Correct the language in path", () => {

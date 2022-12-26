@@ -3,6 +3,7 @@ import { blockLine, blockSettings, blockMid } from "cli-block";
 import { getParentFile, makePath } from "./files";
 import { Payload, MenuItem, ArchiveType } from "../types";
 import { getSVGData } from "./svg";
+import { join } from "path";
 
 export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
   return await Promise.all(
@@ -22,6 +23,15 @@ export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
       return { ...item, icon: icon || "" };
     })
   );
+};
+
+const filterHomePage = (payload: Payload, item: MenuItem) => {
+  const langUrls = [
+    "/index.html",
+    ...payload.languages.map((l) => `/${l}/index.html`),
+  ];
+
+  return !langUrls.includes(item.link);
 };
 
 export const generateMenu = async (payload: Payload): Promise<Payload> => {
@@ -63,7 +73,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
         order: file.meta.order || 999,
       };
     })
-    .filter((item) => item.link !== "/index.html")
+    .filter((item) => filterHomePage(payload, item))
     .filter((item) => item.active)
     .sort((a, b) => a.order - b.order);
 

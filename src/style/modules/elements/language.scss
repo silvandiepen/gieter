@@ -5,17 +5,11 @@
     font-size: 1em;
     padding: var(--ol-space);
 
-    @media screen and (max-width: 720px) {
+    @media #{breakpoint(small)} {
       width: 100%;
       justify-content: center;
     }
-    @media screen and (min-width: 720px) {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      // left: var(--ol-space);
-      // bottom: var(--ol-space);
-    }
+
     &__link {
       display: block;
       position: relative;
@@ -24,6 +18,28 @@
       text-decoration: none;
       color: currentColor;
       transition: opacity var(--ol-transition);
+
+      &::before {
+        content: attr(data-title);
+        position: absolute;
+        bottom: 100%;
+        left: 0%;
+        transform: translateY(50%);
+        opacity: 0;
+        padding: 0.5em;
+        background-color: v(background-90);
+        border-radius: v(borderRadius);
+        white-space: nowrap;
+        font-size: 0.8em;
+        transition: all .2s;
+        color: v(background-90-text);
+      }
+      &:hover {
+        &::before {
+          opacity: 1;
+          transform: translateY(0%);
+        }
+      }
     }
     &__item {
       position: relative;
@@ -36,8 +52,8 @@
         z-index: 0;
         top: 50%;
         opacity: 0.25;
-        background-color: var(--ol-primary);
-        border-radius: calc(var(--ol-border-radius) / 2);
+        background-color: v(primary);
+        border-radius: calc(v(borderRadius) / 2);
         transform: translate(-50%, -50%);
       }
       &--active::before {

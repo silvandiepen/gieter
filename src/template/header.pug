@@ -1,7 +1,3 @@
-.toolbar
-    button.color-mode(onClick="switchMode()") switch
-    //- sil-switch
-
 if menu.length > 0
     sil-menu-toggle.navigation__toggle
     div.navigation__background
@@ -17,7 +13,7 @@ if menu.length > 0
                         a.logo(href=`${homeLink}`)
                             img(src=logo.relativePath)
                 else if project.title
-                    a.logo(href=`${homeLink}`)
+                    a.logo.logo--title(href=`${homeLink}`)
                         span.logo__text=project.title
 
             if menu.length > 0

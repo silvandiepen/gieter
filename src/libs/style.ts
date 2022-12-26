@@ -58,8 +58,8 @@ export const createBaseCss = async (
       active: true,
     };
     mockMenu.push(
-      { ...ph, link: "parent", language: Language.EN },
-      { ...ph, link: "parent/child", language: Language.EN }
+      { ...ph, link: "parent", language: "en" },
+      { ...ph, link: "parent/child", language: "en" }
     );
   }
 
@@ -69,7 +69,7 @@ export const createBaseCss = async (
     fileName: "",
     path: "parent/child",
     created: new Date(),
-    language: Language.EN,
+    language: "en" as Language,
     title: "",
     html: null,
     meta: {},
@@ -133,7 +133,6 @@ export const createStylesheets = async (
       const styleExists = await fileExists(stylePath);
       const nodeModulesPath = resolve(join(process.cwd(), `/node_modules/`));
 
-
       if (styleExists) {
         let file = await readFile(stylePath).then((res) => res.toString());
 
@@ -149,7 +148,6 @@ export const createStylesheets = async (
         // @import "@sil/themer/src/use.scss";
         // ${file}
         // `;
-
 
         const result = await compileStringAsync(file, {
           loadPaths: [nodeModulesPath],
@@ -173,7 +171,8 @@ export const createStylesheets = async (
 };
 
 export const generateStyles = async (payload: Payload): Promise<Payload> => {
-  const styleFile = await buildCss();
+  const cached = !!payload?.args?.clean;
+  const styleFile = await buildCss(cached);
   payload = await createStylesheets(styleFile, payload);
   return payload;
 };

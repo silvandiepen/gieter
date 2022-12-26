@@ -68,7 +68,7 @@ export const createTagPages = async (payload: Payload): Promise<Payload> => {
       title: `#${tag.name}`,
       path,
       created: new Date(),
-      language: Language.EN,
+      language: "en",
       fileName: "index.html",
       parent: tag.parent,
       meta: { type: tag.type },

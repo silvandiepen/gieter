@@ -8,6 +8,7 @@
 @import "task-list";
 @import "alert";
 @import "language";
+@import "typography";
 
 @if export("elements.alert") {
   @include alert();
@@ -41,4 +42,7 @@
 }
 @if export("elements.language") {
   @include language();
+}
+@if export("elements.typography") {
+  @include typography();
 }
