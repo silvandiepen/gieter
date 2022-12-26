@@ -5,7 +5,9 @@ import { fileExists, getFileData } from "@sil/tools/dist/lib/system";
 import { flattenObject } from "./helpers";
 
 export const getConfig = async (): Promise<Arguments> => {
-  if (fileExists("./gieter.config.json")) {
+  const configExists = await fileExists("./gieter.config.json")
+  
+  if(configExists){
     const data = (await getFileData("./gieter.config.json")) as Object;
 
     return flattenObject(data);
