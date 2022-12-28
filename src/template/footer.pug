@@ -19,25 +19,3 @@ if project.script
     else 
         each script in project.script
             script(lang="text/javascript", src=`${script}`)
-
-script
-    include script/colorMode.js   
-    include script/loadWebComponents.js
-
-    if has.languages
-        include script/detectLanguage.js 
-    if has.colors
-        include script/findColors.js
-    if has.header
-        include script/stickyNav.js
-    if has.table
-        include script/wrapTables.js
-    if has.urlToken
-        include script/linkify.js
-
-
-
-
-   
-
-

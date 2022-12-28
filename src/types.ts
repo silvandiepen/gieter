@@ -146,6 +146,7 @@ export interface buildHtmlArgs {
   homeLink: string;
   langMenu: LanguageMenuItem[];
   language: Language;
+  components: string[],
   has: {
     table: boolean;
     header: boolean;

@@ -19,6 +19,7 @@ import { createDir } from "@sil/tools/dist/lib/system";
 import { createCss } from "./style";
 import kleur from "kleur";
 import { getThumbnail } from "./media";
+import { findWebComponents } from "./webcomponents";
 
 const simplifyUrl = (url: string): string => url.replace("/index.html", "");
 
@@ -121,6 +122,7 @@ export const buildPage = async (
     langMenu: getLanguageMenu(payload, file),
     language: currentLanguage,
     subtitle: subtitle(file, payload),
+    components: [],
     has: {
       table: hasTable(file),
       header: hasHeader(menu),
@@ -129,7 +131,12 @@ export const buildPage = async (
       languages: hasLanguages(payload.languages),
     },
   };
+  // Prerender before actual render
+  const prerender = await buildHtml(file, data);
+  data.components = await findWebComponents(prerender)
 
+
+  // Render final html
   const html = await buildHtml(file, data);
 
   /*

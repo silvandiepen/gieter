@@ -13,6 +13,7 @@ const system_1 = require("@sil/tools/dist/lib/system");
 const style_1 = require("./style");
 const kleur_1 = __importDefault(require("kleur"));
 const media_1 = require("./media");
+const webcomponents_1 = require("./webcomponents");
 const simplifyUrl = (url) => url.replace("/index.html", "");
 const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current);
 const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
@@ -93,6 +94,7 @@ const buildPage = async (payload, file) => {
         langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
         subtitle: subtitle(file, payload),
+        components: [],
         has: {
             table: hasTable(file),
             header: hasHeader(menu),
@@ -101,6 +103,10 @@ const buildPage = async (payload, file) => {
             languages: hasLanguages(payload.languages),
         },
     };
+    // Prerender before actual render
+    const prerender = await (0, files_1.buildHtml)(file, data);
+    data.components = await (0, webcomponents_1.findWebComponents)(prerender);
+    // Render final html
     const html = await (0, files_1.buildHtml)(file, data);
     /*
      * Generate the custom CSS for this page

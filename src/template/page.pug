@@ -11,9 +11,31 @@ html(lang=`${language}`)
     
     include footer.pug
 
+    if meta.redirect
+      script.
+        window.location.replace("#{meta.redirect}");
 
 
-if meta.redirect
-  script.
-    window.location.replace("#{meta.redirect}");
+  include webcomponents.pug   
+      
+  script
+      include script/colorMode.js   
+      include script/loadWebComponents.js
+
+      if has.languages
+          include script/detectLanguage.js 
+      if has.colors
+          include script/findColors.js
+      if has.header
+          include script/stickyNav.js
+      if has.table
+          include script/wrapTables.js
+      if has.urlToken
+          include script/linkify.js
+
+
+
+
+    
+
 
