@@ -1,30 +1,36 @@
 section.section.archive.archive--articles
     div.container
-        h2 Articles
-        ul.archive__list
-            each item in archive.children   
-                li.archive__item
-                    a.archive__link(href= item.link)
+        if archive.title
+            .content
+                h2.h4= archive.title
+        sil-article-overview 
+            each item in archive.children 
+                sil-article-item(type="icon",link= item.link, title= item.title, icon= item.meta.icon, excerpt= item.excerpt)
 
-                        figure.archive__image(class=`${item.thumbnail ? '': 'archive__image--empty'}`, data-icon=`${item.meta.icon ? item.meta.icon : false}`)
-                            if item.thumbnailSvg
-                                div.archive__image--svg !{item.thumbnailSvg}
-                            else if item.thumbnail
-                                img(src=item.thumbnail)
+        //- ul.archive__list
+        //-     each item in archive.children   
+        //-         li.archive__item
+        //-             a.archive__link(href= item.link)
+
+        //-                 figure.archive__image(class=`${item.thumbnail ? '': 'archive__image--empty'}`, data-icon=`${item.meta.icon ? item.meta.icon : false}`)
+        //-                     if item.thumbnailSvg
+        //-                         div.archive__image--svg !{item.thumbnailSvg}
+        //-                     else if item.thumbnail
+        //-                         img(src=item.thumbnail)
                     
-                        span.archive__info
-                            if item.date
-                                span.archive__date
-                                    span.archive__day= formatDate(item.created, 'dd')
-                                    span.archive__month= formatDate(item.created, 'MM')
-                                    span.archive__year= formatDate(item.created, 'yyyy')
-                            h3.archive__title= item.title
-                            if item.excerpt    
-                                p.archive__excerpt
-                                    | !{item.excerpt}  
-                    if item.tags
-                        ul.archive__tags.tag__list  
-                            each tag in item.tags
-                                li.tag__item
-                                    a.tag__link(href= tag.link)
-                                        span.tag__text= tag.name
+        //-                 span.archive__info
+        //-                     if item.date
+        //-                         span.archive__date
+        //-                             span.archive__day= formatDate(item.created, 'dd')
+        //-                             span.archive__month= formatDate(item.created, 'MM')
+        //-                             span.archive__year= formatDate(item.created, 'yyyy')
+        //-                     h3.h5.archive__title= item.title
+        //-                     if item.excerpt    
+        //-                         p.archive__excerpt
+        //-                             | !{item.excerpt}  
+        //-             if item.tags
+        //-                 ul.archive__tags.tag__list  
+        //-                     each tag in item.tags
+        //-                         li.tag__item
+        //-                             a.tag__link(href= tag.link)
+        //-                                 span.tag__text= tag.name

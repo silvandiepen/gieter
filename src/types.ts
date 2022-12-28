@@ -151,6 +151,7 @@ export interface buildHtmlArgs {
     header: boolean;
     urlToken: boolean;
     colors: boolean;
+    languages: boolean;
   };
 }
 interface PageCss {

@@ -1,6 +1,6 @@
 @use "sass:map";
 
-@function breakpoint($breakpoint, $direction: "down") {
+@function breakpoint($breakpoint, $direction: "only") {
   $bp: "";
   $breakpoint: map.get(get-setting("grid.breakpoint"),$breakpoint);
 

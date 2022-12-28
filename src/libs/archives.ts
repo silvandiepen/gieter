@@ -70,7 +70,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
       return {
         ...file,
         archives: children.length
-          ? [{ name: archiveName, type: archiveType, children }]
+          ? [{ name: archiveName, type: archiveType, children, title: file?.meta?.archiveTitle }]
           : [],
       };
     });

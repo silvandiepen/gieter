@@ -40,6 +40,7 @@ const hasHeader = (menu: MenuItem[]) => menu.length > 0;
 const hasColors = (file: File) =>
   file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
 
+const hasLanguages = (languages: Language[]) => !!(languages.length > 1);
 const subtitle = (file: File, payload: Payload): string => {
   if (!file.home) {
     const parent = getParentFile(file, payload.files);
@@ -95,18 +96,24 @@ export const buildPage = async (
 
   const menu = payload.menu ? menuStatus(payload.menu) : [];
   const project = getProjectByLanguage(payload.project, currentLanguage);
+  const favicons = payload.favicons;
+  const tags = payload.tags
+    ? payload.tags.filter((tag) => tag.parent == file.parent)
+    : [];
+  const style = {
+    ...payload.style,
+    page: currentLink.replace(".html", ".css"),
+  };
 
   const data: buildHtmlArgs = {
     menu,
-    tags: payload.tags
-      ? payload.tags.filter((tag) => tag.parent == file.parent)
-      : [],
+    tags,
     thumbnail: getThumbnail(file),
-    style: { ...payload.style, page: currentLink.replace(".html", ".css") },
     project,
+    style,
+    favicons,
     media: payload.media,
     logo: payload.logo,
-    favicons: payload.favicons,
     meta: file.meta,
     contentOnly: false,
     showContentImage: file.meta?.image && file.meta.type !== "photo",
@@ -119,6 +126,7 @@ export const buildPage = async (
       header: hasHeader(menu),
       urlToken: hasUrlToken(file),
       colors: hasColors(file),
+      languages: hasLanguages(payload.languages),
     },
   };
 

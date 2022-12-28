@@ -22,6 +22,7 @@ const hasTable = (file) => file.html && file.html.includes("<table>");
 const hasUrlToken = (file) => file.html && file.html.includes('<span class="token url">http');
 const hasHeader = (menu) => menu.length > 0;
 const hasColors = (file) => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+const hasLanguages = (languages) => !!(languages.length > 1);
 const subtitle = (file, payload) => {
     if (!file.home) {
         const parent = (0, files_1.getParentFile)(file, payload.files);
@@ -68,17 +69,23 @@ const buildPage = async (payload, file) => {
     };
     const menu = payload.menu ? menuStatus(payload.menu) : [];
     const project = getProjectByLanguage(payload.project, currentLanguage);
+    const favicons = payload.favicons;
+    const tags = payload.tags
+        ? payload.tags.filter((tag) => tag.parent == file.parent)
+        : [];
+    const style = {
+        ...payload.style,
+        page: currentLink.replace(".html", ".css"),
+    };
     const data = {
         menu,
-        tags: payload.tags
-            ? payload.tags.filter((tag) => tag.parent == file.parent)
-            : [],
+        tags,
         thumbnail: (0, media_1.getThumbnail)(file),
-        style: { ...payload.style, page: currentLink.replace(".html", ".css") },
         project,
+        style,
+        favicons,
         media: payload.media,
         logo: payload.logo,
-        favicons: payload.favicons,
         meta: file.meta,
         contentOnly: false,
         showContentImage: file.meta?.image && file.meta.type !== "photo",
@@ -91,6 +98,7 @@ const buildPage = async (payload, file) => {
             header: hasHeader(menu),
             urlToken: hasUrlToken(file),
             colors: hasColors(file),
+            languages: hasLanguages(payload.languages),
         },
     };
     const html = await (0, files_1.buildHtml)(file, data);

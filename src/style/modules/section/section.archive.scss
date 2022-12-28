@@ -10,12 +10,7 @@
       #{v(primary-10)},
       #{v(background)}
     );
-    .container {
-      padding: v(space-l) 0;
-      @media #{breakpoint(small,only)} {
-        padding: v(space-l);
-      }
-    }
+
     &__link {
       display: block;
       border-radius: v(borderRadius);
@@ -42,9 +37,9 @@
           display: grid;
           gap: v(space-l);
           width: 100%;
+          padding: v(space-l);
           @media #{breakpoint("medium", up)} {
             grid-template-columns: 1fr 1fr 1fr;
-
             position: relative;
           }
         }

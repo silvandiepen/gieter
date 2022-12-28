@@ -154,7 +154,7 @@ export const buildHtml = async (
     content: file.html,
     meta: file.meta,
     pretty: true,
-    archives: filterArchive(file),
+    archives: archives,
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,

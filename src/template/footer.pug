@@ -21,11 +21,11 @@ if project.script
             script(lang="text/javascript", src=`${script}`)
 
 script
-
     include script/colorMode.js   
-    include script/closeMenu.js 
-    include script/loadWebComponents.js 
-    include script/detectLanguage.js 
+    include script/loadWebComponents.js
+
+    if has.languages
+        include script/detectLanguage.js 
     if has.colors
         include script/findColors.js
     if has.header
