@@ -6,14 +6,15 @@
     transform: translate(0);
     position: relative;
     transition: transform v(transition), filter v(transition);
+    padding-bottom: calc(#{v(space-l)} * 2);
     section:only-child {
       padding: calc(#{v(space-l)} * 2) 0;
       @media #{breakpoint(small,only)} {
         padding: v(space-l) 0 calc(#{v(space-l)} * 2) 0;
       }
     }
-    .content{
-      h1:only-child{
+    .content {
+      h1:only-child {
         text-align: center;
       }
     }
