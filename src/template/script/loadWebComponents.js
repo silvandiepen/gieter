@@ -15,7 +15,7 @@ const findWebComponents = () => {
     const head = document.getElementsByTagName("head").item(0);
     const script = document.createElement("script");
     script.setAttribute("type", "module");
-    script.setAttribute("src", `https://unpkg.com/@sil/ui/dist/${c}.js`);
+    script.setAttribute("src", `https://load.ui.sil.mt/${c}.js`);
     head.appendChild(script);
   });
 };
