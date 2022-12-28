@@ -1,6 +1,6 @@
 {
   "name": "gieter",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Create an Gieter html from Markdown",
   "main": "dist/index.js",
   "bin": {
