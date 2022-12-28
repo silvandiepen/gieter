@@ -28,6 +28,7 @@ import { generateFavicon } from "./libs/favicon";
 import { getThumbnail } from "./libs/media";
 
 import { getLanguageName } from "./libs/language";
+import { createRobots } from "./libs/robots";
 
 const PackageJson = require("../package.json");
 
@@ -224,6 +225,7 @@ hello()
   .then(generateFavicon)
   .then(contentPages)
   .then(createTagPages)
+  .then(createRobots)
   .then(() => {
     blockFooter();
   });

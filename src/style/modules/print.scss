@@ -1,0 +1,21 @@
+@media print {
+  body,
+  .archive {
+    background-color: white;
+    background-image: none;
+    color: black;
+  }
+  .navigation__background,
+  .header,
+  .footer,
+  sil-menu-toggle {
+    display: none;
+  }
+  .main {
+    padding: 0;
+  }
+  .content {
+    padding: 2cm;
+    font-size: 16px;
+  }
+}

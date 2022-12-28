@@ -20,6 +20,7 @@ const archives_1 = require("./libs/archives");
 const favicon_1 = require("./libs/favicon");
 const media_2 = require("./libs/media");
 const language_1 = require("./libs/language");
+const robots_1 = require("./libs/robots");
 const PackageJson = require("../package.json");
 /*
  * Files
@@ -181,6 +182,7 @@ const removeUrlParts = (payload) => {
     .then(favicon_1.generateFavicon)
     .then(exports.contentPages)
     .then(tags_1.createTagPages)
+    .then(robots_1.createRobots)
     .then(() => {
     (0, cli_block_1.blockFooter)();
 });
