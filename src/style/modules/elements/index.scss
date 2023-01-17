@@ -1,48 +1,24 @@
-@import "tooltip";
+// @import "tooltip";
 @import "button";
-@import "card";
+// @import "card";
 @import "notification";
-@import "toolbar";
+// @import "toolbar";
 @import "colormode";
 @import "tags";
 @import "task-list";
 @import "alert";
 @import "language";
-@import "typography";
+// @import "typography";
 
-@if export("elements.alert") {
-  @include alert();
-}
-@if export("elements.button") {
-  @include button();
-}
-@if export("elements.card") {
-  @include card();
-}
-@if export("elements.card.group") {
-  @include card-group();
-}
-@if export("elements.colormode") {
-  @include colormode();
-}
-@if export("elements.notification") {
-  @include notification();
-}
-@if export("elements.tags") {
-  @include tags();
-}
-@if export("elements.task-list") {
-  @include task-list();
-}
-@if export("elements.toolbar") {
-  @include toolbar();
-}
-@if export("elements.tooltip") {
-  @include tooltip();
-}
-@if export("elements.language") {
-  @include language();
-}
-@if export("elements.typography") {
-  @include typography();
-}
+@include alert();
+@include button();
+// @include card();
+// @include card-group();
+@include colormode();
+@include notification();
+@include tags();
+@include task-list();
+// @include toolbar();
+// @include tooltip();
+@include language();
+// @include typography();

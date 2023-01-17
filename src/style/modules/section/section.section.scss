@@ -1,14 +1,10 @@
 @mixin section-section() {
-  $section: get-setting("define.section.class");
-  $container: get-setting("define.container.class");
+  $section: ".section";
+  $container: ".container";
 
   #{$section} {
     position: relative;
-    // padding: #{v(space)};
 
-    // @media #{breakpoint(medium)} {
-    //   padding: calc(#{v(space)} * 2);
-    // }
 
     & > #{$container} {
       max-width: v(max-width);
@@ -16,12 +12,6 @@
       margin-right: auto;
       & + #{$container} {
         margin-top: 1em;
-      }
-    }
-
-    @if export("section.section.heights") {
-      &--h-3-4 {
-        min-height: 75vh;
       }
     }
   }

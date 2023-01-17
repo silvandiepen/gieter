@@ -1,5 +1,5 @@
 @mixin section-body() {
-  $class: get-setting("define.body.class");
+  $class:'body';
   html {
     scroll-behavior: smooth;
   }

@@ -1,4 +1,12 @@
 @media print {
+  :root {
+    @include get-lightmode();
+  }
+  body[color-mode="dark"],
+  body[color-mode="light"] {
+    @include get-lightmode();
+  }
+
   body,
   .archive {
     background-color: white;

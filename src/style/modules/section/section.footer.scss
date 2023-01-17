@@ -1,6 +1,6 @@
 @mixin section-footer() {
-  $footer: get-setting("define.footer.class");
-  $navigation: get-setting("define.navigation.class");
+  $footer: '.footer';
+  $navigation: '.navigation';
 
   #{$footer} {
     position: absolute;

@@ -5,16 +5,12 @@
 
   #{$parent} {
     p {
-
-          font-size: baseSize;
-          line-height: 1.5;
-          max-width: v("content.paragraph.max-width");
-        
-    
+      font-size: baseSize;
+      line-height: 1.5;
+      max-width: v("content.paragraph.max-width");
 
       &:first-of-type {
-            font-size: 1.25em;
-      
+        font-size: 1.25em;
       }
     }
   }
@@ -24,12 +20,10 @@
   $parent: get-setting("define.content.class");
   #{$parent} {
     img {
-    
-          max-width: 100%;
-          width: 100vw;
-          max-height: 80vh;
-          margin: auto;
-
+      max-width: 100%;
+      width: 100vw;
+      max-height: 80vh;
+      margin: auto;
     }
   }
 }
@@ -39,11 +33,10 @@
 
   #{$parent} {
     blockquote {
-          font-family: inherit;
-          font-size: v(baseSize);
-          line-height: 1.5;
-          padding: space;
-       
+      font-family: inherit;
+      font-size: v(baseSize);
+      line-height: 1.5;
+      padding: space;
     }
   }
 }
@@ -61,18 +54,16 @@
       &::before {
         content: "";
 
-            content: "";
-            width: calc(100% + 1em);
-            height: calc(100% + 1em);
-            left: -0.5em;
-            top: -0.5em;
-            position: absolute;
-            border-radius: v(borderRadius);
-
+        content: "";
+        width: calc(100% + 1em);
+        height: calc(100% + 1em);
+        left: -0.5em;
+        top: -0.5em;
+        position: absolute;
+        border-radius: v(borderRadius);
       }
       &:focus::before {
-
-            outline: 2px solid currentColor;
+        outline: 2px solid currentColor;
       }
     }
   }

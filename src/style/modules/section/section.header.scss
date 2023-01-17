@@ -1,13 +1,11 @@
 @mixin section-header() {
-  $header: get-setting("define.header.class");
-  $logo: get-setting("define.logo.class");
+  $header: ".header";
+  $logo: ".logo";
 
   #{$header} {
     position: relative;
     z-index: 10;
-    // @media #{breakpoint(medium,up)} {
-    //   padding: v(space);
-    // }
+
     &--sticky {
       position: sticky;
       top: 0;
@@ -24,7 +22,6 @@
       border-bottom: 2px solid var(--foreground-10);
 
       @media #{breakpoint(medium,up)} {
-        // border-radius: v(borderRadius);
         border-bottom: 2px solid var(--foreground-10, transparent);
         padding: v(space);
       }

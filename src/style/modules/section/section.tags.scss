@@ -1,8 +1,8 @@
 @mixin section-tags() {
-  $tags: get-setting("define.tags.class");
+  $tags: ".tags";
   #{$tags} {
-    border-top: 1px solid v(foreground10);
-    border-bottom: 1px solid v(foreground10);
+    border-top: 1px solid v(foreground-10);
+    border-bottom: 1px solid v(foreground-10);
     display: flex;
     align-items: center;
     justify-content: center;

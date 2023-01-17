@@ -1,5 +1,5 @@
 @mixin section-archive() {
-  $archive: get-setting("define.archive.class");
+  $archive: '.archive';
 
   #{$archive} {
     position: relative;

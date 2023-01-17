@@ -1,7 +1,7 @@
 @mixin section-navigation() {
-  $navigation: get-setting("define.navigation.class");
-  $header: get-setting("define.header.class");
-  $footer: get-setting("define.footer.class");
+  $navigation: ".navigation";
+  $header: ".header";
+  $footer: ".footer";
 
   #{$navigation} {
     position: relative;
@@ -11,7 +11,7 @@
       display: flex;
       background-color: inherit;
 
-      @media #{breakpoint('medium','up')}{
+      @media #{breakpoint('medium','up')} {
         gap: v(space);
       }
 
@@ -193,8 +193,8 @@
 }
 
 @mixin section-navigation-toggle() {
-  $navigation: get-setting("define.navigation.class");
-  $header: get-setting("define.header.class");
+  $navigation: ".navigation";
+  $header: ".header";
   @media #{breakpoint(medium,up)} {
     #{$navigation} {
       &__background {
@@ -221,8 +221,9 @@
         transition: transform 0.3s, opacity 0.5s;
         opacity: 0;
       }
-      &__text{
-        width: 100%; text-align: center;
+      &__text {
+        width: 100%;
+        text-align: center;
       }
       &__toggle {
         z-index: 11;
@@ -262,106 +263,6 @@
       }
     }
   }
-  // $navigation: get-setting("define.navigation.class");
-  // $header: get-setting("define.header.class");
-  // #{$navigation} {
-  //   /*
-  //     * Inactive Mobile Header Navigation Toggle
-  //     */
-  //   &__toggle {
-  //     position: fixed;
-  //     top: 0;
-  //     right: 0;
-  //     z-index: 11;
-  //   }
-  //   /*
-  //     * Inactive Mobile Header Navigation Background
-  //     */
-  //   &__background {
-  //     position: fixed;
-  //     top: 0;
-  //     left: 0;
-  //     width: 100vw;
-  //     height: 100vh;
-  //     pointer-events: none;
-  //     background-color: v(background);
-  //     opacity: 0;
-  //     z-index: 5;
-  //     transition: opacity 0.3s ease-in-out;
-  //   }
-  //   /*
-  //     * Inactive Mobile Header Navigation Control
-  //     */
-  //   &__input {
-  //     position: absolute;
-  //     width: 0;
-  //     height: 0;
-  //     clip-path: inset(100% 100% 100% 100%);
-  //     opacity: 0;
-
-  //     /*
-  //       * Inactive Mobile Header Navigation
-  //       */
-  //     & ~ #{$navigation},
-  //     & ~ #{$header} #{$navigation} {
-  //       @media #{breakpoint(small,only)} {
-  //         background-color: v(background90);
-  //         color: v(foreground);
-  //         height: auto;
-  //         min-width: 50vw;
-  //         height: 100vh;
-  //         right: 0;
-  //         top: 0;
-  //         padding: v(space-s);
-  //         padding-top: calc(#{v(space)} * 2);
-  //         transition: clip-path v(transition);
-  //         opacity: 1;
-  //         clip-path: inset(0 0 0 100%);
-  //         align-items: flex-start;
-  //         justify-content: start;
-  //         transform-origin: 50% 0;
-  //         position: absolute;
-  //         pointer-events: none;
-  //         border-left: 1px solid v(foreground-25);
-
-  //         #{$navigation}__link {
-  //           width: auto;
-  //           &::before {
-  //             opacity: 1;
-  //             transform: translate(-50%, -50%) scale(1);
-  //             background-color: v(background90);
-  //           }
-  //         }
-  //       }
-  //     }
-
-  //     @media #{breakpoint(small,only)} {
-  //       &--active {
-  //         // & ~ footer.footer,
-  //         // & ~ main.content {
-  //         //   transform: translateX(-10%);
-  //         //   filter: blur(2px);
-  //         // }
-  //         /*
-  //         * Active Mobile Header Navigation
-  //         */
-  //         & ~ #{$navigation},
-  //         & ~ #{$header} #{$navigation} {
-  //           clip-path: inset(0 0 0 0);
-  //           pointer-events: all;
-  //         }
-
-  //         /*
-  //         * Active Mobile Header Navigation Background
-  //         */
-  //         & ~ #{$navigation}__background {
-  //           pointer-events: all;
-  //           opacity: 0.75;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }
 .footer .navigation {
   @media #{breakpoint(small,only)} {

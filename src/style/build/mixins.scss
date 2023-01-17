@@ -2,7 +2,7 @@
 
 @function breakpoint($breakpoint, $direction: "only") {
   $bp: "";
-  $breakpoint: map.get(get-setting("grid.breakpoint"),$breakpoint);
+  $breakpoint: map.get($grid-breakpoints,$breakpoint);
 
   $min-width: nth($breakpoint, 1);
   $max-width: nth($breakpoint, 2);

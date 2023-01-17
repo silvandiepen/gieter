@@ -1,0 +1,5 @@
+@import "@sil/sass-utils";
+:root {
+  @include createVariables($typography);
+  @include createVariables($base);
+}

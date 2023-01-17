@@ -1,5 +1,5 @@
 @mixin section-main() {
-  $main: get-setting("define.main.class");
+  $main:'.main';
 
   #{$main} {
     filter: blur(0);

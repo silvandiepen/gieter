@@ -1,4 +1,49 @@
+$color-text: true;
+$color-shades: true;
+$shades: (5, 10, 25, 50, 75, 90, 95);
+
 @import "theme";
+@import "@sil/sass-utils";
+@import "reset";
 @import "build";
 @import "tools";
 @import "modules";
+
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 18px;
+
+  background-color: v(background);
+  color: v(foreground);
+  line-height: 1.5;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include get-darkmode($shades);
+  }
+}
+body[color-mode="dark"] {
+  @include get-darkmode($shades);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @include get-lightmode($shades);
+  }
+}
+body[color-mode="light"] {
+  @include get-lightmode($shades);
+}

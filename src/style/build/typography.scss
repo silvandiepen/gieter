@@ -1,5 +1,4 @@
+@import "@sil/sass-utils";
 :root{
-    @each $name,$value in $theme-typography{
-        --#{$name}: #{$value};
-    }
+    @include createVariables($typography);
 }
