@@ -5,9 +5,10 @@ html(lang=`${language}`)
      
   body(class= `page--${name}`)
   
-    include header.pug 
-    
-    include content.pug
+    div.page-container
+        include header.pug 
+        
+        include content.pug
     
     include footer.pug
 

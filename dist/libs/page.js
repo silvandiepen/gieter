@@ -10,7 +10,6 @@ const cli_block_1 = require("cli-block");
 const language_1 = require("../libs/language");
 const files_1 = require("./files");
 const system_1 = require("@sil/tools/dist/lib/system");
-const style_1 = require("./style");
 const kleur_1 = __importDefault(require("kleur"));
 const media_1 = require("./media");
 const webcomponents_1 = require("./webcomponents");
@@ -116,14 +115,14 @@ const buildPage = async (payload, file) => {
         ...data,
         contentOnly: true,
     }, "template/content.pug");
-    const customCss = await (0, style_1.createCss)(customHtml, payload.style.og);
+    // const customCss = await createCss(customHtml, payload.style.og);
     /*
      * Return the page
      */
     return {
         dir: (0, path_1.join)(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")),
         css: {
-            data: customCss,
+            data: '',
             file: customCssFilePath,
         },
         html: {

@@ -1,8 +1,9 @@
 import { existsSync } from "fs";
 import { join } from "path";
-import { Payload } from "../types";
 import Iconator from "iconator";
-import { assetFolder } from "./media";
+
+import { Payload } from "@/types";
+import { assetFolder } from "@/libs/media";
 
 export const generateFavicon = async (payload: Payload): Promise<Payload> => {
   let favicon = "";

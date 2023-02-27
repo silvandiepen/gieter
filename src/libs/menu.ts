@@ -1,9 +1,8 @@
 import { blockLine, blockSettings, blockMid } from "cli-block";
 
-import { getParentFile, makePath } from "./files";
-import { Payload, MenuItem, ArchiveType } from "../types";
-import { getSVGData } from "./svg";
-import { join } from "path";
+import { getParentFile, makePath } from "@/libs/files";
+import { Payload, MenuItem, ArchiveType } from "@/types";
+import { getSVGData } from "@/libs/svg";
 
 export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
   return await Promise.all(

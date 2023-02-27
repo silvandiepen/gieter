@@ -1,4 +1,4 @@
-import { extractMeta } from "./markdown-meta";
+import { extractMeta } from "@/libs/markdown-meta";
 
 describe("Extract Metadata", () => {
   it("Extract simple string", async () => {

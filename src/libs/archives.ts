@@ -1,8 +1,8 @@
 import { parentPath } from "@sil/tools/dist/lib/system";
 
-import { makePath } from "./files";
-import { ArchiveType, Payload, File } from "../types";
-import { getExcerpt } from "./helpers";
+import { makePath } from "@/libs/files";
+import { ArchiveType, Payload, File } from "@/types";
+import { getExcerpt } from "@/libs/helpers";
 /*
  *  Archives
  */

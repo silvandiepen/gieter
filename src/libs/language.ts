@@ -1,6 +1,6 @@
-import { languages } from "../data/language";
-import { Language, Payload, File, LanguageMenuItem } from "../types";
-import { makePath } from "./files";
+import { languages } from "@/data/language";
+import { Language, Payload, File, LanguageMenuItem } from "@/types";
+import { makePath } from "@/libs/files";
 
 export const getDefaultLanguage = (): Language => "en";
 

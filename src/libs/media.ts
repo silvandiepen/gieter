@@ -38,7 +38,7 @@ export const createThumbnails = async (payload: Payload): Promise<Payload> => {
 
 export const resizeImage = async (image: string): Promise<void> => {
   const imageUrl = join(process.cwd(), image);
-  const exists = await existsSync(imageUrl);
+  const exists = existsSync(imageUrl);
 
   if (!exists) {
     blockLineError(`${image} does not exist`);
@@ -52,10 +52,10 @@ export const resizeImage = async (image: string): Promise<void> => {
     image.replace(ext, `.thumb${ext}`)
   );
 
-  const thumbExists = await existsSync(path);
+  const thumbExists = existsSync(path);
   if (thumbExists) return;
 
-  const imageExists = await existsSync(imageUrl);
+  const imageExists = existsSync(imageUrl);
   if (imageExists) {
     await sharp(imageUrl)
       .resize({ width: 640 })

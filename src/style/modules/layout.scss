@@ -1,0 +1,21 @@
+
+main .section .container {
+    max-width: 100%;
+    width: 80ch;
+    margin: auto;
+  }
+
+  main .section.archive {
+    background-color: var(--secondary-10);
+  }
+  
+  main .section.archive .container {
+
+    width: 1440px;
+  }
+  .content{
+    padding: var(--space-l);
+  }
+  .page-container{
+    min-height: 100svh;
+  }

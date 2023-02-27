@@ -6,29 +6,28 @@ import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
 import { hello, asyncForEach } from "@sil/tools";
 import { getArgs } from "@sil/args";
 
-import { toHtml } from "./libs/markdown";
-import { fileTitle } from "./libs/helpers";
+import { toHtml } from "@/libs/markdown";
+import { fileTitle } from "@/libs/helpers";
 import {
   copyToAssets,
   createThumbnails,
   getLogo,
   getMedia,
   getSvgThumbnail,
-} from "./libs/media";
-import { processPartials } from "./libs/partials";
-import { getFiles } from "./libs/files";
-import { getConfig, getProjectData } from "./libs/project";
+} from "@/libs/media";
+import { processPartials } from "@/libs/partials";
+import { getFiles } from "@/libs/files";
+import { getConfig, getProjectData } from "@/libs/project";
 import { File, Payload, Settings, Project } from "./types";
-import { createPage } from "./libs/page";
-import { generateTags, createTagPages } from "./libs/tags";
-import { generateStyles } from "./libs/style";
-import { generateMenu } from "./libs/menu";
-import { generateArchives } from "./libs/archives";
-import { generateFavicon } from "./libs/favicon";
-import { getThumbnail } from "./libs/media";
-
-import { getLanguageName } from "./libs/language";
-import { createRobots } from "./libs/robots";
+import { createPage } from "@/libs/page";
+import { generateTags, createTagPages } from "@/libs/tags";
+import { generateStyles } from "@/libs/buildStyle/style";
+import { generateMenu } from "@/libs/menu";
+import { generateArchives } from "@/libs/archives";
+import { generateFavicon } from "@/libs/favicon";
+import { getThumbnail } from "@/libs/media";
+import { getLanguageName } from "@/libs/language";
+import { createRobots } from "@/libs/robots";
 
 const PackageJson = require("../package.json");
 

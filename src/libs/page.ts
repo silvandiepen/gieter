@@ -16,7 +16,7 @@ import { getLanguageMenu, getDefaultLanguage } from "../libs/language";
 import { makePath, buildHtml, getParentFile } from "./files";
 
 import { createDir } from "@sil/tools/dist/lib/system";
-import { createCss } from "./style";
+import { createCss } from "./buildStyle/style";
 import kleur from "kleur";
 import { getThumbnail } from "./media";
 import { findWebComponents } from "./webcomponents";
@@ -101,6 +101,7 @@ export const buildPage = async (
   const tags = payload.tags
     ? payload.tags.filter((tag) => tag.parent == file.parent)
     : [];
+
   const style = {
     ...payload.style,
     page: currentLink.replace(".html", ".css"),
@@ -155,7 +156,7 @@ export const buildPage = async (
     "template/content.pug"
   );
 
-  const customCss = await createCss(customHtml, payload.style.og);
+  // const customCss = await createCss(customHtml, payload.style.og);
 
   /*
    * Return the page
@@ -166,7 +167,7 @@ export const buildPage = async (
       currentLink.split("/").slice(0, -1).join("/")
     ),
     css: {
-      data: customCss,
+      data: '',
       file: customCssFilePath,
     },
     html: {

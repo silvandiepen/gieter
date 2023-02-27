@@ -1,0 +1,18 @@
+.content {  
+  table {
+    width: 100%;
+    th,td{
+        padding:calc(var(--space) / 2);
+    }
+    thead {
+     th{
+        text-align: left;
+     }
+    }
+    tbody {
+      td{
+        // padding: var(--space);
+      }
+    }
+  }
+}

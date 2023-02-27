@@ -8,7 +8,11 @@
 		"sourceMap": true,
 		"rootDir": "src",
 		"outDir": "dist",
-		"declaration": true
+		"declaration": true,
+		"baseUrl": "./src",
+		"paths": {
+			"@/*": ["*"],
+		}
 	},
 	"lib": ["es2015"],
 	"exclude": ["node_modules", "dist"]

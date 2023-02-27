@@ -1,15 +1,16 @@
 footer.footer 
-    if langMenu.length > 1
-        ul.language
-            each language in langMenu 
-                li.language__item(class= `${language.active ? 'language__item--active' : ''}`)
-                    a.language__link(href=`${language.link}`,data-title=`${language.title}`,data-code=`${language.code}`,data-name=`${language.name}`)
-                        span.language__text=language.code
+    .footer__container
+        if langMenu.length > 1
+            ul.language
+                each language in langMenu 
+                    li.language__item(class= `${language.active ? 'language__item--active' : ''}`)
+                        a.language__link(href=`${language.link}`,data-title=`${language.title}`,data-code=`${language.code}`,data-name=`${language.name}`)
+                            span.language__text=language.code
 
-    if menu 
-        include navigation.pug 
+        if menu 
+            include navigation.pug 
 
-    sil-color-mode
+        sil-color-mode
 
 if project.script
     if typeof project.script === "string"

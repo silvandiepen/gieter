@@ -8,9 +8,9 @@ import { format } from "date-fns";
 import { asyncForEach } from "@sil/tools";
 import { getFileData, renamePath } from "@sil/tools/dist/lib/system";
 
-import { File, buildHtmlArgs, FileType, Dirent, Archive } from "../types";
-import { fixLangInPath, getLangFromFilename } from "./language";
-import { removeTitle } from "./helpers";
+import { File, buildHtmlArgs, FileType, Dirent, Archive } from "@/types";
+import { fixLangInPath, getLangFromFilename } from "@/libs/language";
+import { removeTitle } from "@/libs/helpers";
 
 /*
 	::getFileTree
