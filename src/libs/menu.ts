@@ -50,17 +50,11 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
 
       const parent = getParentFile(file, payload.files);
 
-      let link =  makePath(file);
+      let link = makePath(file);
 
-      // if (
-      //   parent?.meta &&
-      //   parent.meta.archive &&
-      //   parent.meta.archive == ArchiveType.SECTIONS
-      // ) {
-      //   link = `/#${file.id}`;
-      // }
-    
-      
+      if (file.meta.redirect) {
+        link = file.meta.redirect;
+      }
 
       return {
         id: file.id,

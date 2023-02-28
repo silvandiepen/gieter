@@ -38,6 +38,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             created: item?.meta?.date || item.created,
             meta: { ...item.meta, hide: true },
             link: makePath(item),
+            redirect: item.meta.redirect ? item.meta.redirect : null,
             excerpt: getExcerpt(item),
             tags: item?.meta.tags
               ? payload.tags.filter((tag) => item?.meta.tags.includes(tag.name))
@@ -70,7 +71,14 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
       return {
         ...file,
         archives: children.length
-          ? [{ name: archiveName, type: archiveType, children, title: file?.meta?.archiveTitle }]
+          ? [
+              {
+                name: archiveName,
+                type: archiveType,
+                children,
+                title: file?.meta?.archiveTitle,
+              },
+            ]
           : [],
       };
     });
