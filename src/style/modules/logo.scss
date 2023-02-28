@@ -6,6 +6,7 @@
   }
   &--image-only {
     svg {
+      min-width: 2em;
       max-width: 3em;
       max-height: 3em;
       path,rect,circle{

@@ -1,13 +1,13 @@
 .content {
   ol,
-  ul,
-  li {
+  ul:not([class]),
+  li:not([class]) {
     // margin: 0;
     list-style-type: none;
     padding: 0;
   }
 
-  ol {
+  ol:not([class]) {
     counter-reset: list;
     li {
       position: relative;
@@ -24,7 +24,7 @@
       &+ li{ margin-top: var(--space)}
     }
   }
-  ul {
+  ul:not([class]) {
     li {
       position: relative;
       padding-left: var(--space);

@@ -1,4 +1,7 @@
 .content {
+
+  padding: var(--space-l);
+
   hr {
     margin: var(--space-xl) calc(var(--space-xl) * -1);
     color: var(--primary);
