@@ -23,7 +23,6 @@ h4 {
 
 h6 {
   font-size: clamp(0.75rem, 1vw, 1rem);
-  text-transform: uppercase;
   color: var(--primary);
   letter-spacing: 0.5px;
   font-weight: normal;
@@ -45,9 +44,24 @@ h6 {
   }
 
   p:first-of-type:has(+ p) {
-    font-size: 1.1em;
+    font-size: 1.2em;
   }
   p {
     opacity: 0.8;
+  }
+  h6 {
+    & + h1,
+    & + h2,
+    & + h3,
+    & + h4,
+    & + h5 {
+      margin-top: 0;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    max-width: calc(100% + var(--space-xl));
+    margin-left: -var(--space-l);
   }
 }

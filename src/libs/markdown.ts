@@ -20,7 +20,8 @@ const md = new MarkdownIt({
 });
 
 md.use(prism, {
-  plugins: ["autolinker"],
+  highlightInlineCode: true,
+  plugins: ["autolinker"]
 });
 md.use(emoji);
 md.use(anchor);

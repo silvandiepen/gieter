@@ -1,0 +1,68 @@
+.content {
+  hr {
+    margin: var(--space-xl) calc(var(--space-xl) * -1);
+    color: var(--primary);
+    background-color: var(--primary);
+    border: none;
+    height: 1px;
+  }
+
+  dl {
+    dt {
+      font-weight: bold;
+    }
+    dd {
+      margin-top: var(--space-xs);
+    }
+  }
+
+  svg {
+    rect,
+    path,
+    circle {
+      &:not([fill]) {
+        &:not([style]) {
+          &:not([class]) {
+            fill: currentColor;
+          }
+        }
+      }
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 2px solid var(--primary);
+  }
+
+  * {
+    margin: 0;
+    margin-top: 1em;
+  }
+  h1 {
+    margin: 0;
+  }
+
+  p:first-of-type:has(+ p) {
+    font-size: 1.2em;
+  }
+  p {
+    opacity: 0.8;
+  }
+  h6 {
+    & + h1,
+    & + h2,
+    & + h3,
+    & + h4,
+    & + h5 {
+      margin-top: 0;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    max-width: calc(100% + var(--space-xl));
+    margin-left: calc(var(--space-l) * -1);
+  }
+}

@@ -2,5 +2,4 @@ section.section.archive.archive--blog
     div.container
         sil-article-overview
             each item in archive.children   
-                sil-article-item(type="blog", title=`${item.title}`, image=`${item.thumbnail}`, date=`${item.date}`, excerpt=`${item.excerpt}`, tags=`${item.tags}`)
-        
+                sil-article-item(type="blog", onclick=`linkAction('${item.link}')`, link="#", title=`${item.title}`, image=`${item.thumbnail}`, date=`${item.date}`, excerpt=`${item.excerpt}`, tags=`${item.tags}`)

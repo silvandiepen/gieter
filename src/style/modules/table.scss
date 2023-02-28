@@ -1,17 +1,53 @@
-.content {  
+.content {
   table {
-    width: 100%;
-    th,td{
-        padding:calc(var(--space) / 2);
+    width: calc(100% + var(--space));
+    margin-left: calc(var(--space-s) * -1);
+    font-size: 0.875em;
+    th,
+    td {
+      padding: calc(var(--space-s));
     }
+    @media screen and (min-width: 720px) {
+      tr td {
+        border-top: 1px solid var(--secondary-30);
+      }
+    }
+    @media screen and (max-width: 720px) {
+      tr {
+        border-top: 1px solid var(--secondary-30);
+      }
+    }
+
     thead {
-     th{
+      th {
         text-align: left;
-     }
+        color: var(--primary);
+      }
+      @media screen and (max-width: 720px) {
+        display: none;
+      }
     }
     tbody {
-      td{
-        // padding: var(--space);
+      @media screen and (max-width: 720px) {
+        tr {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          & + tr {
+            margin-top: var(--space);
+          }
+        }
+        td {
+          margin: 0;
+          width: 100%;
+          display: flex;
+          &::before {
+            display: block;
+            content: attr(data-label);
+            color: var(--secondary);
+            width: 33.33%;
+          }
+        }
       }
     }
   }

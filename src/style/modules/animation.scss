@@ -1,0 +1,59 @@
+@keyframes coming-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0%);
+  }
+}
+@keyframes coming-in-section {
+  from {
+    transform: translateY(var(--y));
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+@keyframes going-away {
+  from {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98) translateY(-50px);
+  }
+}
+
+@keyframes going-away-section {
+    from {
+        transform: translateY(0%);
+    }
+    to {
+        transform: translateY(var(--y));
+    }
+  }
+
+  .main{
+    @for $i from 1 through 5 {
+        .section:nth-of-type(#{$i}) {
+          --y: #{$i * 50px};
+          
+        }
+      }
+  }
+.coming-in .main {
+  animation: coming-in 0.33s ease-in-out forwards;
+ 
+  .section {
+    animation: coming-in-section 0.33s ease-in-out forwards;
+  }
+}
+.going-away .main {
+  animation: going-away 0.33s ease-in-out forwards;
+  .section {
+    animation: going-away-section 0.33s ease-in-out forwards;
+  }
+}

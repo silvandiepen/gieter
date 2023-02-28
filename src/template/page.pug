@@ -20,9 +20,8 @@ html(lang=`${language}`)
   include webcomponents.pug   
       
   script
-      //- include script/colorMode.js   
-      include script/loadWebComponents.js
-
+      include script/loadWebComponents.js 
+      include script/inlineLoad.js 
       if has.languages
           include script/detectLanguage.js 
       if has.colors

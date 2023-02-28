@@ -1,0 +1,27 @@
+.language {
+  &,
+  &__item {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  display: flex;
+  gap: var(--space-xs);
+  &__item {
+  }
+  &__link {
+    font-size: 0.875em;
+    display: block;
+    line-height: 1;
+    border: 2px solid var(--secondary-60);
+    color: inherit;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    padding: var(--space-xs);
+
+    &:hover {
+      color: var(--secondary-60-text);
+      background-color: var(--secondary-60);
+    }
+  }
+}

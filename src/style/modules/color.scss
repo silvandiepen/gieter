@@ -20,6 +20,12 @@ body {
   color: var(--foreground);
 }
 
+body[color-mode="dark"] {
+  @include get-darkmode();
+}
+body[color-mode="light"] {
+  @include get-lightmode();
+}
 @media (prefers-color-scheme: dark) {
   :root {
     @include get-darkmode();
@@ -29,10 +35,4 @@ body {
   :root {
     @include get-lightmode();
   }
-}
-body[color-mode="dark"] {
-  @include get-darkmode();
-}
-body[color-mode="light"] {
-  @include get-lightmode();
 }

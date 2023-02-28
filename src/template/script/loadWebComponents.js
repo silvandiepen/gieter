@@ -6,6 +6,7 @@ const getAllTagMatches = (regEx) =>
     });
 
 const findWebComponents = () => {
+  console.log("initialized find web components");
   const components = [
     ...new Set(
       getAllTagMatches(/^sil-/i).map(
@@ -14,13 +15,17 @@ const findWebComponents = () => {
     ),
   ];
 
-  const scripts = [...document.querySelectorAll("script")].map(
-    (script) => script.src
-  );
+  // const scriptsUrls = [...document.querySelectorAll("script")].map(
+  //   (script) => script.src
+  // );
+  const scripts = document.querySelectorAll("script");
 
   components.forEach((c) => {
     const url = `https://load.ui.sil.mt/${c}.js`;
-    if(scripts.includes(url)) return;
+
+
+    const findCurrent = [...scripts].find((script) => script.src == url);
+    if (findCurrent) findCurrent.remove();
 
     console.log(`loading sil-${c}`);
     const head = document.getElementsByTagName("head").item(0);
@@ -30,5 +35,3 @@ const findWebComponents = () => {
     head.appendChild(script);
   });
 };
-
-findWebComponents();
