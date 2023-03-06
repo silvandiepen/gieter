@@ -1,0 +1,31 @@
+.task-list {
+  list-style-type:none;
+  margin:0; padding:0;
+  &__item {
+  }
+  &__label {
+    align-items: center;
+    display: flex;
+    &::before {
+      content: "";
+      display: block;
+      width: 1.5em;
+      height: 1.5em;
+      border-radius: 50%;
+      border: 2px solid var(--foreground-30);
+      margin: var(--space-s);
+      text-align: center; line-height: 1.5em;
+    }
+  }
+  &__input {
+    width: 0;
+    height: 0;
+    position: absolute;
+    &:checked ~ .task-list__label::before{
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-text);
+        content: "\2713"
+    }
+  }
+}
