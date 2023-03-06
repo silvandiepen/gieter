@@ -1,19 +1,19 @@
-$colors: (
-  "dark": #111111,
-  "light": #ffffff,
-  "primary": rgb(226, 146, 27),
-  "secondary": rgb(0, 166, 255),
-);
-$prefix: "gieter";
-$color-type: "hsla";
-$color-shades: true;
-$color-props: true;
+// $colors: (
+//   "dark": #111111,
+//   "light": #ffffff,
+//   "primary": rgb(226, 146, 27),
+//   "secondary": rgb(0, 166, 255),
+// );
+// $prefix: "gieter";
+// $color-type: "hsla";
+// $color-shades: true;
+// $color-props: true;
 
-$color-type: "hsla";
-$color-text: true;
-$shades: ((10, 30, 60, 90));
+// $color-type: "hsla";
+// $color-text: true;
+// $shades: ((10, 30, 60, 90));
 
-@import "@sil/sass-utils/index.scss";
+// @import "@sil/sass-utils/index.scss";
 
 body {
   background-color: var(--background);
@@ -21,18 +21,18 @@ body {
 }
 
 body[color-mode="dark"] {
-  @include get-darkmode();
+  content: "[DARKMODE]";
 }
 body[color-mode="light"] {
-  @include get-lightmode();
+  content: "[LIGHTMODE]";
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    @include get-darkmode();
+    content: "[DARKMODE]";
   }
 }
 @media (prefers-color-scheme: light) {
   :root {
-    @include get-lightmode();
+    content: "[LIGHTMODE]";
   }
 }
