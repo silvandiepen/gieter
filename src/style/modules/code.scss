@@ -5,9 +5,13 @@ pre code {
 pre[class^="language"] {
   position: relative;
   border: 1px solid var(--secondary-30);
-//   color: var(--foreground);
-//   background-color: var(--secondary-10);
-  background-image: linear-gradient(to right bottom, var(--secondary-10), transparent);
+  //   color: var(--foreground);
+  //   background-color: var(--secondary-10);
+  background-image: linear-gradient(
+    to right bottom,
+    var(--secondary-10),
+    transparent
+  );
   color: var(--secondary-10-text);
   padding: var(--space);
   border-radius: var(--border-radius);
@@ -47,12 +51,19 @@ pre[class^="language"] {
     &-vue::before {
       content: "vue";
     }
+    &-markdown {
+      content: "md";
+    }
   }
 }
 
 :not(pre) > code {
   font-size: 0.875em;
-  background-image: linear-gradient(to right bottom, var(--primary-10), var(--primary-30));
+  background-image: linear-gradient(
+    to right bottom,
+    var(--primary-10),
+    var(--primary-30)
+  );
   border: 1px solid var(--primary-60);
   color: var(--foreground-10-text);
   padding: var(--space-xs);
@@ -118,6 +129,9 @@ body[color-mode="dark"] {
 }
 
 .token {
+  &.content {
+    all: unset;
+  }
   &.comment {
     //color: setLightness(slategray, var(--lightness));
     opacity: 0.33;
