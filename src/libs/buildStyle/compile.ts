@@ -38,12 +38,16 @@ export const buildCss = async (colors: ColorData | null) => {
     keepSaturation: true,
   });
 
+
   const darkMode = cssVariables({ data: darkData });
   const lightMode = cssVariables({ data: lightData });
 
   const styleData = await loadStyling(stylingPath);
 
+  const findDarkmode = `content: "[DARKMODE]";`;
+  const findLightmode = `content: "[LIGHTMODE]";`
+
   return styleData
-    .replaceAll(`{content:"[DARKMODE]"}`, `{${darkMode}}`)
-    .replaceAll(`{content:"[LIGHTMODE]"}`, `{${lightMode}}`);
+    .replaceAll(findDarkmode, `${darkMode}`)
+    .replaceAll(findLightmode, `${lightMode}`);
 };

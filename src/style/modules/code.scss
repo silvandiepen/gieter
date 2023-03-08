@@ -30,29 +30,22 @@ pre[class^="language"] {
     border-radius: 0 0 var(--border-radius) var(--border-radius);
   }
   &.language {
-    &-json::before {
-      content: "json";
-    }
-    &-bash::before {
-      content: "bash";
-    }
-    &-ejs::before {
-      content: "ejs";
-    }
-    &-scss::before {
-      content: "scss";
-    }
-    &-ts::before {
-      content: "ts";
-    }
-    &-js::before {
-      content: "js";
-    }
-    &-vue::before {
-      content: "vue";
-    }
-    &-markdown {
-      content: "md";
+    $languages: (
+      "json",
+      "bash",
+      "ejs",
+      "scss",
+      "ts",
+      "scss",
+      "js",
+      "vue",
+      "css",
+      "markdown"
+    );
+    @each $lang in $languages {
+      &-#{$lang}::before {
+        content: "#{$lang}";
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ const getAllTagMatches = (regEx) =>
     });
 
 const findWebComponents = () => {
-  console.log("initialized find web components");
+  // console.log("initialized find web components");
   const components = [
     ...new Set(
       getAllTagMatches(/^sil-/i).map(

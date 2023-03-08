@@ -8,19 +8,21 @@
     padding: var(--space-s) var(--space);
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     // border-bottom: 1px solid var(--secondary-30);
-    background-image: linear-gradient(to right, var(--secondary-30), transparent, var(--primary-30));
-    background-size: 100% 1px;
-    background-repeat: no-repeat;
-    background-position: bottom;
-    background-color: var(--background);
+    // background-image: linear-gradient(to right, var(--secondary-30), transparent, var(--primary-30));
+    // background-size: 100% 1px;
+    // background-repeat: no-repeat;
+    // background-position: bottom;
+    // background-color: var(--background);
     color: var(--foreground);
     transform: translateY(0);
     transition: transform .3s ease-in-out; 
+    gap: var(--space-l);
     &--hide{
         transform: translateY(-100%);
     }
   }
+
 }

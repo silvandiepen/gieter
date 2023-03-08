@@ -17,8 +17,7 @@ html(lang=`${language}`)
   include webcomponents.pug   
       
   script
-      include script/loadWebComponents.js 
-      include script/inlineLoad.js 
+      include script/loadWebComponents.js
       if has.languages
           include script/detectLanguage.js 
       if has.colors
@@ -29,7 +28,9 @@ html(lang=`${language}`)
           include script/wrapTables.js
       if has.urlToken
           include script/linkify.js
-
+ 
+      include script/inlineLoad.js  
+      include script/headerNavigation.js 
 
 
 

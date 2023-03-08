@@ -23,22 +23,25 @@ head
 
     if favicons   
         if favicons.light
-            link(rel="icon",type="image/x-icon", href=`/${favicons.light}`, media="(prefers-color-scheme: light)")
+            link(rel="icon" type="image/x-icon", href=`/${favicons.light}`, media="(prefers-color-scheme: light)")
         if favicons.dark
-            link(rel="icon",type="image/x-icon", href=`/${favicons.dark}`, media="(prefers-color-scheme: dark)")
+            link(rel="icon" type="image/x-icon", href=`/${favicons.dark}`, media="(prefers-color-scheme: dark)")
         else if favicons.default
-            link(rel="icon",type="image/x-icon", href=`/${favicons.default}`)
+            link(rel="icon" type="image/x-icon", href=`/${favicons.default}`)
 
     if style.sheet
         style
             | !{style.sheet}
     else if style.path
-        div kut
         link(href=style.path, rel="stylesheet" type="text/css")
+
+    if config.styleCustom 
+        link(href=config.styleCustom, rel="stylesheet" type="text/css")
+
 
     //- if style.page 
     //-     link(href=style.page, rel="stylesheet" type="text/css")
-        
+
     if style.add 
         link(href=style.add, rel="stylesheet" type="text/css")
 

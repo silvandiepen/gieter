@@ -28,6 +28,7 @@ import { generateFavicon } from "@/libs/favicon";
 import { getThumbnail } from "@/libs/media";
 import { getLanguageName } from "@/libs/language";
 import { createRobots } from "@/libs/robots";
+import { generateSocials } from "./libs/socials";
 
 const PackageJson = require("../package.json");
 
@@ -198,6 +199,7 @@ const removeUrlParts = (payload: Payload): Payload => {
   return payload;
 };
 
+
 hello()
   .then(settingsAndConfig)
   .then((s) => {
@@ -217,6 +219,7 @@ hello()
   .then(removeUrlParts)
   .then(processPartials)
   .then(media)
+  .then(generateSocials)
   .then(generateTags)
   .then(generateArchives)
   .then(generateMenu)

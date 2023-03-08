@@ -21,6 +21,7 @@ const favicon_1 = require("./libs/favicon");
 const media_2 = require("./libs/media");
 const language_1 = require("./libs/language");
 const robots_1 = require("./libs/robots");
+const socials_1 = require("./libs/socials");
 const PackageJson = require("../package.json");
 /*
  * Files
@@ -175,6 +176,7 @@ const removeUrlParts = (payload) => {
     .then(removeUrlParts)
     .then(partials_1.processPartials)
     .then(exports.media)
+    .then(socials_1.generateSocials)
     .then(tags_1.generateTags)
     .then(archives_1.generateArchives)
     .then(menu_1.generateMenu)

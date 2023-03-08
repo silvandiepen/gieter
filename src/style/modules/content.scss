@@ -1,5 +1,4 @@
 .content {
-
   padding: var(--space-l);
 
   hr {
@@ -43,12 +42,10 @@
     margin: 0;
     margin-top: 1em;
   }
-  h1 {
-    margin: 0;
-  }
 
   p:first-of-type:has(+ p) {
-    font-size: 1.2em;
+    font-size: 1.5em;
+    line-height: 1.25;
   }
   p {
     opacity: 0.8;
@@ -63,9 +60,21 @@
     }
   }
 
+  // Break Out of content
   img {
-    max-width: 100%;
+    max-width: 100vw;
     max-width: calc(100% + var(--space-xl));
     margin-left: calc(var(--space-l) * -1);
+  }
+  h1 {
+    margin: 0 calc(var(--space-l) * -1);
+    @media screen and (max-width:720px){
+      margin: 0 calc(var(--space) * -1);
+
+    }
+  }
+  pre {
+    margin-left: calc(var(--space) * -1);
+    margin-right: calc(var(--space) * -1);
   }
 }

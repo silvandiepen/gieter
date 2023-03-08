@@ -3,37 +3,79 @@
   top: 0;
   left: 0;
   width: 100%;
-  &__container {
-    padding: var(--space-s) var(--space);
-    width: 100%;
+  --background: var(--dark);
+  --foreground: var(--light);
+
+  &__header {
+    padding: var(--space) var(--space-l);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    background-image: linear-gradient(
-      to right top,
-      var(--secondary-30),
-      var(--secondary-10)
-    );
-    color: var(--secondary-30-text);
-    @media screen and (max-width: 720px) {
-      padding: var(--space-l);
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--space);
+  }
+  &__main {
+    padding: var(--space-l);
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--dark-90);
+    border-bottom: 1px solid var(--dark-90);
+  }
+  &__footer {
+    padding: var(--space) var(--space-l);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space);
+    @media screen and (max-width: 720px){
+      flex-direction: column-reverse;
+    }
+  }
 
-      display: grid;
-      grid-template:
-        "nav lang"
-        "nav switch";
+  &__container {
+    width: 100%;
+    background: var(--background);
+    color: var(--foreground);
+    display: grid;
+
+    .logo {
+      grid-area: logo;
     }
     .language {
-        grid-area: lang;
+      grid-area: lang;
     }
-    sil-switch-color{
-        grid-area: switch;
+    sil-switch-color {
+      grid-area: switch;
     }
-    .navigation{
-        grid-area: nav;
+    .navigation {
+      flex-grow: 1;
+      grid-area: nav;
+    }
+    .copyright {
+      grid-area: copyright;
+      font-size: 0.8em;
+      opacity: 0.5;
+      text-align: center;
+    }
+    .socials {
+      grid-area: socials;
+      &__list {
+        border: 1px solid red;
+      }
+    }
+  }
+}
+
+.socials {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: var(--space-s);
+  justify-content: center;
+  &__link {
+    font-size: 1.5em;
+    color: inherit;
+    opacity:.5;
+    &:hover {
+      opacity: 1;
+      color: var(--primary);
     }
   }
 }

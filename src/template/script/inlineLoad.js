@@ -7,11 +7,10 @@ function waiter(ms = 2000) {
 }
 
 const linkAction = async (link) => {
-  console.log(link);
   try {
     if (!link || link.includes("http")) return;
 
-    const doc = await fetch(link)
+    const newDoc = await fetch(link)
       .then((response) => {
         return response.text();
       })
@@ -21,14 +20,15 @@ const linkAction = async (link) => {
         return doc;
       });
 
-    doc
+    newDoc
       .querySelector("body")
       .setAttribute(
         "color-mode",
         document.querySelector("body").getAttribute("color-mode")
       );
 
-    loadInline(doc);
+      // Setup for the next click
+    loadInline(newDoc);
 
     window.history.pushState(
       { page: "another" },
@@ -36,22 +36,49 @@ const linkAction = async (link) => {
       link.replace("/index.html", "")
     );
 
-    doc.body.classList.add("coming-in");
-    document.body.classList.add("going-away");
+    const oldDoc = document;
+
+    newDoc.body.classList.add("coming-in");
+    oldDoc.body.classList.add("going-away");
 
     await waiter(500);
 
+    setCurrent();
+
     setTimeout(() => {
-      document.body.classList.remove("coming-in");
+      oldDoc.body.classList.remove("coming-in");
     }, 500);
 
-    document.title = doc.title;
-    document.body = doc.body;
+    // Navigation Specific
+
+    newDoc.querySelector(".header .navigation").style = oldDoc.querySelector(
+      ".header .navigation"
+    ).style;
+
+    const oldNav = oldDoc.querySelector(".header .navigation");
+    const newNav = newDoc.querySelector(".header .navigation");
+    // console.log(oldNav, oldNav.getAttribute('data-x'), oldNav.getAttribute('data-w'), oldNav.style);
+
+    const o_w = oldNav.getAttribute("data-w");
+    const o_x = oldNav.getAttribute("data-x");
+
+    newNav.setAttribute("data-w", o_w);
+    newNav.setAttribute("data-x", o_x);
+    newNav.style.setProperty("--w", o_w);
+    newNav.style.setProperty("--x", o_x);
+
+    // Replace new content
 
     setTimeout(() => {
-      window.scrollTo(0, 0);
-      findWebComponents();
-      stickyNav();
+      oldDoc.title = newDoc.title;
+      oldDoc.body = newDoc.body;
+
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        findWebComponents();
+        stickyNav();
+        initNavigation();
+      });
     });
   } catch (err) {}
 };
@@ -62,7 +89,7 @@ const loadInline = (d) => {
     link.setAttribute("is-inline", true);
     link.addEventListener("click", async (e) => {
       e.preventDefault();
-      linkAction(link.getAttribute('href'));
+      linkAction(link.getAttribute("href"));
     });
   });
 };

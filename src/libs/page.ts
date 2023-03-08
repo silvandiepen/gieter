@@ -124,6 +124,8 @@ export const buildPage = async (
     language: currentLanguage,
     subtitle: subtitle(file, payload),
     components: [],
+    socials:payload.socials,
+    config: payload.settings.config,
     has: {
       table: hasTable(file),
       header: hasHeader(menu),

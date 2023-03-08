@@ -1,6 +1,7 @@
 import { languageKeys } from "./data/language";
+import { Social } from "./libs/socials";
 
-export type Language = languageKeys
+export type Language = languageKeys;
 
 export interface Arguments {
   [key: string]: any;
@@ -50,6 +51,7 @@ export interface Payload extends Settings {
   menu?: MenuItem[];
   archives?: File[];
   tags?: Tag[];
+  socials: Social[];
   favicons?: Favicons;
 }
 export interface Tag {
@@ -146,7 +148,9 @@ export interface buildHtmlArgs {
   homeLink: string;
   langMenu: LanguageMenuItem[];
   language: Language;
-  components: string[],
+  components: string[];
+  socials: Social[];
+  config: Payload["settings"]["config"];
   has: {
     table: boolean;
     header: boolean;
