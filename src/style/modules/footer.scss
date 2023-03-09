@@ -17,6 +17,7 @@
     justify-content: space-between;
     border-top: 1px solid var(--dark-90);
     border-bottom: 1px solid var(--dark-90);
+    gap: var(--space);
   }
   &__footer {
     padding: var(--space) var(--space-l);

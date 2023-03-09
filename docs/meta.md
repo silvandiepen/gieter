@@ -24,3 +24,4 @@ tags: documentation
 | tags                 |                    | Add tags to a post                                                                                                                |
 | menuChildren         | `false`            | Add the children to the menu item                                                                                                 |
 | order                | `999`              | The menu is being order by the order defined in the setting. The order is also being used in sections or collections.             |
+| list                 | ''                 | path to a json file, which can be used for list purposed using the template                                                       |

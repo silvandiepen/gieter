@@ -83,11 +83,13 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
   const files = [];
 
   const getParentId = (file: File) => {
-    const parentPath = file.relativePath.toLowerCase().replace('/readme.md','');
-   const parentId =  parentPath.split("/")[parentPath.split("/").length - 2];
-  
-  return parentId;
-  }
+    const parentPath = file.relativePath
+      .toLowerCase()
+      .replace("/readme.md", "");
+    const parentId = parentPath.split("/")[parentPath.split("/").length - 2];
+
+    return parentId;
+  };
 
   await asyncForEach(fileTree, async (file: File) => {
     const data = await getFileData(file.path);
@@ -127,6 +129,39 @@ const filterArchive = (file: File): Archive[] => {
   }
 };
 
+const replaceList = async (file: File) => {
+  if (!file.meta.list) return file.html;
+
+  if (file.meta.list) {
+    try {
+      const list = await getFileData(join(process.cwd(), file.meta.list));
+
+      const startStr = `<!-- list -->`;
+      const endStr = `<!-- /list -->`;
+
+      const startIndex = file.data.indexOf(startStr) + startStr.length;
+      const endIndex = file.data.indexOf(endStr);
+
+      if (startIndex && endIndex) {
+        const listTemplate = file.data.substring(startIndex, endIndex);
+        console.log(listTemplate);
+
+        const renderedList = pug.render(listTemplate, {
+          list
+        });
+        
+        const startIndexHtml = file.html.indexOf(startStr) + startStr.length;
+        const endIndexHtml = file.html.indexOf(endStr);
+
+        return file.html.substring(0,startIndexHtml) + renderedList + file.html.substring(endIndexHtml + endStr.length, file.html.length);
+      }
+      return file.html;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
 export const buildHtml = async (
   file: File,
   args: buildHtmlArgs,
@@ -147,11 +182,13 @@ export const buildHtml = async (
     return archive;
   });
 
+  const content = await replaceList(file);
+
   const options = {
     ...args,
     name: file.name,
     title: file.title,
-    content: file.html,
+    content,
     meta: file.meta,
     pretty: true,
     archives: archives,

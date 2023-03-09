@@ -50,6 +50,9 @@
   p {
     opacity: 0.8;
   }
+  p a{
+    margin: 0;
+  }
   h6 {
     & + h1,
     & + h2,
