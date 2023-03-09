@@ -1,0 +1,42 @@
+.language {
+  $b: &;
+  &,
+  &__item {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  display: flex;
+  gap: var(--space-xs);
+  &__item {
+    &--active {
+      #{$b}__link {
+        opacity: 1;
+        background-color: var(--foreground);
+        color: var(--background);
+      }
+    }
+  }
+  &__link {
+    font-size: 0.875em;
+    display: block;
+    line-height: 1;
+    color: inherit;
+    font-weight: bold;
+    font-size: 0.75em;
+    width: 2.5em;
+    height: 2.5em;
+    line-height: 2.5em;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center; 
+    opacity: .75;
+
+    &:hover {
+      opacity: 1;
+      color: var(--secondary-60-text);
+      background-color: var(--secondary-60);
+    }
+  }
+}

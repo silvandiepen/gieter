@@ -1,0 +1,17 @@
+body,
+html {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+html{
+  background-color: var(--dark);
+  scroll-behavior: smooth;
+}

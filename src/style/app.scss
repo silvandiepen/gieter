@@ -1,5 +1,20 @@
-@import "theme";
-@import "@sil/themer/src/index.scss";
-
-@import "tools";
-@import "modules";
+@import "@sil/sass-utils";
+@import "modules/base.scss";
+@import "modules/reset.scss";
+@import "modules/typography.scss";
+@import "modules/code.scss";
+@import "modules/layout.scss";
+@import "modules/color.scss";
+@import "modules/settings.scss";
+@import "modules/header.scss";
+@import "modules/footer.scss";
+@import "modules/navigation.scss";
+@import "modules/logo.scss";
+@import "modules/list.scss";
+@import "modules/table.scss";
+@import "modules/content.scss";
+@import "modules/language.scss";
+@import "modules/archive.scss";
+@import "modules/tags.scss";
+@import "modules/animation.scss";
+@import "modules/task-list.scss";

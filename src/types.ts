@@ -1,6 +1,17 @@
+import { languageKeys } from "./data/language";
+import { Social } from "./libs/socials";
+
+export type Language = languageKeys;
+
+export interface Arguments {
+  [key: string]: any;
+}
+
 export interface Settings {
   output: string;
   languages: Language[];
+  args: Arguments;
+  config: Arguments;
 }
 
 export interface Project {
@@ -13,6 +24,7 @@ export interface Project {
   language?: Language;
   script?: string | string[];
   groupTags?: boolean;
+  copyFiles?: string | string[];
 }
 
 export interface Style {
@@ -22,6 +34,12 @@ export interface Style {
   page?: string;
   og?: string;
 }
+interface Favicons {
+  default: string;
+  light: string;
+  dark: string;
+}
+
 export interface Payload extends Settings {
   input?: string;
   files: File[];
@@ -33,7 +51,8 @@ export interface Payload extends Settings {
   menu?: MenuItem[];
   archives?: File[];
   tags?: Tag[];
-  favicon?: string;
+  socials: Social[];
+  favicons?: Favicons;
 }
 export interface Tag {
   name: string;
@@ -60,13 +79,6 @@ export interface Archive {
   children: File[];
 }
 
-export enum Language {
-  EN = "en",
-  NL = "nl",
-  RU = "ru",
-  MT = "mt",
-  AM = "am",
-}
 export interface File {
   id: string;
   name: string;
@@ -104,7 +116,9 @@ export interface MenuItem {
 }
 
 export interface LanguageMenuItem {
+  code: string;
   name: string;
+  title: string;
   link: string;
   active: boolean;
 }
@@ -130,15 +144,19 @@ export interface buildHtmlArgs {
   thumbnail?: string | null;
   meta?: Meta;
   showContentImage?: boolean;
-  favicon: string;
+  favicons: Favicons;
   homeLink: string;
   langMenu: LanguageMenuItem[];
   language: Language;
+  components: string[];
+  socials: Social[];
+  config: Payload["settings"]["config"];
   has: {
     table: boolean;
     header: boolean;
     urlToken: boolean;
     colors: boolean;
+    languages: boolean;
   };
 }
 interface PageCss {
@@ -156,6 +174,7 @@ export interface Page {
   html: PageHtml;
   link: string;
   name: string;
+  title: string;
 }
 
 export interface Dirent {

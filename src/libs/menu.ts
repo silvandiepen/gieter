@@ -1,8 +1,8 @@
 import { blockLine, blockSettings, blockMid } from "cli-block";
 
-import { getParentFile, makePath } from "./files";
-import { Payload, MenuItem, ArchiveType } from "../types";
-import { getSVGData } from "./svg";
+import { getParentFile, makePath } from "@/libs/files";
+import { Payload, MenuItem, ArchiveType } from "@/types";
+import { getSVGData } from "@/libs/svg";
 
 export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
   return await Promise.all(
@@ -24,6 +24,15 @@ export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
   );
 };
 
+const filterHomePage = (payload: Payload, item: MenuItem) => {
+  const langUrls = [
+    "/index.html",
+    ...payload.languages.map((l) => `/${l}/index.html`),
+  ];
+
+  return !langUrls.includes(item.link);
+};
+
 export const generateMenu = async (payload: Payload): Promise<Payload> => {
   let menu: MenuItem[] = payload.files
     .map((file) => {
@@ -41,16 +50,10 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
 
       const parent = getParentFile(file, payload.files);
 
-      let link = "";
+      let link = makePath(file);
 
-      if (
-        parent?.meta &&
-        parent.meta.archive &&
-        parent.meta.archive == ArchiveType.SECTIONS
-      ) {
-        link = `/#${file.id}`;
-      } else {
-        link = makePath(file);
+      if (file.meta.redirect) {
+        link = file.meta.redirect;
       }
 
       return {
@@ -63,6 +66,7 @@ export const generateMenu = async (payload: Payload): Promise<Payload> => {
         order: file.meta.order || 999,
       };
     })
+    .filter((item) => filterHomePage(payload, item))
     .filter((item) => item.active)
     .sort((a, b) => a.order - b.order);
 

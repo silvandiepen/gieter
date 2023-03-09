@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,9 +10,9 @@ const cli_block_1 = require("cli-block");
 const language_1 = require("../libs/language");
 const files_1 = require("./files");
 const system_1 = require("@sil/tools/dist/lib/system");
-const style_1 = require("./style");
 const kleur_1 = __importDefault(require("kleur"));
 const media_1 = require("./media");
+const webcomponents_1 = require("./webcomponents");
 const simplifyUrl = (url) => url.replace("/index.html", "");
 const isActiveMenu = (link, current) => simplifyUrl(link) == simplifyUrl(current);
 const isActiveMenuParent = (link, current) => simplifyUrl(current).includes(simplifyUrl(link)) &&
@@ -31,17 +22,31 @@ const hasTable = (file) => file.html && file.html.includes("<table>");
 const hasUrlToken = (file) => file.html && file.html.includes('<span class="token url">http');
 const hasHeader = (menu) => menu.length > 0;
 const hasColors = (file) => file.html && !!file.html.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/i);
+const hasLanguages = (languages) => !!(languages.length > 1);
 const subtitle = (file, payload) => {
     if (!file.home) {
         const parent = (0, files_1.getParentFile)(file, payload.files);
-        return (parent === null || parent === void 0 ? void 0 : parent.title) || "";
+        return parent?.title || "";
     }
     else {
         return "";
     }
 };
-const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+const getProjectByLanguage = (project, language) => {
+    const langProject = {};
+    Object.entries(project).filter((value) => {
+        if (value[0].includes(":")) {
+            if (value[0].includes(`:${language}`)) {
+                langProject[value[0].split(":")[0]] = value[1];
+            }
+        }
+        else {
+            langProject[value[0]] = value[1];
+        }
+    });
+    return langProject;
+};
+const buildPage = async (payload, file) => {
     const currentLink = (0, files_1.makePath)(file);
     const currentLanguage = file.language;
     /*
@@ -50,7 +55,12 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
     const menuStatus = (menu) => {
         if (menu) {
             return menu
-                .map((item) => (Object.assign(Object.assign({}, item), { current: isActiveMenu(item.link, currentLink), isParent: isActiveMenuParent(item.link, currentLink), children: menuStatus(item.children) })))
+                .map((item) => ({
+                ...item,
+                current: isActiveMenu(item.link, currentLink),
+                isParent: isActiveMenuParent(item.link, currentLink),
+                children: menuStatus(item.children),
+            }))
                 .filter((item) => item.language == currentLanguage);
         }
         else {
@@ -58,45 +68,63 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         }
     };
     const menu = payload.menu ? menuStatus(payload.menu) : [];
+    const project = getProjectByLanguage(payload.project, currentLanguage);
+    const favicons = payload.favicons;
+    const tags = payload.tags
+        ? payload.tags.filter((tag) => tag.parent == file.parent)
+        : [];
+    const style = {
+        ...payload.style,
+        page: currentLink.replace(".html", ".css"),
+    };
     const data = {
         menu,
-        tags: payload.tags
-            ? payload.tags.filter((tag) => tag.parent == file.parent)
-            : [],
+        tags,
         thumbnail: (0, media_1.getThumbnail)(file),
-        style: Object.assign(Object.assign({}, payload.style), { page: currentLink.replace(".html", ".css") }),
-        project: payload.project,
+        project,
+        style,
+        favicons,
         media: payload.media,
         logo: payload.logo,
-        favicon: payload.favicon,
         meta: file.meta,
         contentOnly: false,
-        showContentImage: ((_a = file.meta) === null || _a === void 0 ? void 0 : _a.image) && file.meta.type !== "photo",
-        homeLink: file.language == language_1.defaultLanguage ? "/" : `/${file.language}`,
+        showContentImage: file.meta?.image && file.meta.type !== "photo",
+        homeLink: file.language == (0, language_1.getDefaultLanguage)() ? "/" : `/${file.language}`,
         langMenu: (0, language_1.getLanguageMenu)(payload, file),
         language: currentLanguage,
         subtitle: subtitle(file, payload),
+        components: [],
+        socials: payload.socials,
+        config: payload.settings.config,
         has: {
             table: hasTable(file),
             header: hasHeader(menu),
             urlToken: hasUrlToken(file),
             colors: hasColors(file),
+            languages: hasLanguages(payload.languages),
         },
     };
-    const html = yield (0, files_1.buildHtml)(file, data);
+    // Prerender before actual render
+    const prerender = await (0, files_1.buildHtml)(file, data);
+    data.components = await (0, webcomponents_1.findWebComponents)(prerender);
+    // Render final html
+    const html = await (0, files_1.buildHtml)(file, data);
     /*
      * Generate the custom CSS for this page
      */
     const customCssFilePath = (0, path_1.join)(payload.settings.output, currentLink).replace(".html", ".css");
-    const customHtml = yield (0, files_1.buildHtml)(file, Object.assign(Object.assign({}, data), { contentOnly: true }), "template/content.pug");
-    const customCss = yield (0, style_1.createCss)(customHtml, payload.style.og);
+    const customHtml = await (0, files_1.buildHtml)(file, {
+        ...data,
+        contentOnly: true,
+    }, "template/content.pug");
+    // const customCss = await createCss(customHtml, payload.style.og);
     /*
      * Return the page
      */
     return {
         dir: (0, path_1.join)(payload.settings.output, currentLink.split("/").slice(0, -1).join("/")),
         css: {
-            data: customCss,
+            data: '',
             file: customCssFilePath,
         },
         html: {
@@ -105,21 +133,30 @@ const buildPage = (payload, file) => __awaiter(void 0, void 0, void 0, function*
         },
         name: file.name,
         link: currentLink,
+        title: file.title,
     };
-});
+};
 exports.buildPage = buildPage;
-const createPage = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
-    const page = yield (0, exports.buildPage)(payload, file);
-    yield (0, system_1.createDir)(page.dir);
+const createPage = async (payload, file) => {
+    const page = await (0, exports.buildPage)(payload, file);
+    await (0, system_1.createDir)(page.dir);
     try {
-        yield writeFile(page.html.file, page.html.data);
-        yield writeFile(page.css.file, page.css.data);
-        (0, cli_block_1.blockLineSuccess)(`${page.name}`);
+        await writeFile(page.html.file, page.html.data);
+        await writeFile(page.css.file, page.css.data);
+        (0, cli_block_1.blockLineSuccess)(`${page.title}`);
         (0, cli_block_1.blockLine)(kleur_1.default.blue(`   ${page.link.replace("/index.html", "")}`));
+        if (file.archives) {
+            file.archives.forEach((f) => {
+                (0, cli_block_1.blockLine)(`   Archive`);
+                f.children.forEach((c) => {
+                    (0, cli_block_1.blockLine)(`   - ${c.title}`);
+                });
+            });
+        }
     }
     catch (err) {
         throw Error(err);
     }
-});
+};
 exports.createPage = createPage;
 //# sourceMappingURL=page.js.map

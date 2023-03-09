@@ -1,30 +1,54 @@
 import { existsSync } from "fs";
 import { join } from "path";
-import { Payload } from "../types";
 import Iconator from "iconator";
+
+import { Payload } from "@/types";
+import { assetFolder } from "@/libs/media";
 
 export const generateFavicon = async (payload: Payload): Promise<Payload> => {
   let favicon = "";
+  let dark = "";
+  let light = "";
 
-  const ap = join(process.cwd(), "/assets/");
-  const mp = join(process.cwd(), "/media/");
+  const assets = join(process.cwd(), `/${assetFolder()}/`);
 
-  const ex = (p, f) => existsSync(join(p, f));
+  const fileExists = (p: string, f: string) => existsSync(join(p, f));
 
-  if (ex(ap, "favicon.png")) favicon = "assets/favicon.png";
-  else if (ex(mp, "favicon.png")) favicon = "media/favicon.png";
-  else if (ex(ap, "logo.png")) favicon = "assets/logo.png";
-  else if (ex(mp, "logo.png")) favicon = "media/logo.png";
+  if (fileExists(assets, "favicon.png"))
+    favicon = `${assetFolder()}/favicon.png`;
+  else if (fileExists(assets, "logo.png"))
+    favicon = `${assetFolder()}/logo.png`;
 
   if (favicon) {
-    await Iconator({
-      input: favicon,
-      output: "public/assets/favicon",
-      logging: ["inline", "minimal"],
-      sets: ["favicons"],
-    });
-    favicon = "/assets/favicon/favicon.ico";
+    try {
+      await Iconator({
+        input: favicon,
+        output: "public/assets/favicon",
+        logging: ["inline", "minimal"],
+        sets: ["favicons"],
+      });
+    } catch (error) {
+      console.warn(error);
+    }
+    favicon = "assets/favicon/favicon.ico";
+  } else {
+    favicon = fileExists(assets, "icon.svg") ? `${assetFolder()}/icon.svg` : "";
+    light = fileExists(assets, "icon-light.svg")
+      ? `${assetFolder()}/icon-light.svg`
+      : "";
+    dark = fileExists(assets, "icon-dark.svg")
+      ? `${assetFolder()}/icon-dark.svg`
+      : "";
   }
 
-  return { ...payload, favicon };
+  const favicons = {
+    default: favicon,
+    dark: dark,
+    light: light,
+  };
+
+  return {
+    ...payload,
+    favicons,
+  };
 };

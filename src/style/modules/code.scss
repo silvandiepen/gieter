@@ -1,0 +1,240 @@
+pre code {
+  font-size: 0.875em;
+}
+
+pre[class^="language"] {
+  position: relative;
+  border: 1px solid var(--secondary-30);
+  //   color: var(--foreground);
+  //   background-color: var(--secondary-10);
+  background-image: linear-gradient(
+    to right bottom,
+    var(--secondary-10),
+    transparent
+  );
+  color: var(--secondary-10-text);
+  padding: var(--space);
+  border-radius: var(--border-radius);
+  overflow: scroll;
+  &::before {
+    content: "";
+    display: block;
+    background-color: var(--secondary);
+    color: var(--secondary-text);
+    position: absolute;
+    right: var(--space);
+    top: 0;
+    padding: var(--space-xs);
+    line-height: 1;
+    font-size: 0.75em;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+  }
+  &.language {
+    $languages: (
+      "json",
+      "bash",
+      "ejs",
+      "scss",
+      "ts",
+      "scss",
+      "js",
+      "vue",
+      "css",
+      "markdown"
+    );
+    @each $lang in $languages {
+      &-#{$lang}::before {
+        content: "#{$lang}";
+      }
+    }
+  }
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  background-image: linear-gradient(
+    to right bottom,
+    var(--primary-10),
+    var(--primary-30)
+  );
+  border: 1px solid var(--primary-60);
+  color: var(--foreground-10-text);
+  padding: var(--space-xs);
+  border-radius: var(--border-radius);
+  white-space: nowrap;
+}
+
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+/* Code blocks */
+/* Inline code */
+code[class*="language-"] {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+pre[class*="language-"] {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  overflow: auto;
+}
+
+:root {
+  --lightness: 30%;
+}
+
+// @media (prefers-color-scheme: dark) {
+//   :root {
+//     --lightness: 80%;
+//   }
+// }
+body[color-mode="dark"] {
+  --lightness: 70%;
+}
+
+@function setLightness($color, $lightness) {
+  @return hsla(#{hue($color)}, #{saturation($color)}, $lightness);
+}
+
+.token {
+  &.content {
+    all: unset;
+  }
+  &.comment {
+    //color: setLightness(slategray, var(--lightness));
+    opacity: 0.33;
+  }
+  &.prolog {
+    //color: setLightness(slategray, var(--lightness));
+    opacity: 0.75;
+  }
+  &.doctype {
+    //  color: setLightness(slategray, var(--lightness));
+    opacity: 0.75;
+  }
+  &.cdata {
+    // color: setLightness(slategray, var(--lightness));
+    opacity: 0.75;
+  }
+  &.punctuation {
+    opacity: 0.25;
+  }
+  &.namespace {
+    opacity: 0.7;
+  }
+  &.property {
+    color: setLightness(rgb(16, 111, 132), var(--lightness));
+  }
+  &.tag {
+    color: setLightness(#905, var(--lightness));
+  }
+  &.boolean {
+    color: setLightness(#905, var(--lightness));
+  }
+  &.number {
+    color: setLightness(#905, var(--lightness));
+  }
+  &.constant {
+    color: setLightness(#905, var(--lightness));
+  }
+  &.symbol {
+    color: setLightness(#905, var(--lightness));
+  }
+  &.deleted {
+    color: setLightness(#905, var(--lightness));
+  }
+  &.selector {
+    color: setLightness(#690, var(--lightness));
+  }
+  &.attr-name {
+    color: setLightness(#690, var(--lightness));
+  }
+  &.string {
+    color: setLightness(#690, var(--lightness));
+  }
+  &.char {
+    color: setLightness(#690, var(--lightness));
+  }
+  &.builtin {
+    color: setLightness(#690, var(--lightness));
+  }
+  &.inserted {
+    color: setLightness(#690, var(--lightness));
+  }
+  &.operator {
+    color: setLightness(#9a6e3a, var(--lightness));
+  }
+  &.entity {
+    color: setLightness(#9a6e3a, var(--lightness));
+    cursor: help;
+  }
+  &.url {
+    color: setLightness(#9a6e3a, var(--lightness));
+  }
+  .language-css {
+    &.string {
+      color: setLightness(#9a6e3a, var(--lightness));
+    }
+  }
+  .style {
+    &.string {
+      color: setLightness(#9a6e3a, var(--lightness));
+    }
+  }
+  &.atrule {
+    color: setLightness(#07a, var(--lightness));
+  }
+  &.attr-value {
+    color: setLightness(#07a, var(--lightness));
+  }
+  &.keyword {
+    color: setLightness(#07a, var(--lightness));
+  }
+  &.function {
+    color: setLightness(#dd4a68, var(--lightness));
+  }
+  &.class-name {
+    color: setLightness(#dd4a68, var(--lightness));
+  }
+  &.regex {
+    color: setLightness(#e90, var(--lightness));
+  }
+  &.important {
+    color: setLightness(#e90, var(--lightness));
+    font-weight: bold;
+  }
+  &.variable {
+    color: setLightness(#e90, var(--lightness));
+  }
+  &.bold {
+    font-weight: bold;
+  }
+  &.italic {
+    font-style: italic;
+  }
+}

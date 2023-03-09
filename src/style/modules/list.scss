@@ -1,0 +1,42 @@
+.content {
+  ol,
+  ul:not([class]),
+  li:not([class]) {
+    // margin: 0;
+    list-style-type: none;
+    padding: 0;
+  }
+
+  ol:not([class]) {
+    counter-reset: list;
+    li {
+      position: relative;
+      counter-increment: list;
+      padding-left: var(--space);
+
+      &::before {
+        position: absolute;
+        left: 0;
+        width: var(--space);
+        content: counter(list)".";
+        opacity: .5;
+      } 
+      &+ li{ margin-top: var(--space)}
+    }
+  }
+  ul:not([class]) {
+    li {
+      position: relative;
+      padding-left: var(--space);
+
+      &::before {
+        position: absolute;
+        left: 0;
+        width: var(--space);
+        content:"-";
+        opacity: .5;
+      } 
+      &+ li{ margin-top: var(--space)}
+    }
+  }
+}

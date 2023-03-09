@@ -5,15 +5,35 @@ html(lang=`${language}`)
      
   body(class= `page--${name}`)
   
-    include header.pug 
-    
-    include content.pug
+    div.page-container
+        include header.pug 
+        
+        include content.pug
     
     include footer.pug
 
+  
+
+  include webcomponents.pug   
+      
+  script
+      include script/loadWebComponents.js
+      if has.languages
+          include script/detectLanguage.js 
+      if has.colors
+          include script/findColors.js
+      if has.header
+          include script/stickyNav.js
+      if has.table
+          include script/wrapTables.js
+      if has.urlToken
+          include script/linkify.js
+ 
+      include script/inlineLoad.js  
+      include script/headerNavigation.js 
 
 
-if meta.redirect
-  script.
-    window.location.replace("#{meta.redirect}");
+
+    
+
 

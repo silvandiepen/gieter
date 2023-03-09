@@ -2,34 +2,33 @@
 "use strict";
 
 import { join } from "path";
-import {
-  blockMid,
-  blockHeader,
-  blockFooter,
-  blockSettings,
-  blockLineSuccess,
-} from "cli-block";
+import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
 import { hello, asyncForEach } from "@sil/tools";
+import { getArgs } from "@sil/args";
 
-import { toHtml } from "./libs/markdown";
-import { fileTitle } from "./libs/helpers";
+import { toHtml } from "@/libs/markdown";
+import { fileTitle } from "@/libs/helpers";
 import {
+  copyToAssets,
   createThumbnails,
   getLogo,
   getMedia,
   getSvgThumbnail,
-} from "./libs/media";
-import { processPartials } from "./libs/partials";
-import { getFiles } from "./libs/files";
-import { getProjectData } from "./libs/project";
+} from "@/libs/media";
+import { processPartials } from "@/libs/partials";
+import { getFiles } from "@/libs/files";
+import { getConfig, getProjectData } from "@/libs/project";
 import { File, Payload, Settings, Project } from "./types";
-import { createPage } from "./libs/page";
-import { generateTags, createTagPages } from "./libs/tags";
-import { generateStyles } from "./libs/style";
-import { generateMenu } from "./libs/menu";
-import { generateArchives } from "./libs/archives";
-import { generateFavicon } from "./libs/favicon";
-import { getThumbnail } from "./libs/media";
+import { createPage } from "@/libs/page";
+import { generateTags, createTagPages } from "@/libs/tags";
+import { generateStyles } from "@/libs/buildStyle/style";
+import { generateMenu } from "@/libs/menu";
+import { generateArchives } from "@/libs/archives";
+import { generateFavicon } from "@/libs/favicon";
+import { getThumbnail } from "@/libs/media";
+import { getLanguageName } from "@/libs/language";
+import { createRobots } from "@/libs/robots";
+import { generateSocials } from "./libs/socials";
 
 const PackageJson = require("../package.json");
 
@@ -62,7 +61,10 @@ export const files = async (payload: Payload): Promise<Payload> => {
     };
   });
 
+
   const project: Project = await getProjectData(files);
+
+
 
   /*
    * When the file is a "home" file, it gets certain privileges
@@ -74,7 +76,7 @@ export const files = async (payload: Payload): Promise<Payload> => {
     const thePath = pathGroup[pathGroup.length - 1].toLowerCase();
     const isHome = thePath.includes("readme") || thePath.includes("index");
 
-    files[index].home = isHome;
+    files[index].home = isHome ? isHome && file.meta.archive : false;
   });
 
   /*
@@ -111,8 +113,6 @@ export const files = async (payload: Payload): Promise<Payload> => {
       (file) => !project.ignore.some((ignore) => file.path.includes(ignore))
     );
 
-
-
   /*
    * Logging
    */
@@ -132,10 +132,15 @@ export const files = async (payload: Payload): Promise<Payload> => {
 /*
  *  Settings
  */
-export const settings = async (payload: Payload): Promise<Payload> => {
+export const settingsAndConfig = async (payload: Payload): Promise<Payload> => {
+  const args = getArgs();
+  const config = await getConfig();
+
   const settings: Settings = {
     output: join(process.cwd(), "public"),
     languages: [],
+    args,
+    config,
   };
 
   return { ...payload, settings };
@@ -145,11 +150,13 @@ export const settings = async (payload: Payload): Promise<Payload> => {
  *  Build
  */
 
+ 
+
 export const contentPages = async (payload: Payload): Promise<Payload> => {
   if (payload.languages.length > 1) {
     // Create Content pages
     await asyncForEach(payload.languages, async (language) => {
-      blockMid(`Pages ${language}`);
+      blockMid(`Pages ${getLanguageName(language)}`);
 
       await asyncForEach(
         payload.files
@@ -175,19 +182,44 @@ export const media = async (payload: Payload): Promise<Payload> => {
   const logo: File = await getLogo(payload, media);
 
   await createThumbnails(payload);
+  await copyToAssets(payload);
 
   return { ...payload, media, logo };
 };
+const removeUrlParts = (payload: Payload): Payload => {
+  payload.files = payload.files.map((file) => {
+    return {
+      ...file,
+      id: file.id.replace("-src-", "-"),
+      relativePath: file.relativePath.replace("/src/", "/"),
+      path: file.path.replace("/src/", "/"),
+    };
+  });
+
+  return payload;
+};
+
 
 hello()
-  .then(settings)
+  .then(settingsAndConfig)
   .then((s) => {
     blockHeader(`Gieter ${PackageJson.version}`);
     return s;
   })
+  .then((s) => {
+    s.settings.args &&
+      Object.keys(s.settings.args).length &&
+      blockSettings(s.settings.args);
+    s.settings.config &&
+      Object.keys(s.settings.config).length &&
+      blockSettings(s.settings.config);
+    return s;
+  })
   .then(files)
+  .then(removeUrlParts)
   .then(processPartials)
   .then(media)
+  .then(generateSocials)
   .then(generateTags)
   .then(generateArchives)
   .then(generateMenu)
@@ -195,6 +227,7 @@ hello()
   .then(generateFavicon)
   .then(contentPages)
   .then(createTagPages)
+  .then(createRobots)
   .then(() => {
     blockFooter();
   });

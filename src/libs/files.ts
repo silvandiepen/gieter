@@ -8,9 +8,9 @@ import { format } from "date-fns";
 import { asyncForEach } from "@sil/tools";
 import { getFileData, renamePath } from "@sil/tools/dist/lib/system";
 
-import { File, buildHtmlArgs, FileType, Dirent, Archive } from "../types";
-import { fixLangInPath, getLangFromFilename } from "./language";
-import { removeTitle } from "./helpers";
+import { File, buildHtmlArgs, FileType, Dirent, Archive } from "@/types";
+import { fixLangInPath, getLangFromFilename } from "@/libs/language";
+import { removeTitle } from "@/libs/helpers";
 
 /*
 	::getFileTree
@@ -44,7 +44,7 @@ export const getFileTree = async (
         fileName.indexOf(":") > 0 ? getLangFromFilename(fileName) : "en";
 
       const name = (
-        fileName == "index"
+        fileName.toLowerCase() == "index" || fileName.toLowerCase() == "readme"
           ? relativePath.split("/")[relativePath.split("/").length - 2]
           : fileName
       ).toLowerCase();
@@ -82,6 +82,13 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
 
   const files = [];
 
+  const getParentId = (file: File) => {
+    const parentPath = file.relativePath.toLowerCase().replace('/readme.md','');
+   const parentId =  parentPath.split("/")[parentPath.split("/").length - 2];
+  
+  return parentId;
+  }
+
   await asyncForEach(fileTree, async (file: File) => {
     const data = await getFileData(file.path);
     if (file.fileName.indexOf("_") !== 0)
@@ -89,8 +96,7 @@ export const getFiles = async (dir: string, ext: string): Promise<File[]> => {
         ...file,
         type: FileType.CONTENT,
         data,
-        parent:
-          file.relativePath.split("/")[file.relativePath.split("/").length - 2],
+        parent: getParentId(file),
       });
   });
   return files;
@@ -115,7 +121,6 @@ const filterArchive = (file: File): Archive[] => {
         .join("-");
       return childUrl == parentUrl;
     });
-
     return file.archives;
   } else {
     return [];
@@ -149,7 +154,7 @@ export const buildHtml = async (
     content: file.html,
     meta: file.meta,
     pretty: true,
-    archives: filterArchive(file),
+    archives: archives,
     type: file.type,
     formatDate: format,
     removeTitle: removeTitle,

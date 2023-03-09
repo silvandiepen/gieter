@@ -1,6 +1,6 @@
-import { join, extname, basename } from "path";
-import { existsSync } from "fs";
-import { copy, writeFile } from "fs-extra";
+import { join, extname, basename, resolve } from "path";
+import { copyFile, existsSync, lstatSync } from "fs";
+import { copy, writeFile, copySync } from "fs-extra";
 import { blockLineError, blockLineSuccess } from "cli-block";
 import sharp from "sharp";
 
@@ -13,9 +13,10 @@ import { getSVGData } from "./svg";
 export const getThumbnail = (file: File): string | null => {
   const thumb = file.meta.thumb;
   const image = file.meta.image;
-  const icon = file.meta.icon;
+  // const icon = file.meta.icon;
 
-  const thumbnail = thumb || image || icon || null;
+  // const thumbnail = thumb || image || icon || null;
+  const thumbnail = thumb || image || null;
   return thumbnail;
 };
 
@@ -37,7 +38,7 @@ export const createThumbnails = async (payload: Payload): Promise<Payload> => {
 
 export const resizeImage = async (image: string): Promise<void> => {
   const imageUrl = join(process.cwd(), image);
-  const exists = await existsSync(imageUrl);
+  const exists = existsSync(imageUrl);
 
   if (!exists) {
     blockLineError(`${image} does not exist`);
@@ -51,10 +52,10 @@ export const resizeImage = async (image: string): Promise<void> => {
     image.replace(ext, `.thumb${ext}`)
   );
 
-  const thumbExists = await existsSync(path);
+  const thumbExists = existsSync(path);
   if (thumbExists) return;
 
-  const imageExists = await existsSync(imageUrl);
+  const imageExists = existsSync(imageUrl);
   if (imageExists) {
     await sharp(imageUrl)
       .resize({ width: 640 })
@@ -99,7 +100,13 @@ export const getMedia = async (payload: Payload): Promise<File[]> => {
           ".svg",
           ".png",
           ".jpg",
+          ".jpeg",
           ".gif",
+          ".mp3",
+          ".wav",
+          ".otf",
+          ".ttf",
+          ".woff",
         ])),
       ];
     }
@@ -146,4 +153,43 @@ export const getLogo = async (
   }
 
   return logo;
+};
+
+const toArray = (value: string | string[]): string[] => {
+  if (typeof value !== "string") return value;
+  return [value];
+};
+
+export const assetFolder = (): string => {
+  const exists = existsSync(join(process.cwd(), "media"));
+  return exists ? "media" : "assets";
+};
+
+export const copyToAssets = async (payload: Payload): Promise<void> => {
+  const copyFiles = payload.project.copyFiles;
+
+  if (!copyFiles) return;
+
+  await asyncForEach(toArray(copyFiles), async (file) => {
+    const assets = assetFolder();
+
+    const input = join(process.cwd(), file);
+    const output = join(payload.settings.output, assets, basename(file));
+
+    try {
+      await createDir(output.replace(basename(output), ""));
+
+      if (lstatSync(file).isDirectory()) {
+        copySync(input, output, { overwrite: true });
+      } else {
+        copyFile(input, output, (err) => {
+          if (err) throw err;
+        });
+      }
+
+      blockLineSuccess(`${file} copied to ${assets}/${basename(file)}`);
+    } catch (err) {
+      blockLineError(err);
+    }
+  });
 };

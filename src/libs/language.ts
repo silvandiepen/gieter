@@ -1,13 +1,14 @@
-import { Language, Payload, File, LanguageMenuItem } from "../types";
-import { makePath } from "./files";
+import { languages } from "@/data/language";
+import { Language, Payload, File, LanguageMenuItem } from "@/types";
+import { makePath } from "@/libs/files";
 
-export const defaultLanguage: Language = Language.EN;
+export const getDefaultLanguage = (): Language => "en";
 
 export const getLangFromPath = (pathName: string): Language => {
   const langPath = pathName
     .split("/")
     .find((partial) => partial.indexOf(":") > 0);
-  if (!langPath) return defaultLanguage;
+  if (!langPath) return getDefaultLanguage();
   return getLangFromFilename(langPath);
 };
 
@@ -24,7 +25,7 @@ export const fixLangInPath = (
       : partial;
   });
 
-  if (language == defaultLanguage && removeDefault) {
+  if (language == getDefaultLanguage() && removeDefault) {
     return path.join("/");
   }
   return `${language ? `/${language}` : ""}/${path.join("/")}`.replace(
@@ -38,26 +39,13 @@ export const getLangFromFilename = (fileName: string): Language => {
 
   if (fileName.indexOf(":") > 0) {
     const lang = fileName.split(":")[1];
-    switch (lang) {
-      case "en":
-        return Language.EN;
-      case "nl":
-        return Language.NL;
-      case "ru":
-        return Language.RU;
-      case "mt":
-        return Language.MT;
-      case "am":
-        return Language.AM;
-      default:
-        return defaultLanguage;
-    }
+    return lang as Language;
   }
-  return defaultLanguage;
+  return getDefaultLanguage();
 };
 
 const getLanguageForPage = (payload: Payload, file: File): Language => {
-  let lang = Language.EN;
+  let lang = "en" as Language;
 
   if (file && file.language) lang = file.language;
   else if (file && file.meta.language) lang = file.meta.language;
@@ -65,12 +53,21 @@ const getLanguageForPage = (payload: Payload, file: File): Language => {
 
   return lang;
 };
+export const getLanguageNativeName = (lang: Language)=>{
+  return languages[lang].nativeName;
+}
+export const getLanguageName = (lang:Language)=>{
+  return languages[lang].name;
+}
 
 export const getLanguageMenu = (
   payload: Payload,
   file: File
 ): LanguageMenuItem[] => {
   const menu = [];
+
+
+
   payload.languages.forEach((lang: Language) => {
     const altPage = payload.files.find(
       (f) => f.id == file.id.replace(`${file.language}-`, `${lang}-`)
@@ -78,13 +75,16 @@ export const getLanguageMenu = (
 
     const link = altPage
       ? `${makePath(altPage)}`
-      : `/${lang == defaultLanguage ? "" : lang}`;
+      : `/${lang == getDefaultLanguage() ? "" : lang}`;
 
     menu.push({
-      name: lang,
+      code: lang,
+      name: getLanguageName(lang),
+      title: getLanguageNativeName(lang),
       link,
       active: lang == getLanguageForPage(payload, file),
     });
   });
+
   return menu;
 };

@@ -1,7 +1,0 @@
-@mixin section-content() {
-  main.content > section:first-child {
-    p:first-of-type {
-      font-size: 1.2em;
-    }
-  }
-}

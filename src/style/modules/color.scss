@@ -1,0 +1,38 @@
+// $colors: (
+//   "dark": #111111,
+//   "light": #ffffff,
+//   "primary": rgb(226, 146, 27),
+//   "secondary": rgb(0, 166, 255),
+// );
+// $prefix: "gieter";
+// $color-type: "hsla";
+// $color-shades: true;
+// $color-props: true;
+
+// $color-type: "hsla";
+// $color-text: true;
+// $shades: ((10, 30, 60, 90));
+
+// @import "@sil/sass-utils/index.scss";
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+body[color-mode="dark"] {
+  content: "[DARKMODE]";
+}
+body[color-mode="light"] {
+  content: "[LIGHTMODE]";
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    content: "[DARKMODE]";
+  }
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    content: "[LIGHTMODE]";
+  }
+}

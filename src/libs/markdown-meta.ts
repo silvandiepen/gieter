@@ -1,5 +1,5 @@
 import { nthIndex } from "@sil/tools";
-import { Meta } from "../types";
+import { Meta } from "@/types";
 
 export const fixType = (value: string): any => {
   if (!isNaN(value as any)) return parseInt(value, 10);

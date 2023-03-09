@@ -21,11 +21,13 @@ head
     else 
         title=title
 
-    if favicon
-        link(rel="icon",type="image/x-icon", href=`${favicon}`)
-
-
-    //- link(href="./app.scss" rel="stylesheet" type="text/css")
+    if favicons   
+        if favicons.light
+            link(rel="icon" type="image/x-icon", href=`/${favicons.light}`, media="(prefers-color-scheme: light)")
+        if favicons.dark
+            link(rel="icon" type="image/x-icon", href=`/${favicons.dark}`, media="(prefers-color-scheme: dark)")
+        else if favicons.default
+            link(rel="icon" type="image/x-icon", href=`/${favicons.default}`)
 
     if style.sheet
         style
@@ -33,8 +35,14 @@ head
     else if style.path
         link(href=style.path, rel="stylesheet" type="text/css")
 
+    if config.styleCustom 
+        link(href=config.styleCustom, rel="stylesheet" type="text/css")
+
+
     //- if style.page 
     //-     link(href=style.page, rel="stylesheet" type="text/css")
-        
+
     if style.add 
         link(href=style.add, rel="stylesheet" type="text/css")
+
+    script(type="module" src="https://load.ui.sil.mt/color-mode.js")

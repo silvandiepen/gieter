@@ -4,12 +4,12 @@ import prism from "markdown-it-prism";
 import anchor from "markdown-it-anchor";
 import tasks from "markdown-it-tasks";
 import alert from "markdown-it-alert";
-import svgImages from "./markdown-it-svg";
 import defList from "markdown-it-deflist";
 
-import { extractMeta, removeMeta } from "./markdown-meta";
-import { MarkdownData } from "../types";
-import { getGist } from "./download";
+import svgImages from "@/libs/markdown-it-svg";
+import { extractMeta, removeMeta } from "@/libs/markdown-meta";
+import { MarkdownData } from "@/types";
+import { getGist } from "@/libs/download";
 import { asyncForEach } from "@sil/tools";
 
 const md = new MarkdownIt({
@@ -20,7 +20,8 @@ const md = new MarkdownIt({
 });
 
 md.use(prism, {
-  plugins: ["autolinker"],
+  highlightInlineCode: true,
+  plugins: ["autolinker"]
 });
 md.use(emoji);
 md.use(anchor);

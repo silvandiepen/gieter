@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 import { createDir } from "@sil/tools/dist/lib/system";
 
 export interface DownloadResponse {
-  body: any;
+  body?: any;
   [index: string]: any;
 }
 

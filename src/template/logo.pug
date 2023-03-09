@@ -1,0 +1,11 @@
+if project
+    if logo
+        if logo.data
+            a.logo(href=`${homeLink}`, class= `${logo.data ? 'logo--image-only' : ''}`, aria-label=`${project.title}`)
+                | !{logo.data}
+        else if logo.relativePath
+            a.logo(href=`${homeLink}`)
+                img(src=logo.relativePath)
+    else if project.title
+        a.logo.logo--title(href=`${homeLink}`)
+            span.logo__text=project.title

@@ -1,6 +1,19 @@
 import { asyncForEach } from "@sil/tools";
+import { camelCase } from "@sil/case";
+import { Project, Meta, File, Arguments } from "../types";
+import { fileExists, getFileData } from "@sil/tools/dist/lib/system";
+import { flattenObject } from "./helpers";
 
-import { Project, Meta, File } from "../types";
+export const getConfig = async (): Promise<Arguments> => {
+  const configExists = await fileExists("./gieter.config.json")
+  
+  if(configExists){
+    const data = (await getFileData("./gieter.config.json")) as Object;
+
+    return flattenObject(data);
+  }
+  return {};
+};
 
 const fixProjectTypes = (input: Project): Project => {
   const fixedProject: Project = {};
@@ -24,7 +37,7 @@ const getProjectConfig = (meta: Meta): Project => {
   // Merge configs
   Object.keys(meta).forEach((item) => {
     if (item.includes("project") && typeof item == "string") {
-      const key = item.toLowerCase().replace("project", "");
+      const key = camelCase(item.replace("project", ""), { exclude: [":"] });
       if (key == "ignore") {
         project[key] = [];
         meta[item]
@@ -46,6 +59,16 @@ const getProjectConfig = (meta: Meta): Project => {
 export const getProjectData = async (files: File[]): Promise<Project> => {
   const project: Project = {};
 
+  // First set the argumnets from the config file
+  const config = await getConfig();
+  if (config) {
+    const projectMeta = getProjectConfig(config);
+    Object.keys(projectMeta).forEach((key) => {
+      if (!project[key]) project[key] = projectMeta[key];
+    });
+  }
+
+  // Arguments set in files itself, will override the config file.
   await asyncForEach(files, async (file: File) => {
     const projectMeta = getProjectConfig(file.meta);
     Object.keys(projectMeta).forEach((key) => {

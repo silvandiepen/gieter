@@ -2,13 +2,17 @@
 	"compilerOptions": {
 		"module": "CommonJS",
 		"esModuleInterop": true,
-		"target": "es6",
+		"target": "ES2021",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"sourceMap": true,
 		"rootDir": "src",
 		"outDir": "dist",
-		"declaration": true
+		"declaration": true,
+		"baseUrl": "./src",
+		"paths": {
+			"@/*": ["*"],
+		}
 	},
 	"lib": ["es2015"],
 	"exclude": ["node_modules", "dist"]

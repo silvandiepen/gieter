@@ -1,8 +1,8 @@
 import { parentPath } from "@sil/tools/dist/lib/system";
 
-import { makePath } from "./files";
-import { ArchiveType, Payload } from "../types";
-import { getExcerpt } from "./helpers";
+import { makePath } from "@/libs/files";
+import { ArchiveType, Payload, File } from "@/types";
+import { getExcerpt } from "@/libs/helpers";
 /*
  *  Archives
  */
@@ -17,6 +17,10 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 
       let children = [];
 
+      const isParent = (item: File, file: File) => {
+        return item.parent == archiveName;
+      };
+
       const order =
         archiveType == ArchiveType.BLOG
           ? (a, b) => parseInt(b.created) - parseInt(a.created)
@@ -24,7 +28,8 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
 
       if (file.home && !!archiveType) {
         children = payload.files
-          .filter((item) => item.parent == file.id && !item.home)
+
+          .filter((item) => isParent(item, file) && !item.home)
 
           //  Enrich each child with meta information, a link and the excerpt
           .map((item) => ({
@@ -33,6 +38,7 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
             created: item?.meta?.date || item.created,
             meta: { ...item.meta, hide: true },
             link: makePath(item),
+            redirect: item.meta.redirect ? item.meta.redirect : null,
             excerpt: getExcerpt(item),
             tags: item?.meta.tags
               ? payload.tags.filter((tag) => item?.meta.tags.includes(tag.name))
@@ -44,7 +50,6 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
          * Inherit the parents type on each child
          */
         if (file.parent && !file.meta.type) {
-
           const parent = payload.files.find((parentFile) => {
             if (!parentFile.home) return false;
             return (
@@ -52,7 +57,6 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
               (parentPath(file.path) + "/readme.md").toLowerCase()
             );
           });
-
 
           if (parent?.meta && !!archiveType)
             if (file?.meta)
@@ -67,7 +71,14 @@ export const generateArchives = async (payload: Payload): Promise<Payload> => {
       return {
         ...file,
         archives: children.length
-          ? [{ name: archiveName, type: archiveType, children }]
+          ? [
+              {
+                name: archiveName,
+                type: archiveType,
+                children,
+                title: file?.meta?.archiveTitle,
+              },
+            ]
           : [],
       };
     });
