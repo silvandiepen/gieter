@@ -12,6 +12,9 @@ export const getMenuIcons = async (menu: MenuItem[]): Promise<MenuItem[]> => {
       if (icon && icon.includes(".svg")) {
         icon = await getSVGData(item.icon);
       }
+      if (icon && icon.startsWith("sil")) {
+        icon = `<${icon}></${icon}>`;
+      }
 
       if (item.children) {
         item = {

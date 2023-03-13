@@ -18,7 +18,12 @@
     color: inherit;
     text-decoration: none;
     display: flex;
-    gap: var(--space-s);
+    gap: var(--space-xs);
+  }
+  &__icon{
+    font-size: 1.5em;
+    line-height:1;
+    height: 1em;
   }
   &__text {
     position: relative;
@@ -44,15 +49,17 @@
   .navigation {
     padding: var(--space-xs);
     border-radius: 2em;
-    background-color: var(--foreground-10);
+    background-color: color(foreground,.1);
     box-shadow: 0.5em 0.5em 4em 0 rgba(0, 0, 0, 0.125);
+    backdrop-filter: blur(10px);
+
     @media screen and (max-width: 720px) {
       position: fixed;
       top: 0;
       right: 0;
       margin: var(--space-l);
       transform: scale(0);
-      background-color: var(--background);
+      background-color: color(background,.8);
       color: var(--background-text);
       padding: var(--space-l);
       border-radius: .5em;
@@ -68,13 +75,13 @@
 
       &::before {
         transform: translateX(var(--x, 0));
-        width: var(--w, 50px);
+        width: var(--w, 0px);
         background-color: var(--background);
         z-index: 1;
       }
       &::after {
         transform: scale(var(--s)) translateX(var(--h-x, 0));
-        width: var(--h-w, 50px);
+        width: var(--h-w, 0px);
         background-color: var(--primary);
         opacity: 0.1;
         z-index: 0;

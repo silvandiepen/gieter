@@ -1,0 +1,8 @@
+@function color($color, $opacity: 1) {
+  @return hsla(
+    var(--#{$color}-h),
+    var(--#{$color}-s),
+    var(--#{$color}-l),
+    $opacity
+  );
+}

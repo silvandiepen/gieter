@@ -32,14 +32,97 @@
     }
   }
 
+  a:not([class]) {
+    position: relative;
+    text-decoration: none;
+    z-index: 1;
+    display: inline-block;
+
+    &::before {
+      content: "";
+      width: 100%;
+      height: 2px;
+      position: absolute;
+      display: block;
+      bottom: 0;
+      left: 0%;
+      text-decoration: none;
+      background-image: linear-gradient(
+        to right,
+        var(--primary),
+        var(--primary) 33.33%,
+        transparent 33.33%,
+        transparent 66.66%,
+        var(--secondary) 66.66%,
+        var(--secondary)
+      );
+      background-size: 300% 100%;
+      transition: background-position 1s ease-in-out;
+      animation: borderOut 1s ease-in-out forwards;
+    }
+    &:hover::before {
+      animation: borderIn 1s ease-in-out forwards;
+    }
+    @at-root {
+      @keyframes borderOut {
+        from {
+          background-position: 0% 0%;
+        }
+        to {
+          background-position: 100% 100%;
+        }
+      }
+      @keyframes borderIn {
+        from {
+          background-position: 100% 100%;
+        }
+        to {
+          background-position: 300% 300%;
+        }
+      }
+    }
+  }
+
+  .content a[href*="github.com"] {
+    --underline-color: #ffd33d;
+  }
+
+  .content a[href*="codepen.io"] {
+    --underline-color: #111111;
+  }
+
+  .content a[href*="twitter.com"] {
+    --underline-color: #08a0e9;
+  }
+
+  .content a[href*="dribbble.com"] {
+    --underline-color: #ea4c89;
+  }
+
+  .content a[href*="linkedin.com"] {
+    --underline-color: #0e76a8;
+  }
+
+  .content a[href*="instagram.com"] {
+    --underline-color: linear-gradient(
+      to right bottom,
+      #feda75,
+      #fa7e1e,
+      #d62976,
+      #962fbf,
+      #4f5bd5
+    );
+  }
+
   a {
     text-decoration: none;
     color: inherit;
-    border-bottom: 2px solid var(--primary);
   }
 
   * {
     margin: 0;
+  }
+  * + * {
     margin-top: 1em;
   }
 
@@ -50,7 +133,7 @@
   p {
     opacity: 0.8;
   }
-  p a{
+  * a {
     margin: 0;
   }
   h6 {
@@ -71,9 +154,8 @@
   }
   h1 {
     margin: 0 calc(var(--space-l) * -1);
-    @media screen and (max-width:720px){
+    @media screen and (max-width: 720px) {
       margin: 0 calc(var(--space) * -1);
-
     }
   }
   pre {
