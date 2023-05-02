@@ -10,23 +10,10 @@ import { asyncForEach } from "@sil/tools";
 import { createDir } from "@sil/tools/dist/lib/system";
 import { getSVGData } from "./svg";
 
-export const getThumbnail = (file: File): string | null => {
-  const thumb = file.meta.thumb;
-  const image = file.meta.image;
-  // const icon = file.meta.icon;
+export const getThumbnail = (file: File): string | null => file.meta.thumb || file.meta.image || null;
 
-  // const thumbnail = thumb || image || icon || null;
-  const thumbnail = thumb || image || null;
-  return thumbnail;
-};
+export const getSvgThumbnail = async (thumb: string): Promise<string> =>  (thumb && thumb.endsWith(".svg")) ? await getSVGData(thumb) : ''
 
-export const getSvgThumbnail = async (thumb: string): Promise<string> => {
-  let svgData = "";
-  if (thumb && thumb.endsWith(".svg")) {
-    svgData = await getSVGData(thumb);
-  }
-  return svgData;
-};
 
 export const createThumbnails = async (payload: Payload): Promise<Payload> => {
   await asyncForEach(payload.files, async (file) => {
