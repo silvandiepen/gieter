@@ -5,4 +5,4 @@ section.section.archive.archive--articles
                 h2.h4= archive.title
         sil-article-overview 
             each item in archive.children 
-                sil-article-item(type="icon", onclick=`linkAction('${item.redirect ? item.redirect : item.link}')`, image=`${item.thumbnail}`, link="#", title= item.title, icon= item.meta.icon, excerpt= item.excerpt)
+                sil-article-item(onclick=`linkAction('${item.redirect ? item.redirect : item.link}')`, image=`${item.thumbnail}`, link="#", title= item.title, icon= item.meta.icon, excerpt= item.excerpt)
