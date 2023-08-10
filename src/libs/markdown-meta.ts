@@ -1,4 +1,4 @@
-import { nthIndex } from "@sil/tools";
+import { nthIndex } from "@/libs/tools";
 import { Meta } from "@/types";
 
 export const fixType = (value: string): any => {

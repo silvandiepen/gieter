@@ -66,7 +66,6 @@
     "@sil/case": "^0.0.5",
     "@sil/colorset": "^0.0.8",
     "@sil/sass-utils": "^0.0.10",
-    "@sil/tools": "^0.1.15",
     "cli-block": "^1.4.1",
     "date-fns": "^2.29.3",
     "express": "^4.18.2",

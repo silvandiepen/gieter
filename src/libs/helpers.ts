@@ -1,5 +1,5 @@
 import { File } from "../types";
-import { getStringFromTag, removeTag } from "@sil/tools";
+import { getStringFromTag, removeTag } from "@/libs/tools";
 import { camelCase } from "@sil/case";
 import { join } from "path";
 

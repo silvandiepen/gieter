@@ -2,6 +2,7 @@ const { writeFile } = require("fs").promises;
 
 import { join } from "path";
 import { blockLine, blockLineSuccess } from "cli-block";
+import kleur from "kleur";
 
 import {
   Payload,
@@ -15,9 +16,9 @@ import {
 import { getLanguageMenu, getDefaultLanguage } from "../libs/language";
 import { makePath, buildHtml, getParentFile } from "./files";
 
-import { createDir } from "@sil/tools/dist/lib/system";
+import { createDir } from "@/libs/tools";
 import { createCss } from "./buildStyle/style";
-import kleur from "kleur";
+
 import { getThumbnail } from "./media";
 import { findWebComponents } from "./webcomponents";
 

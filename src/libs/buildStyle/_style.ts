@@ -1,6 +1,6 @@
 // import { PurgeCSS } from "purgecss";
 
-// import { createDir, createFile, fileExists } from "@sil/tools/dist/lib/system";
+// import { createDir, createFile, fileExists } from "@/libs/tools";
 // import { buildCss } from "../style/compile/compile";
 // import { Style, Payload, Language } from "../types";
 // import { buildPage } from "./page";

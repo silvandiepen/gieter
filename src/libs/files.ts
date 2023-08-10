@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { readdir } = require("fs").promises;
 
 import pug from "pug";
@@ -5,11 +6,10 @@ import pug from "pug";
 import { extname, resolve, basename, join } from "path";
 import { statSync } from "fs";
 import { format } from "date-fns";
-import { asyncForEach } from "@sil/tools";
-import { getFileData, renamePath } from "@sil/tools/dist/lib/system";
 
 import { File, buildHtmlArgs, FileType, Dirent, Archive } from "@/types";
 import { fixLangInPath, getLangFromFilename } from "@/libs/language";
+import { asyncForEach, getFileData, renamePath } from "@/libs/tools";
 import { removeTitle } from "@/libs/helpers";
 
 /*

@@ -3,7 +3,7 @@
 
 import { join } from "path";
 import { blockMid, blockHeader, blockFooter, blockSettings } from "cli-block";
-import { hello, asyncForEach } from "@sil/tools";
+import { hello, asyncForEach } from "@/libs/tools";
 import { getArgs } from "@sil/args";
 
 import { toHtml } from "@/libs/markdown";
@@ -30,6 +30,7 @@ import { getLanguageName } from "@/libs/language";
 import { createRobots } from "@/libs/robots";
 import { generateSocials } from "./libs/socials";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const PackageJson = require("../package.json");
 
 /*

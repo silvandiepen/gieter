@@ -7,10 +7,10 @@ exports.createPage = exports.buildPage = void 0;
 const { writeFile } = require("fs").promises;
 const path_1 = require("path");
 const cli_block_1 = require("cli-block");
+const kleur_1 = __importDefault(require("kleur"));
 const language_1 = require("../libs/language");
 const files_1 = require("./files");
-const system_1 = require("@sil/tools/dist/lib/system");
-const kleur_1 = __importDefault(require("kleur"));
+const tools_1 = require("../libs/tools");
 const media_1 = require("./media");
 const webcomponents_1 = require("./webcomponents");
 const simplifyUrl = (url) => url.replace("/index.html", "");
@@ -139,7 +139,7 @@ const buildPage = async (payload, file) => {
 exports.buildPage = buildPage;
 const createPage = async (payload, file) => {
     const page = await (0, exports.buildPage)(payload, file);
-    await (0, system_1.createDir)(page.dir);
+    await (0, tools_1.createDir)(page.dir);
     try {
         await writeFile(page.html.file, page.html.data);
         await writeFile(page.css.file, page.css.data);

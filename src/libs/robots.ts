@@ -1,4 +1,4 @@
-import { writeFile } from "@sil/tools/dist/lib/system";
+import { writeFile } from "fs-extra";
 import { blockLineSuccess } from "cli-block";
 import { join } from "path";
 import { Payload } from "../types";

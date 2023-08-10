@@ -1,4 +1,4 @@
-import { asyncForEach } from "@sil/tools";
+import { asyncForEach } from "@/libs/tools";
 import { File, Payload } from "../types";
 
 export const processPartials = async (payload: Payload): Promise<Payload> => {

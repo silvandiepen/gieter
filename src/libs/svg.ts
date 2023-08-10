@@ -1,4 +1,4 @@
-import { getFileData } from "@sil/tools/dist/lib/system";
+import { getFileData } from "@/libs/tools";
 import { join } from "path";
 
 export const getSVGData = async (svg: string): Promise<string> => {

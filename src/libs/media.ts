@@ -4,10 +4,10 @@ import { copy, writeFile, copySync } from "fs-extra";
 import { blockLineError, blockLineSuccess } from "cli-block";
 import sharp from "sharp";
 
-import { getFileTree } from "../libs/files";
+import { getFileTree } from "@/libs/files";
+import { asyncForEach, createDir } from "@/libs/tools";
+
 import { File, Payload } from "../types";
-import { asyncForEach } from "@sil/tools";
-import { createDir } from "@sil/tools/dist/lib/system";
 import { getSVGData } from "./svg";
 
 export const getThumbnail = (file: File): string | null => file.meta.thumb || file.meta.image || null;

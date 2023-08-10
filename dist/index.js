@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.media = exports.contentPages = exports.settingsAndConfig = exports.files = void 0;
 const path_1 = require("path");
 const cli_block_1 = require("cli-block");
-const tools_1 = require("@sil/tools");
+const tools_1 = require("./libs/tools");
 const args_1 = require("@sil/args");
 const markdown_1 = require("./libs/markdown");
 const helpers_1 = require("./libs/helpers");
@@ -22,6 +22,7 @@ const media_2 = require("./libs/media");
 const language_1 = require("./libs/language");
 const robots_1 = require("./libs/robots");
 const socials_1 = require("./libs/socials");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const PackageJson = require("../package.json");
 /*
  * Files

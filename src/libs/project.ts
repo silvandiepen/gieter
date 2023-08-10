@@ -1,7 +1,9 @@
-import { asyncForEach } from "@sil/tools";
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { camelCase } from "@sil/case";
+import { fileExists, getFileData, asyncForEach } from "@/libs/tools";
+
 import { Project, Meta, File, Arguments } from "../types";
-import { fileExists, getFileData } from "@sil/tools/dist/lib/system";
 import { flattenObject } from "./helpers";
 
 export const getConfig = async (): Promise<Arguments> => {
