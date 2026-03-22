@@ -15,3 +15,27 @@ Common commands from the repo root:
 - `npm run lint`
 - `npm run test:run`
 - `npm run serve:docs`
+
+## Cloudflare Pages
+
+Pages project mapping:
+
+- `girk-docs` -> `girk.dev`, `www.girk.dev`
+- `girk-example-basic` -> `example-basic.girk.dev`
+- `girk-example-multilang` -> `example-multilang.girk.dev`
+
+These are set up as Git-connected Cloudflare Pages projects on the `master` branch, so Cloudflare builds them remotely on push.
+
+Cloudflare build settings:
+
+- Project: `girk-docs`
+  Build command: `npm ci && npm run cf:build:docs`
+  Build output directory: `apps/docs/public`
+- Project: `girk-example-basic`
+  Build command: `npm ci && npm run cf:build:example-basic`
+  Build output directory: `apps/example-basic/public`
+- Project: `girk-example-multilang`
+  Build command: `npm ci && npm run cf:build:example-multilang`
+  Build output directory: `apps/example-multilang/public`
+
+The repo root should be used as the working directory. Node 25 is pinned in `.nvmrc` and `.node-version`, which Cloudflare Builds can read.
