@@ -1,0 +1,1 @@
+Girk can generate docs, sites, and book-like projects from Markdown.

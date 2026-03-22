@@ -6,3 +6,5 @@ node_modules
 temp
 dist/
 .cache
+playwright-report/
+test-results/

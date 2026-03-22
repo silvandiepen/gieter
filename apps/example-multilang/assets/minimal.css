@@ -1,0 +1,14 @@
+body {
+  font-family: Georgia, serif;
+  background: #fffdf8;
+  color: #1f2937;
+}
+
+.header,
+.footer {
+  position: static;
+}
+
+.navigation__link {
+  border: 1px solid #d6d3d1;
+}

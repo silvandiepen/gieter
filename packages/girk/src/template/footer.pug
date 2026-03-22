@@ -1,0 +1,41 @@
+footer.footer 
+    .footer__container
+        .footer__header 
+            if langMenu.length > 1
+                ul.language
+                    each language in langMenu 
+                        li.language__item(class= `${language.active ? 'language__item--active' : ''}`)
+                            a.language__link(href=`${language.link}`,data-title=`${language.title}`,data-code=`${language.code}`,data-name=`${language.name}`)
+                                span.language__text=language.code
+            
+            button.color-mode-toggle(type="button", data-color-mode-toggle, aria-label="Toggle color mode")
+                span.color-mode-toggle__label Theme
+                span.color-mode-toggle__value
+
+        .footer__main
+            include logo.pug 
+
+            if menu 
+                include navigation.pug 
+
+
+
+
+
+        .footer__footer        
+            if config.copyright
+                div.copyright
+                    | !{config.copyright}
+            if socials 
+                ul.socials 
+                    each social in socials 
+                        li.socials__item
+                            a.socials__link(href=`${social.link}`,aria-label=`${social.title}`,title=`${social.title}`)
+                                span.socials__text=social.title
+
+if project.script
+    if typeof project.script === "string"
+        script(lang="text/javascript", src=`${project.script}`)        
+    else 
+        each script in project.script
+            script(lang="text/javascript", src=`${script}`)

@@ -1,0 +1,5 @@
+@mixin create-variables($variables) {
+  @each $name, $value in $variables {
+    --#{$name}: #{$value};
+  }
+}

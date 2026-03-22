@@ -1,0 +1,16 @@
+section.section.archive.archive--blog
+    div.container
+        ul.archive-grid.archive-grid--blog
+            each item in archive.children
+                li.archive-card.archive-card--blog
+                    a.archive-card__link(href=`${item.redirect ? item.redirect : item.link}`)
+                        if item.thumbnail
+                            span.archive-card__media.archive-card__media--image
+                                img.archive-card__image(src=item.thumbnail, alt="")
+                        .archive-card__body
+                            if item.date
+                                p.archive-card__meta= formatDate(item.date, "dd MMM yyyy")
+                            h3.archive-card__title= item.title
+                            if item.excerpt
+                                p.archive-card__excerpt
+                                    | !{item.excerpt}

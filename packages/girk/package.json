@@ -1,0 +1,94 @@
+{
+  "name": "girk",
+  "version": "0.7.3",
+  "description": "Create a Girk site from Markdown",
+  "main": "dist/index.js",
+  "bin": {
+    "girk": "dist/index.js",
+    "gieter": "dist/index.js"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=25 <26"
+  },
+  "scripts": {
+    "prebuild": "npm run build -w @girk/utils",
+    "build": "npm run build:style && npm run build:ts",
+    "build:ts": "tsc && tsc-alias",
+    "build:full": "rimraf dist && rimraf .cache && npm run build && npm run test",
+    "build:style": "sass src/style/app.scss dist/style/app.css --load-path=node_modules --load-path=../../node_modules --style=compressed --no-source-map",
+    "dev:style": "sass src/style/app.scss dist/style/app.css --load-path=node_modules --load-path=../../node_modules --watch --error-css --style=expanded",
+    "style:clean": "rm -rf .cache && rm -rf dist/style/app.css",
+    "dev": "concurrently --kill-others \"tsc -w\" \"tsc-alias -w\" \"npm run dev:style\"",
+    "pretest": "npm run build -w @girk/utils",
+    "test": "vitest run",
+    "test:watch": "npm run build -w @girk/utils && vitest",
+    "lint": "oxlint src --tsconfig tsconfig.json",
+    "lint:fix": "oxlint src --tsconfig tsconfig.json --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "prepublishOnly": "npm run build:full"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silvandiepen/girk.git"
+  },
+  "keywords": [
+    "open",
+    "letter",
+    "generate"
+  ],
+  "author": "Sil van Diepen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/silvandiepen/girk/issues"
+  },
+  "homepage": "https://github.com/silvandiepen/girk#readme",
+  "devDependencies": {
+    "@types/markdown-it": "^12.2.3",
+    "@types/node": "^25.5.0",
+    "@types/node-fetch": "^3.0.2",
+    "@types/pug": "^2.0.6",
+    "@types/sass": "^1.43.1",
+    "@types/sharp": "^0.31.1",
+    "@types/svgo": "^2.6.4",
+    "concurrently": "^7.6.0",
+    "husky": "^8.0.3",
+    "nodemon": "^2.0.21",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "tsc-alias": "^1.8.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.1",
+    "vitest": "^4.1.0",
+    "watch": "^1.0.2"
+  },
+  "dependencies": {
+    "@girk/utils": "file:../utils",
+    "@sil/args": "^0.0.6",
+    "@sil/case": "^0.0.5",
+    "@sil/colorset": "^0.0.8",
+    "cli-block": "^1.4.1",
+    "date-fns": "^2.29.3",
+    "express": "^4.18.2",
+    "fs-extra": "^11.1.0",
+    "iconator": "^0.3.2",
+    "markdown-it": "^13.0.1",
+    "markdown-it-alert": "^0.1.5",
+    "markdown-it-anchor": "^8.6.7",
+    "markdown-it-deflist": "^2.1.0",
+    "markdown-it-emoji": "^2.0.2",
+    "markdown-it-highlightjs": "^4.0.1",
+    "markdown-it-prism": "^2.3.0",
+    "markdown-it-tasks": "^0.0.5",
+    "mv": "^2.1.1",
+    "node-fetch": "^2.6.1",
+    "pug": "^3.0.2",
+    "purgecss": "^5.0.0",
+    "purify-css": "^1.2.5",
+    "rimraf": "^4.3.0",
+    "sass": "^1.98.0",
+    "sharp": "^0.31.3",
+    "svgo": "^3.0.2"
+  }
+}

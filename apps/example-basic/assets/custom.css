@@ -1,0 +1,11 @@
+:root {
+  --ol-primary-rgb: 15, 119, 214;
+}
+
+body {
+  letter-spacing: 0.01em;
+}
+
+.archive-card__title {
+  text-transform: uppercase;
+}

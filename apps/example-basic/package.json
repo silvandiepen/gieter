@@ -1,0 +1,16 @@
+{
+  "name": "@girk/example-basic",
+  "private": true,
+  "engines": {
+    "node": ">=25 <26"
+  },
+  "scripts": {
+    "build": "rimraf public && girk",
+    "serve": "npx serve public",
+    "test:run": "npm run build"
+  },
+  "dependencies": {
+    "girk": "file:../../packages/girk",
+    "rimraf": "^4.3.0"
+  }
+}
