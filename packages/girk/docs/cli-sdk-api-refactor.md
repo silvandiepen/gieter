@@ -7,7 +7,7 @@ Girk should become usable in four forms:
 1. **CLI**: the current command-line tool for local projects.
 2. **SDK**: a reusable build engine that accepts data in memory and returns generated files in memory.
 3. **API**: a service layer that exposes the SDK through HTTP endpoints for apps, previews, downloads and publishing.
-4. **UI**: a small user-facing interface for pasting/uploading Markdown, previewing output, downloading ZIP files and publishing generated sites.
+4. **UI web components**: interactive components that can be loaded inside Girk-generated docs and act as a layer on top of the API.
 
 The refactor must not break current usage. Existing CLI behaviour should remain the default.
 
@@ -30,6 +30,8 @@ UI  ─┘
 ```
 
 The build logic should not be duplicated between CLI, SDK, API and UI.
+
+The docs should continue to be built by Girk. The UI should not replace the docs app. Instead, the docs can load one or more web components that call the Girk API and provide an interactive playground inside normal Girk-generated pages.
 
 ## Current problem
 
@@ -178,16 +180,21 @@ await publishGirkOutput(result.files, target);
 return createPublishResponse(target);
 ```
 
-### 4. UI mode
+### 4. UI web component mode
 
-The UI should be a thin top layer around the SDK/API. It should not contain build logic.
+The UI should be a thin layer around the API. It should not contain build logic.
 
-The first UI should probably be implemented as reusable web components rather than a separate full app. This keeps the interface portable and lets the docs site embed the same components directly.
+The first UI should be implemented as reusable web components, not as a separate full app. This fits Girk better because the docs are already built by Girk. The docs can include a component script and then use custom elements directly inside Markdown or generated pages.
 
-Recommended first components:
+Recommended first component:
 
 ```txt
 <girk-playground>
+```
+
+Optional smaller components can be split out later:
+
+```txt
 <girk-file-input>
 <girk-markdown-editor>
 <girk-preview>
@@ -201,24 +208,27 @@ Responsibilities:
 - upload Markdown files
 - upload optional assets
 - edit virtual file paths
+- call the Girk API
 - preview generated pages
 - download generated ZIP
 - publish to a generated subdomain
 - show build warnings/errors
 
-The UI should call the API by default:
+The default UI flow should be:
 
 ```txt
-UI → Girk API → Girk SDK
+Girk-generated docs page → web component → Girk API → Girk SDK
 ```
 
-For local demos and docs, the UI can optionally use the SDK directly in the browser if the SDK bundle supports it:
+This is the main product direction. The web component is a layer on top of the API and can be embedded wherever the docs need an interactive example.
+
+An optional browser-only SDK path can be explored later, but it should not be the first target:
 
 ```txt
-Docs page → web component → Girk SDK → in-browser preview
+Girk-generated docs page → web component → Girk SDK → in-browser preview
 ```
 
-This should be treated as a progressive enhancement. The API-backed flow is the safer production path, especially when ZIP generation, publishing, storage and larger assets are involved.
+The API-backed flow is safer for production because ZIP generation, publishing, storage and larger assets are server-side concerns.
 
 ## UI location
 
@@ -232,37 +242,72 @@ packages/girk-ui/
 
 This package should export framework-agnostic web components that can be used in:
 
-- the docs app
+- the Girk-generated docs
 - a future standalone hosted app
 - demos and examples
 - external sites
 
-Alternative option:
+A separate app is not needed for the first version. The docs are the first host.
+
+Alternative future option:
 
 ```txt
 apps/studio/
 ```
 
-Use this if the product grows into a full dashboard with auth, saved projects, history, billing or domain management.
+Use this only if the product grows into a full dashboard with auth, saved projects, history, billing or domain management.
 
 Recommended path:
 
 1. Start with `packages/girk-ui` as web components.
-2. Embed those components in `apps/docs` for the first playground.
-3. Add `apps/studio` later only if the product needs a larger application shell.
+2. Load those components inside the Girk-generated docs for the first playground.
+3. Use the components as a layer on top of the deployed Girk API.
+4. Add `apps/studio` later only if the product needs a larger application shell.
+
+## UI in Girk-generated docs
+
+The docs should continue to be normal Girk content. A docs page can include a playground using either a Markdown-supported HTML block or a Girk component/partial.
+
+Example:
+
+```html
+<script type="module" src="/assets/girk-ui/girk-playground.js"></script>
+
+<girk-playground api-url="https://api.girk.dev"></girk-playground>
+```
+
+The docs build should copy or bundle the web component assets so the generated site can load them.
+
+Suggested flow:
+
+```txt
+Markdown docs page
+  ↓
+Girk build
+  ↓
+Generated docs HTML
+  ↓
+Loads girk-ui web component
+  ↓
+Component calls deployed Girk API
+  ↓
+Preview / ZIP / publish
+```
+
+This keeps the documentation dogfooded: Girk builds the docs, and the docs demonstrate Girk through a component that calls the API.
 
 ## UI deployment
 
-The docs app can be deployed to Cloudflare and include the UI components.
+The docs can be deployed to Cloudflare and include the UI web components.
 
 Suggested deployment shape:
 
 ```txt
-apps/docs
+Girk-generated docs
   ↓
 Cloudflare Pages or Workers Static Assets
   ↓
-includes <girk-playground>
+loads <girk-playground>
   ↓
 calls deployed Girk API Worker
 ```
@@ -279,7 +324,7 @@ uses girk/sdk
 optionally writes published output to R2
 ```
 
-Published generated sites should not require redeploying the docs app. They should be stored separately, for example in R2, and served by a wildcard Worker route.
+Published generated sites should not require redeploying the docs. They should be stored separately, for example in R2, and served by a wildcard Worker route.
 
 ## Proposed package layout
 
@@ -459,7 +504,7 @@ Recommended hosted architecture:
 ```txt
 User input
   ↓
-Top-layer app or docs playground
+Girk-generated docs with web component
   ↓
 Girk API
   ↓
@@ -471,16 +516,16 @@ Generated output files
   └─ Published site storage, for example R2
 ```
 
-The UI/top-layer app should handle:
+A later studio app can use the same API and UI components, but the first interactive surface should be the docs.
+
+The UI/top-layer should handle:
 
 - user interface
 - editing and uploading Markdown
-- saving projects
 - previews
 - published sites
 - custom or generated subdomains
-- authentication, if needed later
-- storage decisions
+- storage decisions through API calls
 
 Girk should only handle:
 
@@ -596,11 +641,12 @@ Add tests before or during the refactor so behaviour stays stable.
 ### UI tests
 
 - Web component renders with empty state.
-- Markdown input triggers a build request.
+- Markdown input triggers an API build request.
 - Preview displays generated HTML.
 - ZIP action calls the ZIP endpoint.
 - Publish action calls the publish endpoint.
 - Build warnings/errors are visible to users.
+- Generated docs can load the component script and render `<girk-playground>`.
 
 ## Refactor steps
 
@@ -666,7 +712,7 @@ Keep HTTP/runtime concerns outside the SDK.
 
 Add reusable web components in `packages/girk-ui`.
 
-Start with a playground component that can be embedded in the docs:
+Start with a playground component that can be embedded in the Girk-generated docs:
 
 ```html
 <girk-playground api-url="https://api.girk.dev"></girk-playground>
@@ -681,13 +727,15 @@ The component should be able to:
 - call `/zip`
 - optionally call `/publish`
 
-### Step 8: Embed UI in docs
+### Step 8: Load UI in generated docs
 
-Add the playground to the docs app so users can try Girk without installing anything.
+Add the playground to a docs Markdown page so users can try Girk without installing anything.
 
 ```txt
-apps/docs → imports packages/girk-ui → renders <girk-playground>
+docs Markdown → Girk build → generated docs HTML → loads <girk-playground>
 ```
+
+This is not a separate docs app replacing Girk. It is Girk building its own docs and loading a web component as an interactive layer.
 
 ### Step 9: Add Cloudflare publishing adapter
 
@@ -725,7 +773,7 @@ The refactor is done when:
 - A ZIP can be generated from SDK output.
 - API handlers can call the SDK without filesystem access.
 - A basic web component playground can call the API and show a preview.
-- The docs app can embed the playground.
+- The Girk-generated docs can load the playground web component.
 - Tests cover current CLI behaviour, new SDK behaviour, API behaviour and the basic UI flow.
 
 ## Summary
@@ -735,8 +783,8 @@ Girk should become a build engine with multiple faces:
 ```txt
 Filesystem project → CLI adapter → SDK → filesystem output
 Editor/upload data → API adapter → SDK → preview/ZIP/publish output
-Docs playground    → web components → API/SDK → preview/ZIP/publish output
+Girk docs          → web component → API → SDK → preview/ZIP/publish output
 Other apps         → SDK directly → generated static files
 ```
 
-This keeps current users safe while opening Girk up for the new hosted app, previews, ZIP downloads, embeddable docs UI and Cloudflare publishing.
+This keeps current users safe while opening Girk up for API builds, previews, ZIP downloads, embeddable docs UI and Cloudflare publishing.
